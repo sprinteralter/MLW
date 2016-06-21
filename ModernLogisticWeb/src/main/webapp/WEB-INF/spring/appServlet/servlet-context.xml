@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	<context:component-scan base-package="com.rosteach" />
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+	<!-- Static Resources Configuration (get access to static sources such as CSS and JavaScript files) -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="order" value="1" />
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- Documents xml view configuration -->
+	<beans:bean class="org.springframework.web.servlet.view.XmlViewResolver">
+		<beans:property name="order" value="0" />
+		<beans:property name="location">
+			<beans:value>/WEB-INF/classes/excel-config.xml</beans:value>
+		</beans:property>
+	</beans:bean>
+	
+	<!-- bind messages.properties -->
+	<beans:bean class="org.springframework.context.support.ResourceBundleMessageSource" id="messageSource">
+		<beans:property name="basename" value="messages" />
+	</beans:bean> 
+	
+	<!-- Hibernate configuration for MySQL data-->
+	
+		<!-- dataSourceMySql -->
+		<beans:bean id="dataSourceMySQL" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+			<beans:property name="driverClass" value="com.mysql.jdbc.Driver"/>
+			<beans:property name="jdbcUrl" value="jdbc:mysql://localhost:3306/reports_db?useUnicode=true&amp;characterEncoding=UTF-8" />
+			<beans:property name="user" value="root" />
+			<beans:property name="password" value="Rospavlenko5725788" />
+	
+			<beans:property name="acquireIncrement" value="2" />
+			<beans:property name="minPoolSize" value="1" />
+			<beans:property name="maxPoolSize" value="50" />
+			<beans:property name="maxIdleTime" value="600" />
+		</beans:bean> 
+		
+		<!-- Hibernate Session Factory-->
+		<beans:bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+			<beans:property name="dataSource" ref="dataSourceMySQL"></beans:property>
+			<beans:property name="hibernateProperties">
+				<beans:props>
+					<beans:prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</beans:prop>
+					<beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop>
+					<beans:prop key="hibernate.format_sql">true</beans:prop>
+					<beans:prop key="hibernate.show_sql">true</beans:prop>
+					<beans:prop key="hibernate.connection.charSet">UTF-8</beans:prop>
+                	<beans:prop key="connection.characterEncoding">UTF-8</beans:prop>
+				</beans:props>
+			</beans:property>
+			<beans:property name="packagesToScan" value="com.rosteach.entities"></beans:property>
+		</beans:bean>
+		
+		<!-- Transaction -->
+		<beans:bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+			<beans:property name="sessionFactory" ref="sessionFactory" />
+		</beans:bean>
+		
+		<tx:annotation-driven transaction-manager="transactionManager" />
+		
+		<!-- JPA2 configuration for FireBird data-->
+	
+		<!-- dataSourceFireBirdAlter -->
+		<!-- <beans:bean id="dataSourceFireBirdAlter" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+			<beans:property name="driverClass" value="org.firebirdsql.jdbc.FBDriver"/>
+			<beans:property name="jdbcUrl" value="jdbc:firebirdsql:192.168.20.17/3050:alter"/>
+			<beans:property name="user" value="SYSDBA"/>
+			<beans:property name="password" value="strongpass"/>
+	
+			<beans:property name="acquireIncrement" value="2" />
+			<beans:property name="minPoolSize" value="1" />
+			<beans:property name="maxPoolSize" value="50" />
+			<beans:property name="maxIdleTime" value="600" />
+		</beans:bean> 
+		
+		Hibernate Session Factory
+		<beans:bean id="entityManagerAlter" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+			<beans:property name="dataSource" ref="dataSourceFireBirdAlter"></beans:property>
+			<beans:property name="jpaVendorAdapter">
+				<beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+			</beans:property>
+			<beans:property name="packagesToScan" value="com.rosteach.entities"></beans:property>
+			<beans:property name="jpaProperties">
+				<beans:props>
+					<beans:prop key="hibernate.dialect">org.hibernate.dialect.FirebirdDialect</beans:prop>
+					<beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop>
+					<beans:prop key="hibernate.format_sql">true</beans:prop>
+					<beans:prop key="hibernate.show_sql">true</beans:prop>
+				</beans:props>
+			</beans:property>
+			
+		</beans:bean>
+		
+		Transaction
+		<beans:bean id="transactionManagerAlter" class="org.springframework.orm.jpa.JpaTransactionManager">
+			<beans:property name="entityManagerFactory" ref="entityManagerAlter" />
+		</beans:bean>
+		
+		<tx:annotation-driven transaction-manager="transactionManagerAlter" />
+	 -->
+</beans:beans>
