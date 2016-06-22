@@ -97,7 +97,7 @@ public class NovusDAOImpl implements NovusDAO {
 				tovar = p;
 				
 				//���� �������� �� ���������
-				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCT()+"' and clientid ='"+clientCode+"'"); //clientid = 11426 and
+				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCTIDBUYER()+"'");// and clientid ='"+clientCode+"'"); //clientid = 11426 and
 				
 				@SuppressWarnings("unchecked")
 				List<Integer> codes = goodsID.getResultList();

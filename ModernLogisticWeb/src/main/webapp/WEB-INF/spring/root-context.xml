@@ -50,6 +50,8 @@
 		<property name="password" value="strongpass"/>
 		<!-- <property name="connectionProperties" value="[encoding=win1251;]"/> -->
 	</bean>	
+	<!-- Import security config xml -->
+	<import resource="spring-security.xml" />
 	
 	<!-- <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" lazy-init="false">
 		<property name="targetObject" ref="dataSource" />
