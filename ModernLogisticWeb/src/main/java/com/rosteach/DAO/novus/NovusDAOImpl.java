@@ -12,7 +12,8 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Repository;
 import com.rosteach.xml.novus.DESADV;
-import com.rosteach.xml.novus.DESADV.HEAD.PACKINGSEQUENCE.POSITION;
+import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
+import com.rosteach.xml.novus.ORDER;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class NovusDAOImpl implements NovusDAO {
 		properties.put("javax.persistence.jdbc.url", database);
 		properties.put("javax.persistence.jdbc.user", name);
 		properties.put("javax.persistence.jdbc.password", password);
+		System.out.println(database + " " + name + " " + password);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("database", properties); 
 	    EntityManager em =  emf.createEntityManager();
@@ -44,58 +46,64 @@ public class NovusDAOImpl implements NovusDAO {
 	    
 	    JAXBContext jc;
 		Unmarshaller u;
-		DESADV novusXML = new DESADV();
+		//DESADV novusXML = new DESADV();
+		
+		ORDER ord = new ORDER(); 
 		File[] files = new File(path).listFiles();
 		POSITION tovar = null;
 		
 		em.getTransaction().begin();
 		
-		//Перебираем все файлы в каталоге <String path>
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ <String path>
 		for (File f : files){
 			fileName = f.getName();
 			
 			try{	
 			try {
-				jc = JAXBContext.newInstance(DESADV.class);
+				jc = JAXBContext.newInstance(ORDER.class);
 				u = jc.createUnmarshaller();
-				novusXML = (DESADV) u.unmarshal(f);
+				ord = (ORDER) u.unmarshal(f);
 			} catch (JAXBException e) {
 				e.printStackTrace();
 				}
 			
-			//создаем заявку
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+			Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where postcode='"+ord.getHEAD().getDELIVERYPLACE()+"'");
+			int clientCode = (Integer)client.getResultList().get(0);
+			
 			Query q = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
-										+novusXML.getDATE()+"', '"
-										+"11426" +"',"	//clientid
+										+ord.getDATE()+"', "
+										+clientCode +","	//clientid
 												+ " 0, "						//storeid
 												+ "NULL, '"						 //outcomeinvociidset
-										+novusXML.getDELIVERYDATE()+ 			//comment
-												"', NULL, "						//beepreslinkid
-												+ "NULL, "						//beepressstore
-												+ "NULL,'"						//termdate
-												+ novusXML.getSHIPMENTS() +"', "//paytypedid
+										+ord.getDELIVERYDATE()+ 			//comment
+												"', NULL,"						//beepreslinkid
+												+ "NULL,"						//beepressstore
+												+ "NULL,"						//termdate
+												+ "NULL,"//paytypedid
 												+ "NULL, '"						//comment1
-										+novusXML.getORDERNUMBER()+"', "		//comment2
+										+ord.getNUMBER()+"', "		//comment2
 												+ "NULL, NULL, NULL, NULL, NULL, 0)"); 
-			//получаем ответ от процедуры
-			int id = (Integer)q.getSingleResult();
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+			int id = (Integer)q.getResultList().get(0);
+			System.out.println(id+"--------------------------------------------------------------------------------------------------");
 			
-			//создаем массив позиций товаров в заявке
-			List<POSITION> positions = novusXML.getHEAD().getPACKINGSEQUENCE().getPOSITION();
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+			List<POSITION> positions = ord.getHEAD().getPOSITION();
 			
-			//добавляем каждую позицию из масива в заявку
+			//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 			for (POSITION p : positions){
 				try{
 				tovar = p;
 				
-				//АйДи продукта по штрихкоду
-				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCT()+"'"); //clientid = 11426 and
+				//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCT()+"' and clientid ='"+clientCode+"'"); //clientid = 11426 and
 				
 				@SuppressWarnings("unchecked")
 				List<Integer> codes = goodsID.getResultList();
 				int gid = codes.get(0);	
 				
-				//еденицу измерения по АйДи продукта
+				//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);
 				short mesID = (Short) mID.getResultList().get(0);
 				
@@ -103,7 +111,7 @@ public class NovusDAOImpl implements NovusDAO {
 			 Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+gid+","+mesID+",'"+p.getORDEREDQUANTITY()+"',null"+")");
 				qp.executeUpdate();
 				}catch(IndexOutOfBoundsException ind){
-					result = result + "НЕ НАЙДЕН (ШТРИХКОД = "+tovar.getPRODUCT()+") ТОВАРА "+tovar.getDESCRIPTION()+" В (ФАЙЛЕ= "+fileName+") ,";
+					result = result + "product code error. Not found = "+tovar.getPRODUCT()+" in "+fileName+",";
 					System.out.println(result+") --------------------------------------------------------------------------------------------");				
 					em.getTransaction().rollback();
 					em.getTransaction().begin();

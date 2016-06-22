@@ -114,6 +114,7 @@ public class InsertionDocInvoice {
 					/**
 					 * Create an Object with JAXBContext with unmarshalling
 					 * */
+					if (new File(path,s[j]).isFile()){
 					DocListInvoice document = (DocListInvoice)((JAXBContext.newInstance(DocListInvoice.class)).createUnmarshaller()).unmarshal(new File(path,s[j]));
 					
 						for(int x=0;x<=document.getDocumentInvoice().size()-1;x++){
@@ -166,7 +167,7 @@ public class InsertionDocInvoice {
 								System.out.println("");
 						}
 					}
-				}
+				}}
 				stm.close();
 				conn.close();		
 			}

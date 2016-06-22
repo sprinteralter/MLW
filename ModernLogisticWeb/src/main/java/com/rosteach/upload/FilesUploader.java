@@ -21,7 +21,7 @@ public class FilesUploader {
 	}
 	
 	public FilesUploader(String name){	
-		rootPath = rootPath+name+"/";
+		rootPath = "C:/MLW/"+name+"/";
 		directory = new File(rootPath);
 		System.out.println(rootPath);
 	}

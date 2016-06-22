@@ -106,21 +106,28 @@ public class XMLController {
 			@RequestParam("password") String password) throws JAXBException,SQLException{
 		
 		String db = dataBase;
-		String path="C:/MLW/XMLDOC/user_name";
+		String path="C:/MLW/user_name";
 		
 		if(db.equals("alter_ros")){
 			db="jdbc:firebirdsql:192.168.20.85/3050:alter_ros";
-		} else if(dataBase.equals("Alter")){
+		} 
+		if(dataBase.equals("Alter")){
 			db="jdbc:firebirdsql:192.168.20.17/3050:alter";
-		} else if(dataBase.equals("alter_curent")){
+		} 
+		if(dataBase.equals("alter_curent")){
 			db="jdbc:firebirdsql:192.168.20.13/3050:alter_curent";
 		}	
-		else if(dataBase.equals("sprinter_curent")){
+		
+		if(dataBase.equals("sprinter_curent")){
 			db="jdbc:firebirdsql:192.168.20.13/3050:sprinter_curent";
 		}	
 		
-	 	
+		if(dataBase.equals("Sprinter")){
+			db="jdbc:firebirdsql:192.168.20.16/3050:sprinter";
+		}
 		
+	 	
+		System.out.println(db+" "+ login+" "+ password+"---------------------------------------------------------------");
 		String result = novus.Insert(db, login, password, path);
 		
 		
