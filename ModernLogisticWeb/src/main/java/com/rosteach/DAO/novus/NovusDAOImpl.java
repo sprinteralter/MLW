@@ -66,7 +66,12 @@ public class NovusDAOImpl implements NovusDAO {
 			} catch (JAXBException e) {
 				e.printStackTrace();
 				}
-			
+			Query check = em.createNativeQuery("select id from SPRORDERSOUTINV (1,'"+ord.getDATE()+"',Null,0,Null,0) where comment2='"+ord.getNUMBER()+"'");
+			int exOrder = check.getResultList().size();
+			if (exOrder > 0){
+				result = "order " +ord.getNUMBER()+ " already exist";
+			return result;
+			}
 			//������� ������
 			Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where postcode='"+ord.getHEAD().getDELIVERYPLACE()+"'");
 			int clientCode = (Integer)client.getResultList().get(0);
@@ -111,7 +116,7 @@ public class NovusDAOImpl implements NovusDAO {
 			 Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+gid+","+mesID+",'"+p.getORDEREDQUANTITY()+"',null"+")");
 				qp.executeUpdate();
 				}catch(IndexOutOfBoundsException ind){
-					result = result + "product code error. Not found = "+tovar.getPRODUCT()+" in "+fileName+",";
+					result = result + "error. GLN = "+clientCode+" in "+fileName+",";
 					System.out.println(result+") --------------------------------------------------------------------------------------------");				
 					em.getTransaction().rollback();
 					em.getTransaction().begin();
