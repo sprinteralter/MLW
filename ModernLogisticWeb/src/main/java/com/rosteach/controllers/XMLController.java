@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,9 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rosteach.DAO.InsertionDocInvoice;
 import com.rosteach.DAO.novus.NovusDAO;
-import com.rosteach.DAO.security.CurrentUser;
 import com.rosteach.DAO.security.GetDetails;
-import com.rosteach.DAO.security.User;
 import com.rosteach.upload.FilesUploader;
 import com.rosteach.validators.FilesValidator;
 
