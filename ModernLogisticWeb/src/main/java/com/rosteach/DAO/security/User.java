@@ -7,27 +7,38 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Users")
+@Table(name="users_auth")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private String password;
-    private int role;
+    private String db;
+    private String role;
     
     
     public User(){};
     
-	public User(String name, String password) {
+	public User(String name, String password, String database, String role) {
 		this.name = name;
 		this.password = password;
+		db = database;
+		this.role = role;	
 	}
 	
-	public int getRole() {
+	public String getDatabase() {
+		return db;
+	}
+
+	public void setDatabase(String database) {
+		db = database;
+	}
+
+	public String getRole() {
 		return role;
 	}
-	public void setRole(int role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 	public long getId() {

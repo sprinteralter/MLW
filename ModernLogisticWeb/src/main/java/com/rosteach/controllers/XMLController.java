@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rosteach.DAO.InsertionDocInvoice;
 import com.rosteach.DAO.novus.NovusDAO;
+import com.rosteach.DAO.security.CurrentUser;
+import com.rosteach.DAO.security.GetDetails;
+import com.rosteach.DAO.security.User;
 import com.rosteach.upload.FilesUploader;
 import com.rosteach.validators.FilesValidator;
 
@@ -29,6 +34,7 @@ public class XMLController {
 	
 	@RequestMapping(value = "/XML", method = RequestMethod.GET)
 	public String xml() {
+		
 		return "XML";
 	}
 	/**
@@ -84,7 +90,8 @@ public class XMLController {
 	public @ResponseBody String uploadNovus(@RequestParam("file[]") MultipartFile [] file){
 		String result = "";
 		//checking and saving file block
-		FilesUploader files = new FilesUploader("user_name");
+		GetDetails gd = new GetDetails();
+		FilesUploader files = new FilesUploader(gd.getName());
 		FilesValidator validator = new FilesValidator();
 		//validate all parameters
 		File directory = validator.checkDirectory(files.getDirectory());
@@ -105,30 +112,11 @@ public class XMLController {
 			@RequestParam("name") String login, 
 			@RequestParam("password") String password) throws JAXBException,SQLException{
 		
-		String db = dataBase;
-		String path="C:/MLW/user_name";
-		
-		if(db.equals("alter_ros")){
-			db="jdbc:firebirdsql:192.168.20.85/3050:alter_ros";
-		} 
-		if(dataBase.equals("Alter")){
-			db="jdbc:firebirdsql:192.168.20.17/3050:alter";
-		} 
-		if(dataBase.equals("alter_curent")){
-			db="jdbc:firebirdsql:192.168.20.13/3050:alter_curent";
-		}	
-		
-		if(dataBase.equals("sprinter_curent")){
-			db="jdbc:firebirdsql:192.168.20.13/3050:sprinter_curent";
-		}	
-		
-		if(dataBase.equals("Sprinter")){
-			db="jdbc:firebirdsql:192.168.20.16/3050:sprinter";
-		}
-		
+		GetDetails gd = new GetDetails();
+		String db = gd.getDB();
+		String path="C:/MLW/"+gd.getName();
 	 	
-		System.out.println(db+" "+ login+" "+ password+"---------------------------------------------------------------");
-		String result = novus.Insert(db, login, password, path);
+		String result = novus.Insert(db, gd.getName(), gd.getPass(), path);
 		
 		
 		return result;

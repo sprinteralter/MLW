@@ -66,6 +66,7 @@ public class NovusDAOImpl implements NovusDAO {
 			} catch (JAXBException e) {
 				e.printStackTrace();
 				}
+			//check if order exist
 			Query check = em.createNativeQuery("select id from SPRORDERSOUTINV (1,'"+ord.getDATE()+"',Null,0,Null,0) where comment2='"+ord.getNUMBER()+"'");
 			int exOrder = check.getResultList().size();
 			if (exOrder > 0){
@@ -85,7 +86,7 @@ public class NovusDAOImpl implements NovusDAO {
 												"', NULL,"						//beepreslinkid
 												+ "NULL,"						//beepressstore
 												+ "NULL,"						//termdate
-												+ "NULL,"//paytypedid
+												+ "1,"//paytypedid
 												+ "NULL, '"						//comment1
 										+ord.getNUMBER()+"', "		//comment2
 												+ "NULL, NULL, NULL, NULL, NULL, 0)"); 
@@ -102,7 +103,7 @@ public class NovusDAOImpl implements NovusDAO {
 				tovar = p;
 				
 				//���� �������� �� ���������
-				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCTIDBUYER()+"'");// and clientid ='"+clientCode+"'"); //clientid = 11426 and
+				Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+p.getPRODUCTIDBUYER()+"' and clientid = '11426'"); //clientid = 11426 and
 				
 				@SuppressWarnings("unchecked")
 				List<Integer> codes = goodsID.getResultList();

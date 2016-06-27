@@ -5,10 +5,14 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.rosteach.DAO.security.CurrentUser;
 
 /**
  * Handles requests for the application home page.
@@ -26,6 +30,7 @@ public class ViewController {
 		date = new Date();
 		date.getTime();
 		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
+
 		return "home";
 	}
 	

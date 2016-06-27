@@ -1,4 +1,4 @@
-/*package com.rosteach.DAO.security;
+package com.rosteach.DAO.security;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -11,17 +11,46 @@ import org.springframework.stereotype.Repository;
 public class UserDAOImpl implements UserDAO {
 	
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
-    EntityManager em =  emf.createEntityManager();
+   
 
 	@Override
-	public User getUserByName(String name) {
-		Query query = em.createQuery("SELECT u FROM Users u where u.name = '"+name+"'", User.class);
-	    return (User)query.getSingleResult();
+	public User getUserByName(String name, String database) {
+		String db = "";
+    	
+    	if(database.equals("alter_ros")){
+			db="jdbc:firebirdsql:192.168.20.85/3050:alter_ros";
+		} 
+		if(database.equals("Alter")){
+			db="jdbc:firebirdsql:192.168.20.17/3050:alter";
+		} 
+		if(database.equals("alter_curent")){
+			db="jdbc:firebirdsql:192.168.20.13/3050:alter_curent";
+		}	
+		
+		if(database.equals("sprinter_curent")){
+			db="jdbc:firebirdsql:192.168.20.13/3050:sprinter_curent";
+		}	
+		
+		if(database.equals("Sprinter")){
+			db="jdbc:firebirdsql:192.168.20.16/3050:sprinter";
+		}
+		
+		 EntityManager em =  emf.createEntityManager();
+		Query query = em.createNativeQuery("SELECT * FROM users_auth where name = '"+name+"' and db = '"+db+"'", User.class);
+		try{
+	    return (User)query.getResultList().get(0);
+		} catch (IndexOutOfBoundsException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public void createUser(User user) {
-		 try {
+		
+	EntityManager em =  emf.createEntityManager();
+
+	try {
 	            em.getTransaction().begin();
 	            em.persist(user);
 	            em.getTransaction().commit();
@@ -29,8 +58,7 @@ public class UserDAOImpl implements UserDAO {
 	            em.getTransaction().rollback();
 	            ex.printStackTrace();
 	        }
-		
+
 	}
 
 }
-*/

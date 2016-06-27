@@ -3,7 +3,7 @@
 
 <html>
 <head>
-  <title>MyShop</title>
+  <title>Register</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,10 +51,16 @@
 
   <form role="form" enctype="multipart/form-data" class="form-signin" action="./useradd" method="post">
     <h2 class="form-signin-heading">Регистрация</h2>
-    
-    <div class="form-group"><input type="text" class="input-block-level" name="name" placeholder="Имя"></div>
+    <div class="form-group"><input type="text" class="input-block-level" name="name" placeholder="Имя пользователя"></div>
     <div class="form-group"><input type="password" class="input-block-level" name="password" placeholder="пароль"></div>
-
+ 	<div class="form-group">
+<select name="dataBase" required="required">
+							<option selected>Sprinter</option>
+							<option>Alter</option>
+							<option>sprinter_curent</option>
+							<option>alter_curent</option>
+						</select>
+</div>
     <div class="form-group"><input type="submit" class="btn btn-large btn-primary" value="зарегистрироваться"></div>
   </form>
 </div>

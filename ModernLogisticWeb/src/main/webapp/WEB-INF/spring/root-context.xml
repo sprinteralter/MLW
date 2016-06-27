@@ -27,6 +27,10 @@
     	<property name="maxUploadSize" value="1000000"/>
 	</bean>
 	
+<!-- 	<bean id="DatabaseFilter" class="com.rosteach.DAO.security.DatabaseFilter">
+	 <property name="authenticationManager" ref="authenticationManager" />
+	</bean> -->
+	
 	<!-- JDBC connection pool Bean definition -->
 	<bean id="dataSourceAlter" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="org.firebirdsql.jdbc.FBDriver"/>
@@ -50,8 +54,14 @@
 		<property name="password" value="strongpass"/>
 		<!-- <property name="connectionProperties" value="[encoding=win1251;]"/> -->
 	</bean>	
+	
 	<!-- Import security config xml -->
 	<import resource="spring-security.xml" />
+	 
+	<context:annotation-config/>
+    <context:component-scan base-package="com.rosteach.DAO.security">
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
 	
 	<!-- <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" lazy-init="false">
 		<property name="targetObject" ref="dataSource" />
