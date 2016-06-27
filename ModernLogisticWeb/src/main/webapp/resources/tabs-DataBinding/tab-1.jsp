@@ -10,13 +10,13 @@
 	<div id="content">
 		<div class="left">
 			<label>База данных источник:</label>
-			<select class="leftselect" name="selectFrom" required="required" form="form">
+			<select class="leftselect" name="selectFrom" required="required">
 				<option selected>default</option>
 				<option>Alter</option>
 				<option>Sprinter</option>
 			</select>
 			<div class="leftinput">
-				<input name="inputDataBase" class="linput" placeholder="Входные параметры" required="required" form="form">
+				<input class="linput" name="inputIds" placeholder="Входные параметры" required="required">
 			</div>
 		</div>
 		<div class="central">
@@ -24,13 +24,12 @@
 		</div>
 		<div class="right">
 			<label>База данных приемник:</label>
-			<select class="rightselect" name="selectIn" form="form">
+			<select class="rightselect" name="selectIn">
 				<option selected>default</option>
 				<option>Alter</option>
 				<option>Sprinter</option>
 			</select>
 			<div class="rightinput">
-				<input class="showresult" placeholder="Результат...">
 			</div>
 		</div>
 	</div>
@@ -40,16 +39,17 @@
 	<div id="applymessage">
 	   	<p class="applMess"></p>
 	   	<p class="applAjaxMess"></p>
-	   	<form id="form" action="databind" method="get">
-		   	<input type="text" name="name" placeholder="login" required="required" />
-			<input type="password" name="password" placeholder="password" required="required" />
-		</form>
-	   	<button class="applMessApply" type="submit" form="form">Подтвердить</button><button class="applMessCancel">Отменить</button>
+	   	<!-- <form id="form" action="databind" method="get"> -->
+		   	<input class="name" type="text" name="name" placeholder="login" required="required" />
+			<input class="password" type="password" name="password" placeholder="password" required="required" />
+		<!-- </form> -->
+	   	<button class="applMessApply"><!-- type="submit" form="form" -->Подтвердить</button><button class="applMessCancel">Отменить</button>
 	</div>
 	<div id="overlay"></div>
     <script>
         $(document).ready(function(){
-        	  var options = { 
+        	        	
+        	/* var options = { 
 				        beforeSend: function(){
 				        	alert($(".rightselect").val());
 					        $("#applymessage").css("display","none");
@@ -77,7 +77,7 @@
 			    	}; 
 			    		 
 			 $("#form").ajaxForm(options);
-        	
+        	 */
         	$('.leftselect').change(function(){
                 $('.leftinput').show();
             });
@@ -97,7 +97,41 @@
 	        			$("#applymessage")
 	        				.css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
 	        				.animate({opacity: 1, top: "50%"}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
-	        			$('.applMess').html("Подтвердить выгрузку данных в базу!");
+	        			$('.applMess').html("Подтвердить импорт данных!");
+	        	});
+            });
+            $('.applMessApply').click(function(){
+       
+            	var request = {
+            		name: $('.name').val(),
+            		password: $('.password').val(),
+            		databaseFrom: $('.leftselect').val(),
+            		databaseTo: $(".rightselect").val(),
+            		ids: $('.linput').val()
+            	};
+            	alert(JSON.stringify(request));
+            	$.ajax({
+            		url: 'getData/databind',
+            		type: 'post',
+            		contentType: "application/json; charset=utf-8",
+            		dataType: 'json',
+            		success: function(data){
+            			$("#overlay").fadeOut(200, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+		        			function(){ // пoсле выпoлнения предъидущей aнимaции
+		   	    				$("#applymessage")
+		        						.css("display", "none").animate({opacity: 0, top: "50%"}, 200);
+		        		});
+		   	    		$('.rightinput').text(data.ids);
+		   	    		$('.rightinput').show();
+		   	    	},
+		   	    	data: JSON.stringify(request)
+            	});
+            });
+            $('.applMessCancel').click(function(){
+            	$("#overlay").fadeOut(200, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+	        		function(){ // пoсле выпoлнения предъидущей aнимaции
+	   	    			$("#applymessage")
+	        				.css("display", "none").animate({opacity: 0, top: "50%"}, 200);
 	        	});
             });
         });

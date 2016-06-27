@@ -10,17 +10,17 @@ public class ClientRequest {
 		private int id;
 		
 		private java.sql.Date docdate;
-		private int clientid;
+		private Integer clientid;
 		private String clientsname;
 		private String clientname;
-		private int storeid;
+		private Integer storeid;
 		private String storesname;
 		private String storename;
 		private String outcomeinvoiceidsset;
-		private double endsumm;
-		private double endsummwithoverh;
+		private Double endsumm;
+		private Double endsummwithoverh;
 		private String comment;
-		private double overhsumm;
+		private Double overhsumm;
 		private Integer beepreslinkid;
 	    private String beepresstore;
 	    private java.sql.Timestamp beepressendtime;
@@ -33,12 +33,12 @@ public class ClientRequest {
 	    private String pricetypesname;
 	    private String useredit;
 	    private java.sql.Timestamp timeedit;
-	    private int agentid;
+	    private Integer agentid;
 	    private String agentsname;
-	    private double itemssumm;
+	    private Double itemssumm;
 	    private Float discount;
 	    private Float specdiscount;
-	    private int ok_passed;
+	    private Integer ok_passed;
 	    private String clientadresslocation;
 	    private String profilesname;
 	    
@@ -46,11 +46,11 @@ public class ClientRequest {
 	    	
 	    }
 
-		public int getId() {
+		public Integer getId() {
 			return id;
 		}
 
-		public void setId(int id) {
+		public void setId(Integer id) {
 			this.id = id;
 		}
 
@@ -62,11 +62,11 @@ public class ClientRequest {
 			this.docdate = docdate;
 		}
 
-		public int getClientid() {
+		public Integer getClientid() {
 			return clientid;
 		}
 
-		public void setClientid(int clientid) {
+		public void setClientid(Integer clientid) {
 			this.clientid = clientid;
 		}
 
@@ -86,11 +86,11 @@ public class ClientRequest {
 			this.clientname = clientname;
 		}
 
-		public int getStoreid() {
+		public Integer getStoreid() {
 			return storeid;
 		}
 
-		public void setStoreid(int storeid) {
+		public void setStoreid(Integer storeid) {
 			this.storeid = storeid;
 		}
 
@@ -118,19 +118,19 @@ public class ClientRequest {
 			this.outcomeinvoiceidsset = outcomeinvoiceidsset;
 		}
 
-		public double getEndsumm() {
+		public Double getEndsumm() {
 			return endsumm;
 		}
 
-		public void setEndsumm(double endsumm) {
+		public void setEndsumm(Double endsumm) {
 			this.endsumm = endsumm;
 		}
 
-		public double getEndsummwithoverh() {
+		public Double getEndsummwithoverh() {
 			return endsummwithoverh;
 		}
 
-		public void setEndsummwithoverh(double endsummwithoverh) {
+		public void setEndsummwithoverh(Double endsummwithoverh) {
 			this.endsummwithoverh = endsummwithoverh;
 		}
 
@@ -142,11 +142,11 @@ public class ClientRequest {
 			this.comment = comment;
 		}
 
-		public double getOverhsumm() {
+		public Double getOverhsumm() {
 			return overhsumm;
 		}
 
-		public void setOverhsumm(double overhsumm) {
+		public void setOverhsumm(Double overhsumm) {
 			this.overhsumm = overhsumm;
 		}
 
@@ -246,11 +246,11 @@ public class ClientRequest {
 			this.timeedit = timeedit;
 		}
 
-		public int getAgentid() {
+		public Integer getAgentid() {
 			return agentid;
 		}
 
-		public void setAgentid(int agentid) {
+		public void setAgentid(Integer agentid) {
 			this.agentid = agentid;
 		}
 
@@ -262,11 +262,11 @@ public class ClientRequest {
 			this.agentsname = agentsname;
 		}
 
-		public double getItemssumm() {
+		public Double getItemssumm() {
 			return itemssumm;
 		}
 
-		public void setItemssumm(double itemssumm) {
+		public void setItemssumm(Double itemssumm) {
 			this.itemssumm = itemssumm;
 		}
 
@@ -286,11 +286,11 @@ public class ClientRequest {
 			this.specdiscount = specdiscount;
 		}
 
-		public int getOk_passed() {
+		public Integer getOk_passed() {
 			return ok_passed;
 		}
 
-		public void setOk_passed(int ok_passed) {
+		public void setOk_passed(Integer ok_passed) {
 			this.ok_passed = ok_passed;
 		}
 

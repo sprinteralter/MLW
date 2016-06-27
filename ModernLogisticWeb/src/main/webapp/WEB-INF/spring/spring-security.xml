@@ -13,6 +13,8 @@
 		<intercept-url pattern="/login" access="isAnonymous()" />
 		<intercept-url pattern="/reg" access="isAnonymous()" />
 		<intercept-url pattern="/useradd" access="isAnonymous()" />
+		<intercept-url pattern="/" access="permitAll" />
+		<intercept-url pattern="/home" access="permitAll" />
 		<intercept-url pattern="/*" access="isAuthenticated()" />
 		
 		<custom-filter before="FORM_LOGIN_FILTER" ref="DatabaseFilter" />

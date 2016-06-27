@@ -58,8 +58,6 @@ public class AuthorizeControllers {
 	       //сделать проверку если такой юзер существует
 	       
 			return new ModelAndView("reg");
-	        
-
 	    }
 	    
 	    @RequestMapping(value = "/login", method = RequestMethod.GET)

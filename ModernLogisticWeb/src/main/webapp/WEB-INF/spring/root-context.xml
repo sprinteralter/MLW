@@ -34,7 +34,7 @@
 	<!-- JDBC connection pool Bean definition -->
 	<bean id="dataSourceAlter" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="org.firebirdsql.jdbc.FBDriver"/>
-		<property name="jdbcUrl" value="jdbc:firebirdsql:192.168.20.17/3050:alter"/>
+		<property name="jdbcUrl" value="jdbc:firebirdsql:192.168.20.17/3050:alter?lc_ctype=WIN1251;sql_dialect=3"/>
 		<property name="user" value="SYSDBA"/>
 		<property name="password" value="strongpass"/>
 		
@@ -49,7 +49,7 @@
 	
 	<bean id="dataSourceSprinter" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="org.firebirdsql.jdbc.FBDriver"/>
-		<property name="url" value="jdbc:firebirdsql:192.168.20.16/3050:sprinter"/>
+		<property name="url" value="jdbc:firebirdsql:192.168.20.16/3050:sprinter?lc_ctype=WIN1251;sql_dialect=3"/>
 		<property name="username" value="SYSDBA"/>
 		<property name="password" value="strongpass"/>
 		<!-- <property name="connectionProperties" value="[encoding=win1251;]"/> -->
