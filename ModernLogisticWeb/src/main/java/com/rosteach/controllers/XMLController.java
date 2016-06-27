@@ -90,8 +90,8 @@ public class XMLController {
 	public @ResponseBody String uploadNovus(@RequestParam("file[]") MultipartFile [] file){
 		String result = "";
 		//checking and saving file block
-		GetDetails gd = new GetDetails();
-		FilesUploader files = new FilesUploader(gd.getName());
+		GetDetails currentUser = new GetDetails();
+		FilesUploader files = new FilesUploader(currentUser.getName());
 		FilesValidator validator = new FilesValidator();
 		//validate all parameters
 		File directory = validator.checkDirectory(files.getDirectory());
@@ -112,11 +112,11 @@ public class XMLController {
 			@RequestParam("name") String login, 
 			@RequestParam("password") String password) throws JAXBException,SQLException{
 		
-		GetDetails gd = new GetDetails();
-		String db = gd.getDB();
-		String path="C:/MLW/"+gd.getName();
+		GetDetails currentUser = new GetDetails();
+		String db = currentUser.getDB();
+		String path="C:/MLW/"+currentUser.getName();
 	 	
-		String result = novus.Insert(db, gd.getName(), gd.getPass(), path);
+		String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 		
 		
 		return result;
