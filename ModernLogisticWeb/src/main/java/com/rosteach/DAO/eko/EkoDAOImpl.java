@@ -68,7 +68,7 @@ public class EkoDAOImpl implements EkoDAO {
 			return result;
 			}
 			//������� ������
-			Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where CONTACTPERSON ='"+ord.getHEAD().getDELIVERYPLACE()+"'");
+			Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where CONTACTPERSON ='"+ord.getHEAD().getDELIVERYPLACE()+"'"); //CONTACTPERSON
 			int clientCode = 0;
 			try{
 				clientCode= (Integer)client.getResultList().get(0);
@@ -105,7 +105,14 @@ public class EkoDAOImpl implements EkoDAO {
 				
 				@SuppressWarnings("unchecked")
 				List<Integer> codes = goodsID.getResultList();
-				int gid = codes.get(0);	
+				int gid;
+				try{
+					 gid = codes.get(0);	
+				} catch(IndexOutOfBoundsException e){
+					return new String("НЕ ТОТ ФАЙЛ?");
+					
+				}
+				
 				
 				//������� ��������� �� ���� ��������
 				//Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);

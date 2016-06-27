@@ -11,7 +11,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Repository;
-import com.rosteach.xml.novus.DESADV;
 import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
 import com.rosteach.xml.novus.ORDER;
 
@@ -97,7 +96,7 @@ public class NovusDAOImpl implements NovusDAO {
 												+ "NULL, NULL, NULL, NULL, NULL, 0)"); 
 			//�������� ����� �� ���������
 			int id = (Integer)q.getResultList().get(0);
-			System.out.println(id+"--------------------------------------------------------------------------------------------------");
+			
 			
 			//������� ������ ������� ������� � ������
 			List<POSITION> positions = ord.getHEAD().getPOSITION();
@@ -112,7 +111,13 @@ public class NovusDAOImpl implements NovusDAO {
 				
 				@SuppressWarnings("unchecked")
 				List<Integer> codes = goodsID.getResultList();
-				int gid = codes.get(0);	
+				int gid;
+				try{
+					 gid = codes.get(0);	
+				} catch(IndexOutOfBoundsException e){
+					return new String("НЕ ТОТ ФАЙЛ?");
+					
+				}
 				
 				//������� ��������� �� ���� ��������
 				Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);
@@ -122,8 +127,7 @@ public class NovusDAOImpl implements NovusDAO {
 			 Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+gid+","+mesID+",'"+p.getORDEREDQUANTITY()+"',null"+")");
 				qp.executeUpdate();
 				}catch(IndexOutOfBoundsException ind){
-					result = result + "error. GLN = "+clientCode+" in "+fileName+",";
-					System.out.println(result+") --------------------------------------------------------------------------------------------");				
+					result = result + "error. GLN = "+clientCode+" in "+fileName+",";	
 					em.getTransaction().rollback();
 					em.getTransaction().begin();
 					break;
