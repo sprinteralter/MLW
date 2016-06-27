@@ -70,12 +70,17 @@ public class NovusDAOImpl implements NovusDAO {
 			Query check = em.createNativeQuery("select id from SPRORDERSOUTINV (1,'"+ord.getDATE()+"',Null,0,Null,0) where comment2='"+ord.getNUMBER()+"'");
 			int exOrder = check.getResultList().size();
 			if (exOrder > 0){
-				result = "order " +ord.getNUMBER()+ " already exist";
+				result = "Номер накладной " +ord.getNUMBER()+ " уже есть в базе (файл: "+fileName+")";
 			return result;
 			}
 			//������� ������
 			Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where postcode='"+ord.getHEAD().getDELIVERYPLACE()+"'");
-			int clientCode = (Integer)client.getResultList().get(0);
+			int clientCode = 0;
+			try{
+				clientCode= (Integer)client.getResultList().get(0);
+			} catch(IndexOutOfBoundsException e) {
+				return new String("Нет привязки GLN " +ord.getHEAD().getDELIVERYPLACE()+ " (файл: "+fileName+")");
+			}
 			
 			Query q = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
 										+ord.getDATE()+"', "

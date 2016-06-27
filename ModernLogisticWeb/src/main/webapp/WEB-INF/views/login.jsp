@@ -33,8 +33,8 @@
     <c:url value="/j_spring_security_check" var="loginUrl" />
     <form action="${loginUrl}" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" class="form-control" name="j_username" placeholder="login" required autofocus value="admin">
-        <input type="password" class="form-control" name="password" placeholder="Password" required value="1234">
+        <input type="text" class="form-control" name="j_username" placeholder="login" required autofocus value="">
+        <input type="password" class="form-control" name="password" placeholder="Password" required value="">
         <select name="domain" class="form-control" required="required">
 							<option selected>Sprinter</option>
 							<option>Alter</option>

@@ -108,8 +108,8 @@ public class EkoDAOImpl implements EkoDAO {
 				int gid = codes.get(0);	
 				
 				//������� ��������� �� ���� ��������
-				Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);
-				short mesID = (Short) mID.getResultList().get(0);
+				//Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);
+				//short mesID = (Short) mID.getResultList().get(0);
 				
 				
 			 Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+gid+","+4+",'"+p.getORDEREDQUANTITY()+"',null"+")");

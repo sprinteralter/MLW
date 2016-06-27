@@ -55,7 +55,6 @@ public class AuthorizeControllers {
 	       userDao.createUser(user);
 	       return new ModelAndView("login");
 			}
-	       //сделать проверку если такой юзер существует
 	       
 			return new ModelAndView("reg");
 	    }

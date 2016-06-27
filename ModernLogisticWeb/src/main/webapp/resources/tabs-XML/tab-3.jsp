@@ -207,8 +207,6 @@
 				        			function(){
 				        		$("#accessmessage").hide();
 				        	});
-					    	$(".textR").html("");
-					    	$(".textL").html("");
 					    	$("input").empty();
 				        });
 				     	 
