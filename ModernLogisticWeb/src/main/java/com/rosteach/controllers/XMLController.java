@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rosteach.DAO.InsertionDocInvoice;
+import com.rosteach.DAO.eko.EkoDAO;
 import com.rosteach.DAO.novus.NovusDAO;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.upload.FilesUploader;
@@ -27,6 +28,9 @@ public class XMLController {
 	
 	@Autowired
 	private NovusDAO novus;
+	
+	@Autowired
+	private EkoDAO eko;
 	
 	@RequestMapping(value = "/XML", method = RequestMethod.GET)
 	public String xml() {
@@ -81,8 +85,9 @@ public class XMLController {
 			}
 		return result;
 	}
+	//-----------------------------------------NOVUS-------------------------------------------------------
 	
-	@RequestMapping(value = "/uploadNovus", method=RequestMethod.POST, produces={"application/text"})
+	@RequestMapping(value = "/uploadNovus", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
 	public @ResponseBody String uploadNovus(@RequestParam("file[]") MultipartFile [] file){
 		String result = "";
 		//checking and saving file block
@@ -102,11 +107,8 @@ public class XMLController {
 		return result;
     }
 	
-	@RequestMapping(value = "/PushNovus", method = RequestMethod.GET)
-	public @ResponseBody String insertionNovus(
-			@RequestParam("dataBase") String dataBase, 
-			@RequestParam("name") String login, 
-			@RequestParam("password") String password) throws JAXBException,SQLException{
+	@RequestMapping(value = "/PushNovus", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+	public @ResponseBody String insertionNovus() throws JAXBException,SQLException{
 		
 		GetDetails currentUser = new GetDetails();
 		String db = currentUser.getDB();
@@ -124,4 +126,39 @@ public class XMLController {
 		String result = new InsertionDocInvoice().getDate();
 		return result;
 	}
+	
+	//-----------------------------------------EKO-------------------------------------------------------
+	
+		@RequestMapping(value = "/uploadEko", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+		public @ResponseBody String uploadEko(@RequestParam("file[]") MultipartFile [] file){
+			String result = "";
+			//checking and saving file block
+			GetDetails currentUser = new GetDetails();
+			FilesUploader files = new FilesUploader(currentUser.getName());
+			FilesValidator validator = new FilesValidator();
+			//validate all parameters
+			File directory = validator.checkDirectory(files.getDirectory());
+			validator.scanForFile(files.getRootPath());
+			
+			if(validator.checkType(file)==true){
+				result = files.saveFiles(file,directory);
+			}
+			else {
+				result = "Invalid type of file or files!!";
+			}
+			return result;
+	    }
+		
+		@RequestMapping(value = "/PushEko", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+		public @ResponseBody String insertionEko() throws JAXBException,SQLException{
+			
+			GetDetails currentUser = new GetDetails();
+			String db = currentUser.getDB();
+			String path="C:/MLW/"+currentUser.getName();
+		 	
+			String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+			return result;
+		}
+		
+	
 }
