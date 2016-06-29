@@ -6,6 +6,8 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -17,7 +19,7 @@ public class GetClientID {
 	/**
 	 * getClientId method with input File reference  
 	 * */
-	public int getClientId(String file, int index,Statement stm) throws JAXBException{
+	public int getClientId(String file, int index,EntityManager em) throws JAXBException{
 		int temp=0;
 		try{
 			/**
@@ -28,15 +30,18 @@ public class GetClientID {
 				/**
 				 * SQL query creation (insertion)
 				 * */
-				String sqlH ="SELECT id FROM client WHERE info3='"+
+				/*String sqlH ="SELECT id FROM client WHERE info3='"+
 								document.getDocumentInvoice().get(index).getInvoiceParties().get(0).getDeliveryKod().get(0).getTaxID()+"'";
-				ResultSet rsId = stm.executeQuery(sqlH);
+				ResultSet rsId = stm.executeQuery(sqlH);*/
+				Query clientIdQuery = em.createNativeQuery("SELECT id FROM client WHERE info3='"+
+						document.getDocumentInvoice().get(index).getInvoiceParties().get(0).getDeliveryKod().get(0).getTaxID()+"'");
 				/**
 				 * process the result set
 				 * */
-				while(rsId.next()) {
+				temp=(Integer)clientIdQuery.getSingleResult();
+				/*while(rsId.next()) {
 					temp = rsId.getInt("ID");
-				}
+				}*/
 				System.out.println("ClientId !!!"+temp);
 				/**
 				 * Closing our statement and connection!

@@ -6,16 +6,25 @@ package com.rosteach.DAO;
 
 import java.io.File;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.springframework.stereotype.Repository;
 
 import com.rosteach.xml.DocListInvoice;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+@Repository
 public class InsertionDocInvoice {
 	/**
 	 * Initializing our directories and files to scann
@@ -87,20 +96,30 @@ public class InsertionDocInvoice {
 			/**
 			 * set Properties for our connection
 			 * */
-			Properties prop = new Properties();
+			
+			Map<String,String> properties = new HashMap<String,String>();
+			properties.put("javax.persistence.jdbc.url", dataBase);
+			properties.put("javax.persistence.jdbc.user", login);
+			properties.put("javax.persistence.jdbc.password", password);
+			
+			/*Properties prop = new Properties();
 			prop.setProperty("user", login);
 			prop.setProperty("password", password);
-			prop.setProperty("encoding", "win1251");
+			prop.setProperty("encoding", "win1251");*/
 			/**
 			 * get connection to database method getConnection(url,user,password,encoding)
 			 * */
-			Class.forName("org.firebirdsql.jdbc.FBDriver").newInstance();
-			Connection conn= DriverManager.getConnection(dataBase,prop);
-			System.out.println("Connection for Header execution Start with success!!!");
+			//Class.forName("org.firebirdsql.jdbc.FBDriver").newInstance();
+			//Connection conn= DriverManager.getConnection(dataBase,prop);
+			//System.out.println("Connection for Header execution Start with success!!!");
+			
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("database", properties); 
+		    EntityManager em =  emf.createEntityManager();
+		    em.getTransaction().begin();
 			/**
 			 * statement creation
 			 * */
-			Statement stm = conn.createStatement();
+			//Statement stm = conn.createStatement();
 			/**
 			 * Creation of GetClientID for getClientId
 			 * */
@@ -125,33 +144,41 @@ public class InsertionDocInvoice {
 								/**
 								 * SQL query creation (insertion)
 								 * */
-								String sqlH ="EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
+								Query headerQuery = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
+										+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceDate()+"', "
+										+id.getClientId(path+s[j], x, em)+", 0, NULL, '"
+										+document.getDocumentInvoice().get(x).getTaxInvoice().get(0).getTaxNumber()+"', NULL, NULL, NULL, NULL, NULL, '"
+										+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber()+"', NULL, NULL, NULL, NULL, NULL, 0)");
+								
+								/*String sqlH ="EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
 											+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceDate()+"', "
 											+id.getClientId(path+s[j], x, stm)+", 0, NULL, '"
 											+document.getDocumentInvoice().get(x).getTaxInvoice().get(0).getTaxNumber()+"', NULL, NULL, NULL, NULL, NULL, '"
-											+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber()+"', NULL, NULL, NULL, NULL, NULL, 0)";
+											+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber()+"', NULL, NULL, NULL, NULL, NULL, 0)";*/
 								/**
 								 * process the result set
 								 * */
-								ResultSet rsHeader = stm.executeQuery(sqlH);
-								String val = "";
+								//ResultSet rsHeader = stm.executeQuery(sqlH);
+								/*String val = "";
 									while(rsHeader.next()) {
 										val = rsHeader.getString("ID");
-									}
-								/**
-								 * Closing our statement and connection!
-								 * */
+									}*/
 								
-								System.out.println("Connection for Header execution End with success!!! Output ID is: "+val);
+								int outputId = (Integer)headerQuery.getSingleResult();
+								
+								System.out.println("Connection for Header execution End with success!!! Output ID is: "+outputId);
 								for(int i=0;i<=document.getDocumentInvoice().get(x).getInvoiceLines().size()-1;i++){
 											/**
 											 * SQL query creation (insertion)
 											 * */
 											for(int z=0;z<=document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().size()-1;z++){
-												String sqlD ="EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT_CODE("+val+", "
+												/*String sqlD ="EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT_CODE("+val+", "
 														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getEAN()+", "+"Null"+", "
 														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getInvoiceQuantity()+", Null)";
-												stm.executeUpdate(sqlD);
+												stm.executeUpdate(sqlD);*/
+												Query detailsQuery = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT_CODE("+outputId+", "
+														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getEAN()+", "+"Null"+", "
+														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getInvoiceQuantity()+", Null)");
 												
 												temp = Double.parseDouble(document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getNetAmount());
 												System.out.println(temp);
@@ -161,15 +188,14 @@ public class InsertionDocInvoice {
 								}
 								System.out.println("");
 								System.out.println("______________Total report for "+s[j]+"______________");
-								System.out.println("Header id: "+val);
+								System.out.println("Header id: "+outputId);
 								System.out.println("Details inserted: "+document.getDocumentInvoice().get(x).getInvoiceLines().size());
 								System.out.println("totalTempSum: "+tempSum);
 								System.out.println("");
 						}
 					}
 				}}
-				stm.close();
-				conn.close();		
+				em.getTransaction().commit();
 			}
 			catch(Exception ex){
 				ex.getStackTrace();
