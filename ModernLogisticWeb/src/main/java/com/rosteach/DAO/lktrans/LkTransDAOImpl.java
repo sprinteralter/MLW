@@ -49,9 +49,13 @@ public class LkTransDAOImpl implements LktransDAO {
 				 	
 				 	//get goods id from position where 13480 = clientID
 					int goodsID = es.goodsID(p.getPRODUCTIDBUYER(), 13480);
-					
 					//get measure ID
-					short mesID = (short) es.getMeasureid(13480, p.getPRODUCTIDBUYER());
+					short mesID;
+					try{
+					mesID = (short) es.getMeasureid(13480, p.getPRODUCTIDBUYER());
+					} catch(IndexOutOfBoundsException e){
+						return "Нет привязки артикула " + p.getPRODUCTIDBUYER() + " к товару "+ p.getCHARACTERISTIC().getDESCRIPTION();
+					}
 					
 					//add position to order
 					es.addPosition(orderID, goodsID, mesID, p.getORDEREDQUANTITY());
