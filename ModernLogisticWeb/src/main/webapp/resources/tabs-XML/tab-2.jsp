@@ -100,17 +100,9 @@
 				<h3>Result console</h3>
 				<textarea class="textR" disabled></textarea>
 				<div id="rightTADataSection">
-					<form id="rightForm" action="PushNovus" method="get">
-						<!-- <select name="dataBase" required="required">
-							<option selected>Sprinter</option>
-							<option>sprinter_curent</option>
-						</select>
-						<input type="text" name="name"
-							placeholder="login" required="required" />
-						<input type="password"
-							name="password" placeholder="password" required="required" /> -->
-					</form>
 					<div class="pushButtRight">
+						<form id="rightForm" action="PushNovus" method="get">
+						</form>
 	                     <button class="push" type="submit" form="rightForm">Загрузить данные
 	                     </button>
 	                </div>

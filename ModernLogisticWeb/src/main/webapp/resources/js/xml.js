@@ -40,8 +40,40 @@ $(document).ready(function(){
         }
     );
     /* end */
-    /*-------------AJAX------------*/  
-    /*------------------tabs generation------------------*/
+    /*start*/
+    $(".infoBarIcon").click(
+        function(){
+    	    $(".infoBarLogin").toggle();
+        }
+    );
+    /*end*/
     
+    /*-------------AJAX------------*/  
+    /*$('.logout').click(function(){
+    	$.ajax({
+    		url: 'logout',
+    		type: 'get',
+    		success: function(data){
+    			
+    	    }
+    	});
+    })*/
+    /*------------------tabs generation------------------*/
+   /* $.ajax({
+		url: 'getData/databind',
+		type: 'post',
+		contentType: "application/json; charset=utf-8",
+		dataType: 'json',
+		success: function(data){
+			$("#overlay").fadeOut(200, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+    			function(){ // пoсле выпoлнения предъидущей aнимaции
+	    				$("#applymessage")
+    						.css("display", "none").animate({opacity: 0, top: "50%"}, 200);
+    		});
+	    		$('.rightinput').text(data.ids);
+	    		$('.rightinput').show();
+	    	},
+	    data: JSON.stringify(request)
+	});*/
 });
 

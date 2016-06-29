@@ -32,15 +32,10 @@ public class XMLController {
 	@Autowired
 	private EkoDAO eko;
 	
-	@RequestMapping(value = "/XML", method = RequestMethod.GET)
-	public String xml() {
-		
-		return "XML";
-	}
 	/**
-	 * File upload mapping
+	 * File upload mapping for Veres tab
 	 * */
-	@RequestMapping(value = "/uploadFile", method=RequestMethod.POST, produces={"application/text"})
+	@RequestMapping(value = "/uploadFile", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
 	public @ResponseBody String uploadFile(@RequestParam("file[]") MultipartFile [] file){
 		String result = "";
 		//checking and saving file block
@@ -59,25 +54,24 @@ public class XMLController {
 		return result;
     }
 	
-	//Tampering Data from xml into Database
-	@RequestMapping(value = "/Push", method = RequestMethod.GET,produces={"application/text"})
-	public @ResponseBody String insertion(
-			@RequestParam("dataBase") String dataBase,
-			@RequestParam("name") String login,
-			@RequestParam("password") String password) throws JAXBException,SQLException{
+	//Tampering Data from xml into Database for Veres tab 
+	
+	@RequestMapping(value = "/PushVeres", method = RequestMethod.GET,produces={"text/plain;charset=UTF-8"})
+	public @ResponseBody String insertion() throws JAXBException,SQLException{
 		String result = "";
 		InsertionDocInvoice insertion = new InsertionDocInvoice();
-		String data="";
+		GetDetails currentUser = new GetDetails();
+		/*String data="";
 		if(dataBase.equals("alter_ros")){
 			data="jdbc:firebirdsql:192.168.20.85/3050:alter_ros";
 		} else if(dataBase.equals("Alter")){
 			data="jdbc:firebirdsql:192.168.20.17/3050:alter";
 		} else if(dataBase.equals("alter_curent")){
 			data="jdbc:firebirdsql:192.168.20.13/3050:alter_curent";
-		}	
+		}	*/
 			//check date of document
 			if(insertion.checkDate()==true){
-				insertion.insertData(data,login,password);
+				insertion.insertData(currentUser.getDB(),currentUser.getName(),currentUser.getPass());
 				result="Insertion into database was successfull, documents date: "+insertion.getDate();
 			}
 			else{
@@ -129,36 +123,34 @@ public class XMLController {
 	
 	//-----------------------------------------EKO-------------------------------------------------------
 	
-		@RequestMapping(value = "/uploadEko", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
-		public @ResponseBody String uploadEko(@RequestParam("file[]") MultipartFile [] file){
-			String result = "";
-			//checking and saving file block
-			GetDetails currentUser = new GetDetails();
-			FilesUploader files = new FilesUploader(currentUser.getName());
-			FilesValidator validator = new FilesValidator();
-			//validate all parameters
-			File directory = validator.checkDirectory(files.getDirectory());
-			validator.scanForFile(files.getRootPath());
+	@RequestMapping(value = "/uploadEko", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+	public @ResponseBody String uploadEko(@RequestParam("file[]") MultipartFile [] file){
+		String result = "";
+		//checking and saving file block
+		GetDetails currentUser = new GetDetails();
+		FilesUploader files = new FilesUploader(currentUser.getName());
+		FilesValidator validator = new FilesValidator();
+		//validate all parameters
+		File directory = validator.checkDirectory(files.getDirectory());
+		validator.scanForFile(files.getRootPath());
 			
-			if(validator.checkType(file)==true){
-				result = files.saveFiles(file,directory);
-			}
-			else {
-				result = "Invalid type of file or files!!";
-			}
-			return result;
-	    }
-		
-		@RequestMapping(value = "/PushEko", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-		public @ResponseBody String insertionEko() throws JAXBException,SQLException{
-			
-			GetDetails currentUser = new GetDetails();
-			String db = currentUser.getDB();
-			String path="C:/MLW/"+currentUser.getName();
-		 	
-			String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
-			return result;
+		if(validator.checkType(file)==true){
+			result = files.saveFiles(file,directory);
 		}
+		else {
+			result = "Invalid type of file or files!!";
+		}
+		return result;
+	}
 		
-	
+	@RequestMapping(value = "/PushEko", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+	public @ResponseBody String insertionEko() throws JAXBException,SQLException{
+		
+		GetDetails currentUser = new GetDetails();
+		String db = currentUser.getDB();
+		String path="C:/MLW/"+currentUser.getName();
+		 	
+		String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+		return result;
+	}	
 }

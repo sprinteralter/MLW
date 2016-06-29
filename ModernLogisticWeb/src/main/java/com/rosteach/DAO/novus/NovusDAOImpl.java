@@ -120,8 +120,8 @@ public class NovusDAOImpl implements NovusDAO {
 				}
 				
 				//������� ��������� �� ���� ��������
-				Query mID = em.createNativeQuery("select measureid from goods where id ="+gid);
-				short mesID = (Short) mID.getResultList().get(0);
+				Query mID = em.createNativeQuery("select first(1) case g.CLASS3 when 'S' then 4 else 1 end edizm from prodlink p, goods g where g.id=p.goodsid and p.clientid = 11426 and  p.prodcode = '"+p.getPRODUCTIDBUYER()+"'");
+				int mesID = (Integer) mID.getResultList().get(0);
 				
 				
 			 Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+gid+","+mesID+",'"+p.getORDEREDQUANTITY()+"',null"+")");

@@ -6,7 +6,7 @@ var app = angular.module('myApp', ['ngGrid']);
 app.controller('MyCtrl', function($scope, $http) {    
 	$scope.myData='';
 	
-	$http.get('getData/get').
+	$http.get('getData/get',{headers: { 'Content-Transfer-Encoding': 'utf-8' }}).
     success(function(data) {
       $scope.myData = data;
     });

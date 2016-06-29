@@ -25,11 +25,11 @@ public class DataRestController {
 	@Autowired
 	private DataBindingService dataService;
 	
-	@RequestMapping(value="/get", method=RequestMethod.GET, produces={"application/json"})
+	@RequestMapping(value="/get", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<ClientsRequests>> getAllReports(){
 		return new ResponseEntity<List<ClientsRequests>>(requestsService.getAllRequests(),HttpStatus.OK);
 	}
-	@RequestMapping(value = "/databind", method=RequestMethod.POST,consumes={"application/json"}, produces={"application/json"})
+	@RequestMapping(value = "/databind", method=RequestMethod.POST,consumes={"application/json"}, produces={"application/json; charset=UTF-8"})
 	public String bindData(@RequestBody String request){
 		System.out.println("----------------------------"+request);
 		
@@ -41,9 +41,7 @@ public class DataRestController {
 		
 		System.out.println("name---------------"+name);
 		
-		dataService.getClientsRequests(dataFrom, name, password, ids);
-		
-		//dataService.setClientsRequests(inputData, "sprinter_curent", name, "sysadmin", "");
+		dataService.setClientsRequestsWithDetails(dataService.getClientsRequests(dataFrom, name, password, ids),"sprinter_curent",name,"sysadmin");
 		
 		return request;
 		//new ResponseEntity<List<ClientRequest>>(dataService.getRequests("alter", name, password, ""),HttpStatus.OK);ResponseEntity<List<ClientRequest>>

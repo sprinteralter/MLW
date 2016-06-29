@@ -96,19 +96,86 @@ body{
     height: 100%;
     width:30%;
     border-radius: 5px 0 0 5px;
+
 }
 .infoBar .infoBarLeft .infoBarIcon{
-    height: 3em;
-    width: 3em;
-    border-radius: 50% 50% 50% 50%;
-    border: 0.5px solid whitesmoke;
-    margin-top: 1.5%;
-    margin-left: 4%;
+    height: 100%;
+    width: 20%;
+    border-radius: 5px 0 0 5px;
+    float: left;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 2%;
 }
 .infoBar .infoBarLeft .infoBarIcon img{
-    height: 3em;
-    width: 3em;
-    border-radius: 50% 50% 50% 50%; 
+    height: 100%;
+    width: auto;
+    cursor: pointer;
+    box-sizing: border-box;
+    opacity: 0.6;
+}
+.infoBar .infoBarLeft .infoBarIcon img:hover{
+    border: 0.5px solid whitesmoke;
+    opacity: 1;
+}
+.infoBar .infoBarLeft .infoBarLogin{
+    height:100%;
+    width: 80%;
+    float:left;
+    border-left: 0.5px solid whitesmoke;
+    box-sizing: border-box;
+    display: none;
+}
+.infoBar .infoBarLeft .infoBarLogin .loginName{
+    margin: 0;
+    padding: 1%;
+    width: 60%;
+    height: 30%;
+    border-radius: 0 0 10% 0; 
+    border-bottom: 0.1px solid whitesmoke;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
+    font-style: italic; /* Курсивное начертание */
+    box-sizing: border-box;
+}
+.infoBar .infoBarLeft .infoBarLogin .loginDatabase{
+    margin: 0;
+    padding: 1%;
+    width: 60%;
+    height: 30%;
+    border-radius: 0 0 10% 0; 
+    border-bottom: 0.1px solid whitesmoke;
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
+    font-style: italic; /* Курсивное начертание */
+    box-sizing: border-box;
+}
+.infoBar .infoBarLeft .infoBarLogin .loginOptions{
+    margin: 0;
+    padding: 1%;
+    width: 60%;
+    height: 40%;
+    box-sizing: border-box;
+}
+.infoBar .infoBarLeft .infoBarLogin .loginOptions .logout{
+    margin: 0;
+    padding: 0;
+    width: 50%;
+    height: 100%;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    float: left;
+    border-radius: 5px;
+    border: 0.5px solid whitesmoke;
+    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
+    font-style: italic; /* Курсивное начертание */
+    color:black;
+    box-sizing: border-box;
+}
+.infoBar .infoBarLeft .infoBarLogin .loginOptions .logout:hover{
+    background: #ADD8E6;
+    border-color: #dddddd;
 }
 .infoBar .infoBarCenter{
     float:left;
@@ -238,8 +305,7 @@ body{
     box-sizing: border-box;
     border-radius: 10px;
 }
-.ui-tabs .ui-tabs-panel .leftTA #progress {
-	display:none;
+.ui-tabs .ui-tabs-panel .leftTA #progress { 
 	position: relative;
     margin: 0;
     width:100%; 
@@ -258,6 +324,7 @@ body{
 .ui-tabs .ui-tabs-panel .leftTA #percent { 
     position:absolute;
     top:0;
+    height:100%;
     width: 100%;
     margin: auto;
     text-align: center;
@@ -267,8 +334,15 @@ body{
     height: 20%;
 }
 .ui-tabs .rightTA .pushButtRight{
+    margin: 1%;
+ 	border:0.15em dotted #dddddd; 
+ 	border-radius: 10px; 
+	padding: 15px;
     text-align: center;
-    border-radius: 10px 10px 10px 10px;
+    box-sizing: border-box;
+}
+.ui-tabs .rightTA .pushButtRight form{
+    display: none;
 }
 .ui-tabs .ui-tabs-panel .rightTA .push{
     margin: 0;
@@ -284,8 +358,7 @@ body{
     background: #1CD6B1;
     color: white;
 }
-.ui-tabs .ui-tabs-panel .rightTA #progressInsertion {
-	display:none;
+.ui-tabs .ui-tabs-panel .rightTA #progressInsertion { 
 	position: relative;
     width:100%; 
 	border: 1px solid #ddd; 
@@ -304,16 +377,9 @@ body{
     position:absolute;
     top:0;
     width: 100%;
+    height: 100%;
     margin: auto;
     text-align: center;
-}
-.ui-tabs .ui-tabs-panel .rightTA form{
-    margin: 1%;
- 	padding: 1% 0;
-    border:0.15em dotted #dddddd; 
- 	border-radius: 10px; 
-    text-align: center;
-    box-sizing: border-box;
 }
 .ui-tabs .ui-tabs-panel .rightTA form input,
 .ui-tabs .ui-tabs-panel .rightTA form select{
@@ -322,19 +388,28 @@ body{
     border-radius: 5px 5px 5px 5px;
     font-style: oblique;
     text-align: center;
-     
 }
 .ui-tabs .ui-tabs-panel .buttons ul{
+    margin:0;
     margin-top: 100%;
-    padding: 0;
+    padding:0;
     list-style: none;
+    box-sizing: border-box;
 }
 .ui-tabs .ui-tabs-panel .buttons ul li{
     width:30%;
     margin:auto;
     margin-top: 30%;
-    border-radius: 20px 20px 20px 20px;
+    border-radius: 10px;
     border-bottom: 1px solid whitesmoke;
+    cursor: pointer;
+}
+.ui-tabs .ui-tabs-panel .buttons ul li img{
+    width:100%;
+    height: auto;
+}
+.ui-tabs .ui-tabs-panel .buttons ul li:hover{
+    border-color: #8a2820;
 }
 /*--------LOADER END MESSAGES--------*/
 .ui-tabs #loader{
@@ -365,7 +440,22 @@ body{
     text-align:center;
     border-radius:10px 10px 10px 10px;
 }
-.ui-tabs #applymessage,
+.ui-tabs #applymessage{
+	width: 400px;
+    height: 200px;
+    background: -webkit-linear-gradient(#8FFFAB, whitesmoke);
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -220px;
+    padding:1%;
+    display:none;
+    opacity: 0;
+    z-index: 5;
+    text-align:center;
+    border-radius:10px 10px 10px 10px;
+}
 .ui-tabs #accessmessage{
 	width: 400px;
     height: 200px;
@@ -390,9 +480,7 @@ body{
 	margin-top:10px;
 	margin-left: 20px;
 }
-.ui-tabs #errormessage .errMess,
-.ui-tabs #applymessage .applMess,
-.ui-tabs #accessmessage .accMess{
+.ui-tabs #errormessage .errMess, .ui-tabs #applymessage .applMess, .ui-tabs #accessmessage .accMess{
 	margin-top:60px;
 }
 .ui-tabs #overlay{
@@ -417,11 +505,9 @@ body{
     -ms-transform: scale(1.2);
     transform: scale(1.2);
 }
-.ui-tabs .ui-tabs-panel .leftTA:hover{
-	border-color: #FF9412;
-}
+.ui-tabs .ui-tabs-panel .leftTA:hover,
 .ui-tabs .ui-tabs-panel .rightTA:hover{
-	border-color: #1CD6B1;
+	border-color: #6AAFCC;
 }
 .ui-tabs .ui-tabs-panel .buttons:hover{
 	border-color: #8a2820;

@@ -41,9 +41,9 @@
 		<!-- dataSourceMySql -->
 		<beans:bean id="dataSourceMySQL" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 			<beans:property name="driverClass" value="com.mysql.jdbc.Driver"/>
-			<beans:property name="jdbcUrl" value="jdbc:mysql://192.168.20.85:3306/reports_db?useUnicode=true&amp;characterEncoding=UTF-8" />
+			<beans:property name="jdbcUrl" value="jdbc:mysql://192.168.20.38:3306/reports_db?useUnicode=true&amp;characterEncoding=UTF-8" />
 			<beans:property name="user" value="root" />
-			<beans:property name="password" value="Rospavlenko5725788" />
+			<beans:property name="password" value="T5r+VuKxg4" />
 	
 			<beans:property name="acquireIncrement" value="2" />
 			<beans:property name="minPoolSize" value="1" />

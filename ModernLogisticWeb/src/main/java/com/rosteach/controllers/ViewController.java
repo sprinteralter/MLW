@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.rosteach.DAO.security.CurrentUser;
+import com.rosteach.DAO.security.GetDetails;
 
 /**
  * Handles requests for the application home page.
@@ -30,7 +32,6 @@ public class ViewController {
 		date = new Date();
 		date.getTime();
 		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
-
 		return "home";
 	}
 	
@@ -41,5 +42,23 @@ public class ViewController {
 		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
 		return "DataBinding";
 	}
-	
+
+	@RequestMapping(value = "/XML", method = RequestMethod.GET)
+	public ModelAndView xml(){
+		ModelAndView mav = new ModelAndView();
+		
+		GetDetails currentUser = new GetDetails();
+		String database = currentUser.getDB();
+		String username = currentUser.getName();
+		
+		int start = database.lastIndexOf(':')+1;
+		int end = database.length();
+		
+		Date date = new Date();
+		logger.info("Home page downloaded with success!  Server date & time is: {}.",date.getTime());
+		
+		mav.addObject("username", "Имя: "+username);
+		mav.addObject("database", "База: "+database.substring(start,end));
+		return mav;
+	}
 }

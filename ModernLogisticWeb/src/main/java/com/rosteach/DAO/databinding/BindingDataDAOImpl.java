@@ -110,9 +110,14 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		
 		Set<ClientRequest> keys = clientsRequests.keySet();
 		for(ClientRequest key: keys){
+		
+			Query getClientId = entityManager.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where basecode = "+key.getClientid());
+			
+			Integer clientid = (Integer)getClientId.getSingleResult();
+			
 			Query query = entityManager.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"+
 																key.getDocdate()+"',"+
-																key.getClientid()+","+
+																clientid+","+
 																0+",'"+
 																null+"','"+
 																key.getComment()+"',"+

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 	<title>XML</title>
@@ -33,7 +34,15 @@
         <div class="infoBar">
             <div class="infoBarLeft">
                 <div class="infoBarIcon" title="Put your Foto">
-                	 <img src="resources/images/userFoto.png" width=70px height=70px;/>
+                	 <img src="resources/images/userFoto.png"/>
+                </div>
+                <div class="infoBarLogin">
+                    <p class="loginName">${username}</p>
+                    <p class="loginDatabase">${database}</p>
+                    <div class="loginOptions">
+                        <a href="logout" class="logout">Выйти</a>
+                        <a href="#" class="logout">Данные</a>
+                    </div>
                 </div>
             </div>
             <div class="infoBarCenter">

@@ -22,7 +22,7 @@
 	</div>
     <nav class="nav">
         <ul class="sliding-menu">
-	       <li><a href="/controllers">Главная</a></li>
+	       <li><a href="<%=request.getContextPath()%>/">Главная</a></li>
 		   <li><a href="#">Документы</a></li>
 	       <li><a href="#">Заявки</a></li>
 	       <li><a href="#">Справочник</a></li>

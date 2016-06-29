@@ -24,7 +24,6 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 		this.role = role;
 		name = username;
 		pass = password;
-		
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -45,11 +44,9 @@ public class CurrentUser extends org.springframework.security.core.userdetails.U
 		return pass;
 	}
 	
-	public long getID(){
-		
+	public long getID(){	
 		return id;
-	}
-
+	}	
 }
 
 
