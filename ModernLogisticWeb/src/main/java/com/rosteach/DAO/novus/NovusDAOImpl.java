@@ -1,27 +1,21 @@
 package com.rosteach.DAO.novus;
 
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.persistence.TransactionRequiredException;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
+
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Repository;
 import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
+import com.rosteach.services.EdiService;
 import com.rosteach.xml.novus.ORDER;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.persistence.EntityManager;
+import java.util.List;
+
 
 @Repository
 public class NovusDAOImpl implements NovusDAO {
@@ -30,7 +24,57 @@ public class NovusDAOImpl implements NovusDAO {
 	public String Insert(String database, String name, String password, String path) throws SQLException{
 		
 		
-		Map<String,String> properties = new HashMap<String,String>();
+		EdiService es = new EdiService();
+		es.setConnection(database, name, password);
+		File[] files = es.getXMLlist(path);
+		ORDER ord = new ORDER(); 
+		JAXBContext jc;
+		Unmarshaller u;
+		for (File f : files){
+			try {
+				ord = (ORDER) es.test(f, ord);
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String checkOrderifExist = es.novusOrderCheck(ord.getDATE(), String.valueOf(ord.getNUMBER()), f.getName());
+			if (checkOrderifExist != null){
+				return checkOrderifExist;
+			}
+			
+			int clientID = es.getDeliveryNovusGLN(ord.getHEAD().getDELIVERYPLACE(), "postcode");
+			if (clientID == 0){
+				return new String("Нет привязки GLN " +ord.getHEAD().getDELIVERYPLACE()+ " (файл: "+f.getName()+")");
+			}
+			
+			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
+			
+			List<POSITION> positions = ord.getHEAD().getPOSITION();
+			for (POSITION p : positions){
+				int goodsID = es.goodsID(p.getPRODUCTIDBUYER(), 11426);
+				
+				//Query mID = entity.createNativeQuery("select first(1) case g.CLASS3 when 'S' then 4 else 1 end edizm from prodlink p, goods g where g.id=p.goodsid and p.clientid = 11426 and  p.prodcode = '"+p.getPRODUCTIDBUYER()+"'");
+				
+				//"select measureid from goods where id ="+goodsID);
+				short mesID = (short) es.getMeasureid(11426, p.getPRODUCTIDBUYER());
+				System.out.println(orderID+ " ClientID "+ goodsID+" GoodsID "+ mesID+" mesID "+ p.getORDEREDQUANTITY() + " orderQ");
+				es.addPosition(orderID, goodsID, mesID, p.getORDEREDQUANTITY());
+			}
+		
+			
+		}
+		es.commit();
+		try {
+			FileUtils.cleanDirectory(new File(path));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new String("Добавлено "+files.length + " заявок");
+		}
+		
+		/*Map<String,String> properties = new HashMap<String,String>();
 		properties.put("javax.persistence.jdbc.url", database);
 		properties.put("javax.persistence.jdbc.user", name);
 		properties.put("javax.persistence.jdbc.password", password);
@@ -150,5 +194,5 @@ public class NovusDAOImpl implements NovusDAO {
 			e.printStackTrace();
 		}
 		return result;
-	}   
+	}   */
 }

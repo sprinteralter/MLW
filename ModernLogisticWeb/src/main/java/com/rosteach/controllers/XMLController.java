@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rosteach.DAO.InsertionDocInvoice;
 import com.rosteach.DAO.eko.EkoDAO;
+import com.rosteach.DAO.lktrans.LktransDAO;
 import com.rosteach.DAO.novus.NovusDAO;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.upload.FilesUploader;
@@ -31,6 +32,9 @@ public class XMLController {
 	
 	@Autowired
 	private EkoDAO eko;
+	
+	@Autowired
+	private LktransDAO lk;
 	
 	/**
 	 * File upload mapping for Veres tab
@@ -144,7 +148,7 @@ public class XMLController {
 	}
 		
 	@RequestMapping(value = "/PushEko", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-	public @ResponseBody String insertionEko() throws JAXBException,SQLException{
+	public @ResponseBody String insertionEko() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
 		
 		GetDetails currentUser = new GetDetails();
 		String db = currentUser.getDB();
@@ -153,4 +157,37 @@ public class XMLController {
 		String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 		return result;
 	}	
+	
+	//-----------------------------------------LK-TRANS-------------------------------------------------------
+	
+		@RequestMapping(value = "/uploadLK", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+		public @ResponseBody String uploadLK(@RequestParam("file[]") MultipartFile [] file){
+			String result = "";
+			//checking and saving file block
+			GetDetails currentUser = new GetDetails();
+			FilesUploader files = new FilesUploader(currentUser.getName());
+			FilesValidator validator = new FilesValidator();
+			//validate all parameters
+			File directory = validator.checkDirectory(files.getDirectory());
+			validator.scanForFile(files.getRootPath());
+				
+			if(validator.checkType(file)==true){
+				result = files.saveFiles(file,directory);
+			}
+			else {
+				result = "Invalid type of file or files!!";
+			}
+			return result;
+		}
+			
+		@RequestMapping(value = "/PushLK", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+		public @ResponseBody String insertionLK() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
+			
+			GetDetails currentUser = new GetDetails();
+			String db = currentUser.getDB();
+			String path="C:/MLW/"+currentUser.getName();
+			 	
+			String result = lk.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+			return result;
+		}	
 }

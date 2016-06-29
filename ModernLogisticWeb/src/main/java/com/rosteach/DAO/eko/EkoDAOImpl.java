@@ -19,6 +19,7 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Repository;
 
+import com.rosteach.services.EdiService;
 import com.rosteach.xml.eko.ORDER;
 import com.rosteach.xml.eko.ORDER.HEAD.POSITION;
 
@@ -26,9 +27,58 @@ import com.rosteach.xml.eko.ORDER.HEAD.POSITION;
 public class EkoDAOImpl implements EkoDAO {
 
 	@Override
-	public String Insert(String database, String name, String password, String path) throws SQLException {
+	public String Insert(String database, String name, String password, String path) throws SQLException, InstantiationException, IllegalAccessException {
 
-		Map<String,String> properties = new HashMap<String,String>();
+		EdiService es = new EdiService();
+		es.setConnection(database, name, password);
+		File[] files = es.getXMLlist(path);
+		ORDER ord = new ORDER();
+		for (File f : files){
+			
+			//unmarshal file
+			ord = (ORDER) es.test(f, ord);
+			
+			//check if order exist
+			String checkOrderifExist = es.novusOrderCheck(ord.getDATE(), ord.getNUMBER(), f.getName());
+			if (checkOrderifExist != null){
+				return checkOrderifExist;
+			}
+			
+			//get clientID (postcode = GLN field)
+			int clientID = es.getDeliveryNovusGLN(ord.getHEAD().getDELIVERYPLACE(), "postcode");
+			if (clientID == 0){
+				return new String("Нет привязки GLN " +ord.getHEAD().getDELIVERYPLACE()+ " (файл: "+f.getName()+")");
+			}
+			
+			//create order and get returned Order ID
+			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), ord.getNUMBER());
+			
+			//get list of order goods position
+			List<POSITION> positions = ord.getHEAD().getPOSITION();
+			
+			for (POSITION p : positions){
+				 	
+				 	//get goods id from position where 25851 = clientID
+					int goodsID = es.goodsID(p.getPRODUCTIDBUYER(), 25851);
+					//add position to order
+					es.addPosition(orderID, goodsID, (short) 4, p.getORDEREDQUANTITY());
+			 }
+			
+			
+			
+		}
+		es.commit();
+		try {
+			FileUtils.cleanDirectory(new File(path));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new String("Добавлено "+files.length + " заявок");
+		
+	}
+		
+		/*Map<String,String> properties = new HashMap<String,String>();
 		properties.put("javax.persistence.jdbc.url", database);
 		properties.put("javax.persistence.jdbc.user", name);
 		properties.put("javax.persistence.jdbc.password", password);
@@ -139,6 +189,6 @@ public class EkoDAOImpl implements EkoDAO {
 		}
 		return result;
 	}   
-	
+	*/
 
 }
