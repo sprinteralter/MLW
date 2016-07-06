@@ -30,22 +30,25 @@ public class FerreroRequestServiceIMPL implements FerreroRequestService {
 		List<FerreroRequest> oneDay = new ArrayList<FerreroRequest>(); 
 		
 		int idOrd = 0;
-		int clientID = 0;
-		String agentName = "blablabla";
-		FerreroRequest oneReq = new FerreroRequest();
-		java.sql.Date orderDate = new java.sql.Date(12, 12, 1988);
+		FerreroRequest oneReq;// = new FerreroRequest();
+
 		for (int i = 0; i < orders.size(); i++){
-			idOrd = orders.get(i).getIdorder();
-			clientID = orders.get(i).getCLIENTID();
-			agentName = orders.get(i).getAGENTSNAME();
 			
-			if( oneReq.getIdorder() == idOrd && oneReq.getCLIENTID() == clientID && oneReq.getDOCDATEORDER() == orderDate && oneReq.getAGENTSNAME().equals(agentName) ){	
-				oneReq.setAGENTSNAME("-------------------");
-				oneReq.setCLIENTID(0);	
-			} else{
-				oneReq = orders.get(i);
-			}
+			oneReq = orders.get(i);
+			Integer temp =  orders.get(i).getIdorder();
+			if(oneReq.getIdorder()!= null && oneReq.getIdorder() == idOrd){	// && oneReq.getCLIENTID() == clientID && oneReq.getDOCDATEORDER() == orderDate && oneReq.getAGENTSNAME().equals(agentName) 
+				//oneReq.setIdorder(null);
+				oneReq.setAGENTSNAME(null);
+				oneReq.setCLIENTID(null);
+				oneDay.add(oneReq);
+				oneDay.get(oneDay.size()-1).setIdorder(null);
+				
+			} else {	
+				
 			oneDay.add(oneReq);
+			}
+			idOrd = temp;
+			
 		}
 
 		return oneDay;

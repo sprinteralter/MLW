@@ -57,7 +57,13 @@ public class NovusDAOImpl implements NovusDAO {
 				//Query mID = entity.createNativeQuery("select first(1) case g.CLASS3 when 'S' then 4 else 1 end edizm from prodlink p, goods g where g.id=p.goodsid and p.clientid = 11426 and  p.prodcode = '"+p.getPRODUCTIDBUYER()+"'");
 				
 				//"select measureid from goods where id ="+goodsID);
-				short mesID = (short) es.getMeasureid(11426, p.getPRODUCTIDBUYER());
+				short mesID ;
+				try{
+				mesID = (short) es.getMeasureid(11426, p.getPRODUCTIDBUYER());
+				} catch(IndexOutOfBoundsException e){
+					return "Нет привязки артикула (покупатель) " + p.getPRODUCTIDBUYER() + " к товару "+ p.getCHARACTERISTIC().getDESCRIPTION();
+				}
+				
 				System.out.println(orderID+ " ClientID "+ goodsID+" GoodsID "+ mesID+" mesID "+ p.getORDEREDQUANTITY() + " orderQ");
 				es.addPosition(orderID, goodsID, mesID, p.getORDEREDQUANTITY());
 			}
