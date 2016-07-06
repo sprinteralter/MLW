@@ -6,7 +6,7 @@
 	<title>XML</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="resources/css/jquery-ui-xml.css" />
+	<link rel="stylesheet" type="text/css" href="resources/css/xml.css" />
 	<!-- JS -->
 	<script type="text/javascript" src="resources/js/jquery-2.2.4.min.js"></script>
 	<script type="text/javascript" src="resources/js/jquery-ui.js"></script>
@@ -30,19 +30,27 @@
     </script>
 </head>
 <body>
+	<div id="loginInfo">
+		<div id="dropZone" title="Загрузить Фото">
+	        <img src="resources/images/userFoto.png"/>
+		</div>
+        <div class="userInfo">
+            <div class="userName"><p>${username}</p></div>
+            <div class="userDatabase"><p>${database}</p></div>
+            <div class="userButtons">
+                <a href="logout">Выйти</a>
+                <a href="#">Редактировать данные</a>
+            </div>
+        </div>
+        <div class="userCancel">
+            <div class="cancel"><img src="resources/images/cancel.png"/></div>
+        </div>
+    </div>
 	<div id="header">    
         <div class="infoBar">
             <div class="infoBarLeft">
-                <div class="infoBarIcon" title="Put your Foto">
+                <div class="infoBarIcon" title="Ваш профиль">
                 	 <img src="resources/images/userFoto.png"/>
-                </div>
-                <div class="infoBarLogin">
-                    <p class="loginName">${username}</p>
-                    <p class="loginDatabase">${database}</p>
-                    <div class="loginOptions">
-                        <a href="logout" class="logout">Выйти</a>
-                        <a href="#" class="logout">Данные</a>
-                    </div>
                 </div>
             </div>
             <div class="infoBarCenter">
@@ -58,16 +66,12 @@
             <li><a href="resources/tabs-XML/tab-1.jsp">Veres</a></li>
             <li><a href="resources/tabs-XML/tab-2.jsp">EDI Novus</a></li>
             <li><a href="resources/tabs-XML/tab-3.jsp">EDI Eko</a></li>
-            <li><a href="resources/tabs-XML/tab-4.jsp">EDI LK</a></li>
-            <li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
+            <li><a href="resources/tabs-XML/tab-4.jsp">EDI LKTrans</a></li>
+			<li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
         </ul>
     </div>
-    <div id="delegation">
-     	<div class="delegatePushButtRight"></div>
-     	<div class="delegateUploadButtLeft"></div>
-    </div>
     <div id="footer">
-        <h3>XML converting</h3>
+        <h3>XML INSERTION</h3>
     </div>
 </body>
 </html>

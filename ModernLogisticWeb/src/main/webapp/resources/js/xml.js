@@ -1,7 +1,15 @@
 $(document).ready(function(){
-    
+   
 	
-    
+	
+	//var file = event.dataTransfer.files[0];
+    /*
+	if (file.size > maxFileSize) {
+	    dropZone.text('Файл слишком большой!');
+	    dropZone.addClass('error');
+	    return false;
+	};*/
+	
    /* $('.delegateUploadButtLeft').on('click','.uplFile',
     	function(event){
     		var request = event.target.files;
@@ -46,6 +54,19 @@ $(document).ready(function(){
     	    $(".infoBarLogin").toggle();
         }
     );
+    /*end*/
+    /*login info*/
+    
+    $('.infoBarIcon').click(function(){
+        $('#overlay').fadeIn(200, function(){
+            $('#loginInfo').show(200);        
+        });    
+    });
+    $('.cancel').click(function(){
+        $('#loginInfo').hide(200,function(){
+            $('#overlay').fadeOut(200)
+        });        
+    });
     /*end*/
     
     /*-------------AJAX------------*/  

@@ -20,29 +20,15 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
-	
-	public EntityManagerFactory getEntityManagerFactory() {
-		return entityManagerFactory;
-	}
-
-	public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
-	}
-
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
 
 	@Override
 	public HashMap<ClientRequest,List<ClientRequestDetails>> getClientsRequestsDetails(
 			String database, 
 			String username, 
 			String password,
-			String inputIds) {
+			String inputIds,
+			String startDate,
+			String endDate) {
 		
 		/**
 		 * Set properties for our persistence unit and into entityManagerFactory and result map
@@ -50,7 +36,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		HashMap<ClientRequest,List<ClientRequestDetails>> resultMap= new HashMap<ClientRequest,List<ClientRequestDetails>>();
 		
 		Map<String,String> props = new HashMap<String,String>();
-		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.17/3050:"+database);
+		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.13/3050:"+database);
 		props.put("javax.persistence.jdbc.user", username);
 		props.put("javax.persistence.jdbc.password", password);
 		
@@ -63,7 +49,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		
 		entityManager.getTransaction().begin();
 		
-		Query query = entityManager.createNativeQuery("select * from SPRORDERSOUTINV (1,'16.05.2016','16.05.2016',0,Null,0) where id in ("+inputIds+")",ClientRequest.class);
+		Query query = entityManager.createNativeQuery("select * from SPRORDERSOUTINV (1,'"+startDate+"','"+endDate+"',0,0,0) where id in ("+inputIds+")",ClientRequest.class);
 		
 		@SuppressWarnings("unchecked")
 		List<ClientRequest> requestResult = (List<ClientRequest>)query.getResultList();
@@ -79,6 +65,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 			
 			resultMap.put(request, requestDetailsResult);
 		}
+		
 		/**
 		 * Commit transaction
 		 * */
@@ -88,7 +75,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 	}
 
 	@Override
-	public List<Integer> setClientsRequestsWithDetails(
+	public String setClientsRequestsWithDetails(
 			HashMap<ClientRequest,List<ClientRequestDetails>> clientsRequests,
 			String database,
 			String username,
@@ -101,32 +88,32 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		props.put("javax.persistence.jdbc.user", username);
 		props.put("javax.persistence.jdbc.password", password);
 		
-		entityManagerFactory = Persistence.createEntityManagerFactory("database",props);
-		entityManager = entityManagerFactory.createEntityManager();
+		EntityManagerFactory entityManagerFactoryInsert = Persistence.createEntityManagerFactory("database",props);
+		EntityManager entityManagerInsert = entityManagerFactoryInsert.createEntityManager();
 		/**
 		 * Begin transaction
 		 * */
-		entityManager.getTransaction().begin();
+		entityManagerInsert.getTransaction().begin();
+		
 		
 		Set<ClientRequest> keys = clientsRequests.keySet();
-		for(ClientRequest key: keys){
 		
-			Query getClientId = entityManager.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where basecode = "+key.getClientid());
+		for(ClientRequest key: keys){
+			//define our details collection per key request
+			List<ClientRequestDetails> details = clientsRequests.get(key);
 			
-			Integer clientid = (Integer)getClientId.getSingleResult();
-			
-			Query query = entityManager.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"+
+			Query query = entityManagerInsert.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"+
 																key.getDocdate()+"',"+
-																clientid+","+
-																0+",'"+
-																null+"','"+
-																key.getComment()+"',"+
+																3+","+ //needed real data
+																0+","+
+																null+","+
+																key.getComment()+","+
 																null+","+
 																null+","+
 																null+","+
 																null+","+
-																key.getComment1()+",'"+
-																key.getComment2()+"',"+
+																key.getComment1()+","+
+																key.getComment2()+","+
 																null+","+
 																null+","+
 																null+","+
@@ -135,14 +122,45 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 																key.getOk_passed()+");"
 																);
 			
-			@SuppressWarnings("unchecked")
-			List<Integer> result = (List<Integer>)query.getResultList();
-			System.out.println("-------------------------------------------------------"+result.get(0));
+			Integer InsertedId = (Integer)query.getSingleResult();
+			System.out.println("--------------------Returned iD"+InsertedId);
+			/*List<ClientRequest> requests = new ArrayList<ClientRequest>();
+			requests.addAll(keys);
+			System.out.println(requests.get(0).getId());*/
+			
+			/*ClientRequestDetails detailsPerKey = clientsRequests.get(key).get(0);
+			System.out.println(detailsPerKey.getGOODSNAME());
+				System.out.println();
+				System.out.println("----------------------------"+clientsRequests.size());
+				System.out.println();*/
+			for(ClientRequestDetails detail: details){
+				System.out.println("---------------------------Successfuly started execution!");
+				
+				
+				Query queryForGOODSID = entityManagerInsert.createNativeQuery("select id from goods where code='4823001400725'");
+				Integer GOODSID= (Integer) queryForGOODSID.getSingleResult();
+					
+					System.out.println("------------------------------GoodsId"+GOODSID);	
+					Query queryForDetails= entityManagerInsert.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+
+																			InsertedId+","+
+																			GOODSID+","+
+																			detail.getGOODSMEASUREID()+","+
+																			detail.getITEMCOUNT()+","+
+																			detail.getQUOTACOUNT()+")");
+					queryForDetails.executeUpdate();
+					
+				System.out.println("---------------------------Successfuly completed execution!");
+				break;
+			}
+			
+			//System.out.println("-------------------------------------------------------"+result.get(0));
 		}
 		/**
 		 * Commit transaction
 		 * */
-		entityManager.getTransaction().commit();
+		entityManagerInsert.getTransaction().commit();
+		entityManagerInsert.close();
 		return null;
 	}
+	
 }

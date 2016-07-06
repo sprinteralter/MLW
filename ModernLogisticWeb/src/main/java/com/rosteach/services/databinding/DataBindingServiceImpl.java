@@ -19,11 +19,13 @@ public class DataBindingServiceImpl implements DataBindingService{
 			String database,
 			String username,
 			String password,
-			String inputIds) {
-		return dataDAO.getClientsRequestsDetails(database, username, password, inputIds);
+			String inputIds,
+			String startDate,
+			String endDate) {
+		return dataDAO.getClientsRequestsDetails(database, username, password, inputIds, startDate, endDate);
 	}
 	@Override
-	public List<Integer> setClientsRequestsWithDetails(
+	public String setClientsRequestsWithDetails(
 			HashMap<ClientRequest,List<ClientRequestDetails>> clientsRequests,
 			String database,
 			String username,

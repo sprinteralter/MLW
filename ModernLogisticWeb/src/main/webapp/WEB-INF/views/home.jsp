@@ -32,7 +32,7 @@
 		<div class="firstline">
 			<div class="item"><a href="Data"><img src="resources/images/data-solution.png"/></a><div class="icon"><h3>data</h3></div></div>
 			<div class="item"><a href="Tools"><img src="resources/images/tools.png"/></a><div class="icon"><h3>tools</h3></div></div>
-			<div class="item"><a href="Ferrero"><img src="resources/images/ferrero.png"/></a><div class="icon"><h3>ferrero</h3></div></div>
+			<div class="item"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h3>N/A</h3></div></div>
 			<div class="item"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h3>N/A</h3></div>
             </div>
 		</div>

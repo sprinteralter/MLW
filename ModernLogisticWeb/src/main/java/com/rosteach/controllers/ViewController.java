@@ -5,15 +5,12 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.rosteach.DAO.security.CurrentUser;
 import com.rosteach.DAO.security.GetDetails;
 
 /**
@@ -36,11 +33,44 @@ public class ViewController {
 	}
 	
 	@RequestMapping(value = "/dataBinding", method = RequestMethod.GET)
-	public String home() {
+	public ModelAndView dataBinding() {
+		ModelAndView mav = new ModelAndView();
+		
+		GetDetails currentUser = new GetDetails();
+		String database = currentUser.getDB();
+		String username = currentUser.getName();
+		
+		int start = database.lastIndexOf(':')+1;
+		int end = database.length();
+		
 		Date date = new Date();
-		date.getTime();
-		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
-		return "DataBinding";
+		logger.info("DataBinding downloaded with success!  Server date & time is: {}.",date);	
+		
+		mav.addObject("username", "Имя: "+username);
+		mav.addObject("database", "База: "+database.substring(start,end));
+		return mav;
+	}
+	
+	/**
+	 * returning xmlcreation home page (xmlfromdata)
+	 */
+	@RequestMapping(value = "/XMLcreation", method = RequestMethod.GET)
+	public ModelAndView xmlfromdata() {
+		ModelAndView mav = new ModelAndView();
+		
+		GetDetails currentUser = new GetDetails();
+		String database = currentUser.getDB();
+		String username = currentUser.getName();
+		
+		int start = database.lastIndexOf(':')+1;
+		int end = database.length();
+		
+		Date date = new Date();
+		logger.info("XMLcreation downloaded with success!  Server date & time is: {}.",date);	
+		
+		mav.addObject("username", "Имя: "+username);
+		mav.addObject("database", "База: "+database.substring(start,end));
+		return mav;
 	}
 
 	@RequestMapping(value = "/XML", method = RequestMethod.GET)
@@ -55,7 +85,7 @@ public class ViewController {
 		int end = database.length();
 		
 		Date date = new Date();
-		logger.info("Home page downloaded with success!  Server date & time is: {}.",date.getTime());
+		logger.info("XML downloaded with success!  Server date & time is: {}.",date.getTime());
 		
 		mav.addObject("username", "Имя: "+username);
 		mav.addObject("database", "База: "+database.substring(start,end));

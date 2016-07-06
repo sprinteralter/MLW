@@ -91,6 +91,135 @@ body{
     background: -webkit-linear-gradient(top, silver, whitesmoke);
     box-sizing: border-box;
 }
+#loginInfo{
+    margin: 5%;
+    padding: 0;
+    position: absolute;
+    width: 50%;
+    height: 70%;
+    background: white;
+    box-sizing: border-box;
+    z-index: 5;
+    border: 5px double #dddddd;
+    border-radius: 5px;
+    display: none;
+}
+#loginInfo form{
+	margin:0;
+	padding:0;
+}
+#loginInfo #dropZone{
+    margin: 1%;
+    padding: 1%;
+    width: 20%;
+    height: 30%;
+    border: 2px solid #dddddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    float: left;
+    cursor: pointer;
+}
+#loginInfo #dropZone img:hover{
+    -webkit-transform: scale(1.1);
+}
+#loginInfo #dropZone img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#loginInfo .userInfo{
+    margin:1%;
+    width: 70%;
+    height: 30%;
+    float: left;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+#loginInfo .userCancel{
+    margin: 1%;
+    width: 4%;
+    height: 30%;
+    float: right;
+    box-sizing: border-box;
+}
+#loginInfo .userCancel img{
+	margin: 0%;
+    width: 100%;
+    cursor: pointer;
+}
+#loginInfo .userCancel img:hover{
+    -webkit-transform: scale(1.1);
+}
+#loginInfo p{
+    display: table-cell;
+    vertical-align: bottom;
+    margin: 0;
+}
+#loginInfo .userInfo .userName{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    box-sizing: border-box;
+    display: table;
+}
+#loginInfo .userInfo .userDatabase{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    display: table;
+    box-sizing: border-box;
+}
+#loginInfo .userInfo .userDatabase{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    box-sizing: border-box;
+}
+#loginInfo .userInfo .userButtons{
+    margin: 0;
+    padding: 3%;
+    height: 40%;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    display: table;
+}
+#loginInfo .userInfo .userButtons a{
+    text-decoration: none;
+    color: black;
+    width: 50%;
+    display: table-cell;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+}
+#loginInfo .userInfo .userButtons a:hover{
+    background: #F5E5C6;
+    border-color: #756C5A;
+    color:#453920;
+    text-transform: uppercase;
+}
+#loginInfo .userFoto:before,
+#loginInfo .userCancel:before,
+#loginInfo .userInfo:before,
+#loginInfo .userFoto:after,
+#loginInfo .userCancel:after,
+#loginInfo .userInfo:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+#loginInfo .userFoto:after,
+#loginInfo .userInfo:after {
+	clear: both;
+}
 .infoBar .infoBarLeft{
     float:left;
     height: 100%;
@@ -111,71 +240,13 @@ body{
     height: 100%;
     width: auto;
     cursor: pointer;
+    border-radius: 5px;
     box-sizing: border-box;
     opacity: 0.6;
 }
 .infoBar .infoBarLeft .infoBarIcon img:hover{
     border: 0.5px solid whitesmoke;
     opacity: 1;
-}
-.infoBar .infoBarLeft .infoBarLogin{
-    height:100%;
-    width: 80%;
-    float:left;
-    border-left: 0.5px solid whitesmoke;
-    box-sizing: border-box;
-    display: none;
-}
-.infoBar .infoBarLeft .infoBarLogin .loginName{
-    margin: 0;
-    padding: 1%;
-    width: 60%;
-    height: 30%;
-    border-radius: 0 0 10% 0; 
-    border-bottom: 0.1px solid whitesmoke;
-    text-align: center;
-    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
-    font-style: italic; /* Курсивное начертание */
-    box-sizing: border-box;
-}
-.infoBar .infoBarLeft .infoBarLogin .loginDatabase{
-    margin: 0;
-    padding: 1%;
-    width: 60%;
-    height: 30%;
-    border-radius: 0 0 10% 0; 
-    border-bottom: 0.1px solid whitesmoke;
-    text-align: center;
-    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
-    font-style: italic; /* Курсивное начертание */
-    box-sizing: border-box;
-}
-.infoBar .infoBarLeft .infoBarLogin .loginOptions{
-    margin: 0;
-    padding: 1%;
-    width: 60%;
-    height: 40%;
-    box-sizing: border-box;
-}
-.infoBar .infoBarLeft .infoBarLogin .loginOptions .logout{
-    margin: 0;
-    padding: 0;
-    width: 50%;
-    height: 100%;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    float: left;
-    border-radius: 5px;
-    border: 0.5px solid whitesmoke;
-    font-family: 'Times New Roman', Times, serif; /* Шрифт с засечками */
-    font-style: italic; /* Курсивное начертание */
-    color:black;
-    box-sizing: border-box;
-}
-.infoBar .infoBarLeft .infoBarLogin .loginOptions .logout:hover{
-    background: #ADD8E6;
-    border-color: #dddddd;
 }
 .infoBar .infoBarCenter{
     float:left;

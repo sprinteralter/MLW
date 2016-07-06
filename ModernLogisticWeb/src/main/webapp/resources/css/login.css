@@ -82,10 +82,20 @@ video{
 .logoForm form button{
     margin: 0;
     margin-top: 2%;
+    background: #F5F0E6;
     padding: 1%;
     width: 17%;
     border-radius: 5px;
     border-style: none;
     border: 1px solid #dddddd;
     cursor: pointer;
+    color: darkgray;
+}
+.logoForm form button:hover{
+    background: #F5E5C6;
+    border-color: #756C5A;
+    color:#453920;
+}
+.logoForm:hover{
+    border-color: #453920;
 }

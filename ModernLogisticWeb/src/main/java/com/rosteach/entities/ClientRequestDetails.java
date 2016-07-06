@@ -288,5 +288,4 @@ public class ClientRequestDetails {
 	public void setQUOTASVAL_REM_ALLOWED(Double qUOTASVAL_REM_ALLOWED) {
 		QUOTASVAL_REM_ALLOWED = qUOTASVAL_REM_ALLOWED;
 	}
-    
 }

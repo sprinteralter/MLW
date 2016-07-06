@@ -30,18 +30,18 @@ $(document).ready(function(){
         }
         ,             
         function(){
-            $(this).css("background","silver");
+            $(this).css("background","gainsboro");
         }
     );
     /* end */
     /* start .item:second */
     $(".item:eq(1)").hover(
         function(){
-	       $(this).css("background","#B0EBB6");
+	       $(this).css("background","#ADD8E6");
         }
         ,             
         function(){
-            $(this).css("background","silver");
+            $(this).css("background","gainsboro");
         }
     );
     /* end */
@@ -51,7 +51,16 @@ $(document).ready(function(){
         }
         ,             
         function(){
-            $(this).css("background","silver");
+            $(this).css("background","gainsboro");
         }
     );
+    $(".item:eq(3)").hover(
+         function(){
+             $(this).css("background","rgb(212,175,55)");
+         }
+         ,             
+         function(){
+             $(this).css("background","gainsboro");
+         }
+     );
 });
