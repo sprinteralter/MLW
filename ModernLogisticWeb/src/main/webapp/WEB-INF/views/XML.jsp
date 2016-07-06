@@ -59,6 +59,7 @@
             <li><a href="resources/tabs-XML/tab-2.jsp">EDI Novus</a></li>
             <li><a href="resources/tabs-XML/tab-3.jsp">EDI Eko</a></li>
             <li><a href="resources/tabs-XML/tab-4.jsp">EDI LK</a></li>
+            <li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
         </ul>
     </div>
     <div id="delegation">

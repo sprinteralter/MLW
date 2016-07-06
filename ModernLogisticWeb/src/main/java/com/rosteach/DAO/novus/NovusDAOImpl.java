@@ -32,7 +32,7 @@ public class NovusDAOImpl implements NovusDAO {
 		Unmarshaller u;
 		for (File f : files){
 			try {
-				ord = (ORDER) es.test(f, ord);
+				ord = (ORDER) es.unmarshal(f, ord);
 			} catch (InstantiationException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

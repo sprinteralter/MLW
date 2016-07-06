@@ -1,4 +1,4 @@
-package com.rosteach.DAO.lktrans;
+package com.rosteach.DAO.socrat;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,17 +6,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.stereotype.Repository;
 
 import com.rosteach.services.EdiService;
-import com.rosteach.xml.lktrans.ORDER;
-import com.rosteach.xml.lktrans.ORDER.HEAD.POSITION;
+import com.rosteach.xml.novus.ORDER;
+import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
 
-@Repository
-public class LkTransDAOImpl implements LktransDAO {
+public class SocratDAOImpl implements SocratDAO{
 
 	@Override
-	public String Insert(String database, String name, String password, String path) throws SQLException, InstantiationException, IllegalAccessException {
+	public String Insert(String database, String name, String password, String path)
+			throws SQLException, InstantiationException, IllegalAccessException {
 
 		EdiService es = new EdiService();
 		es.setConnection(database, name, password);
@@ -28,7 +27,7 @@ public class LkTransDAOImpl implements LktransDAO {
 			ord = (ORDER) es.unmarshal(f, ord);
 			
 			//check if order exist
-			String checkOrderifExist = es.novusOrderCheck(ord.getDATE(), ord.getNUMBER(), f.getName());
+			String checkOrderifExist = es.novusOrderCheck(ord.getDATE(), String.valueOf(ord.getNUMBER()), f.getName());
 			if (checkOrderifExist != null){
 				return checkOrderifExist;
 			}
@@ -40,7 +39,7 @@ public class LkTransDAOImpl implements LktransDAO {
 			}
 			
 			//create order and get returned Order ID
-			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), ord.getNUMBER());
+			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
 			
 			//get list of order goods position
 			List<POSITION> positions = ord.getHEAD().getPOSITION();
@@ -48,11 +47,11 @@ public class LkTransDAOImpl implements LktransDAO {
 			for (POSITION p : positions){
 				 	
 				 	//get goods id from position where 13480 = clientID
-					int goodsID = es.goodsID(p.getPRODUCTIDBUYER(), 13480);
+					int goodsID = es.goodsID(p.getPRODUCTIDBUYER(), 57245);
 					//get measure ID
 					short mesID;
 					try{
-					mesID = (short) es.getMeasureid(13480, p.getPRODUCTIDBUYER());
+					mesID = (short) es.getMeasureid(57245, p.getPRODUCTIDBUYER());
 					} catch(IndexOutOfBoundsException e){
 						return "Нет привязки артикула (покупатель) " + p.getPRODUCTIDBUYER() + " к товару "+ p.getCHARACTERISTIC().getDESCRIPTION();
 					}
@@ -74,4 +73,5 @@ public class LkTransDAOImpl implements LktransDAO {
 		return new String("Добавлено "+files.length + " заявок");
 		
 	}
+
 }

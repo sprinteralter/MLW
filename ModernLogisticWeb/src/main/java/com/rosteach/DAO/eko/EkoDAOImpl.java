@@ -36,7 +36,7 @@ public class EkoDAOImpl implements EkoDAO {
 		for (File f : files){
 			
 			//unmarshal file
-			ord = (ORDER) es.test(f, ord);
+			ord = (ORDER) es.unmarshal(f, ord);
 			
 			//check if order exist
 			String checkOrderifExist = es.novusOrderCheck(ord.getDATE(), ord.getNUMBER(), f.getName());

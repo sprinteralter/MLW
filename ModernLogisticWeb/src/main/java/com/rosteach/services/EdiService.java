@@ -40,6 +40,7 @@ public class EdiService {
 		return files;
 	}
 	
+	//check if order exist
 	public String novusOrderCheck(XMLGregorianCalendar date, String number, String filename){
 		Query check = em.createNativeQuery("select id from SPRORDERSOUTINV (1,'"+date+"',Null,0,Null,0) where comment2='"+number+"'");
 		int exOrder = check.getResultList().size();
@@ -52,6 +53,7 @@ public class EdiService {
 		
 	}
 	
+	//get delivery place client ID
 	public int getDeliveryNovusGLN(long GLN, String columnGLN){
 		Query client = em.createNativeQuery("select id from SPRCLIENT (Null,Null,Null,Null,0) where "+columnGLN+"='"+GLN+"'");
 		int clientCode = 0;
@@ -65,6 +67,7 @@ public class EdiService {
 		return clientCode;
 	}
 	
+	//create order
 	public int createOrder(XMLGregorianCalendar date, long clientID, XMLGregorianCalendar deliveryDate, String orderNum ){
 		
 		Query q = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
@@ -85,9 +88,9 @@ public class EdiService {
 		
 	}
 	
+	//get goods ID 
 	public int goodsID(int buyer, int client){
 		Query goodsID = em.createNativeQuery("select goodsid from prodlink where  prodcode = '"+buyer+"' and clientid = '"+client+"'"); //clientid = 11426 and
-		System.out.println(buyer + " BUYERRRRRR" + client + "CLIENTTTTTTTTTTTTTTTTT");
 		List<Integer> codes = goodsID.getResultList();
 		int gid;
 		try{
@@ -99,6 +102,7 @@ public class EdiService {
 		return gid;
 	}
 	
+	//add position to order
 	public void addPosition(int id, int goodsID, short measureID, float orderQuantity){
 		try{
 		Query qp = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT("+id+","+goodsID+","+measureID+",'"+orderQuantity+"',null"+")");
@@ -110,6 +114,7 @@ public class EdiService {
 		
 	}
 	
+	//get measure id 
 	public int getMeasureid(int clientID, int productBuyer){
 		Query mID = em.createNativeQuery("select first(1) case g.CLASS3 when 'S' then 4 else 1 end edizm from prodlink p, goods g where g.id=p.goodsid and p.clientid = "+clientID+" and  p.prodcode = '"+productBuyer+"'");//"select measureid from goods where id ="+goodsID);
 		int mesID = (Integer) mID.getResultList().get(0);
@@ -121,13 +126,13 @@ public class EdiService {
 	}
 	
 	
+	//unmarshal file
 	JAXBContext jc;
 	Unmarshaller u;
 	
-	public Object test(File f ,Object o) throws InstantiationException, IllegalAccessException{
+	public Object unmarshal(File f ,Object o) throws InstantiationException, IllegalAccessException{
 		
-		Class ord = o.getClass(); //Class.forName(o.getClass().getName());
-								//Class supercalass = Ord.getSuperclass();
+		Class ord = o.getClass();
 		Object ORDER = ord.newInstance();
 		try {
 			jc = JAXBContext.newInstance(ord);
