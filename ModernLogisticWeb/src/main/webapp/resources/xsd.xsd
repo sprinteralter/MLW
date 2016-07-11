@@ -1,0 +1,51 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <!-- XML Schema Generated from XML Document on Wed Jul 06 2016 17:32:03 GMT+0300 (Финляндия (лето)) -->
+         <!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+         <xs:element name="DESADV">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="NUMBER" type="xs:int"></xs:element>
+                           <xs:element name="DATE" type="xs:date"></xs:element>
+                           <xs:element name="DELIVERYDATE" type="xs:date"></xs:element>
+                           <xs:element name="ORDERNUMBER" type="xs:int"></xs:element>
+                           <xs:element name="ORDERDATE" type="xs:date"></xs:element>
+                           <xs:element name="DELIVERYNOTENUMBER" type="xs:int"></xs:element>
+                           <xs:element name="DELIVERYNOTEDATE" type="xs:date"></xs:element>
+                           <xs:element name="CAMPAIGNNUMBER" type="xs:int"></xs:element>
+                           <xs:element name="HEAD">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="SUPPLIER" type="xs:int"></xs:element>
+                                             <xs:element name="BUYER" type="xs:int"></xs:element>
+                                             <xs:element name="DELIVERYPLACE" type="xs:int"></xs:element>
+                                             <xs:element name="SENDER" type="xs:int"></xs:element>
+                                             <xs:element name="RECIPIENT" type="xs:int"></xs:element>
+                                             <xs:element name="EDIINTERCHANGEID" type="xs:int"></xs:element>
+                                             <xs:element name="PACKINGSEQUENCE">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="POSITION" maxOccurs="unbounded">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="POSITIONNUMBER" type="xs:int"></xs:element>
+                                                                                 <xs:element name="PRODUCT" type="xs:int"></xs:element>
+                                                                                 <xs:element name="PRODUCTIDBUYER" type="xs:int"></xs:element>
+                                                                                 <xs:element name="DELIVEREDQUANTITY" type="xs:int"></xs:element>
+                                                                                 <xs:element name="DELIVEREDUNIT" type="xs:string"></xs:element>
+                                                                                 <xs:element name="ORDEREDQUANTITY" type="xs:int"></xs:element>
+                                                                                 <xs:element name="ORDERUNIT" type="xs:string"></xs:element>
+                                                                                 <xs:element name="PRICE" type="xs:double"></xs:element>
+                                                                                 <xs:element name="DESCRIPTION" type="xs:string"></xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                       </xs:sequence>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+               </xs:complexType>
+         </xs:element>
+</xs:schema>

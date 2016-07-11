@@ -12,18 +12,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
-import com.rosteach.entities.ClientsRequests;
+//import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
-import com.rosteach.services.ClientsRequestsService;
+import com.rosteach.entities.SPROutcomeInvoice;
+//import com.rosteach.services.ClientsRequestsService;
+import com.rosteach.services.SPROutcomeInvoiceService;
 import com.rosteach.services.databinding.DataBindingService;
+import com.rosteach.xmlgen.XmlGenerator;
 
 @RestController
 @RequestMapping(value= "/data")
 public class DataRestController {
 	@Autowired
-	private ClientsRequestsService requestsService;
+	private SPROutcomeInvoiceService invoicesService;
+	
+	/*@Autowired
+	private ClientsRequestsService requestsService;*/
 	
 	@Autowired
 	private DataBindingService dataService;
@@ -31,9 +38,14 @@ public class DataRestController {
 	/**
 	 * method for generating all needed data for xml confirmation
 	 * */
-	@RequestMapping(value="/get", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<ClientsRequests>> getAllReports(){
-		return new ResponseEntity<List<ClientsRequests>>(requestsService.getAllRequests(),HttpStatus.OK);
+	@RequestMapping(value="/getInvoices", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<List<SPROutcomeInvoice>> getAllClientsRequests(){
+		GetDetails currentUser = new GetDetails();
+		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
+	}
+	@RequestMapping(value="/getOutcomeinVoices", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<List<SPROutcomeInvoice>> getAllSalesInvoice(){
+		return null;//new ResponseEntity<List<SalesInvoice>>(requestsService.getAllRequests(),HttpStatus.OK);
 	}
 	/**
 	 * method for generating all needed data for xml confirmation
@@ -41,6 +53,14 @@ public class DataRestController {
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<String> confirmRequests(@RequestBody String request){
 		System.out.println("------------------------------"+request);
+		
+		XmlGenerator generator = new XmlGenerator();
+		
+		boolean result = generator.generateNotification(request);
+		
+		System.out.println("--------------------"+result);
+		
+		
 		return new ResponseEntity<String>(request,HttpStatus.OK);
 	}
 	/**

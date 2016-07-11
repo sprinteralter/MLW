@@ -14,13 +14,37 @@ import org.springframework.stereotype.Repository;
 
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
+import com.rosteach.entities.EntityManagerReferee;
 
 @Repository
 public class BindingDataDAOImpl implements BindingDataDAO{
 
 	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
-
+	private EntityManagerReferee referee;
+	
+	@Override
+	public List<ClientRequestDetails> getDetailsById(Integer id,
+			String database, 
+			String username, 
+			String password			
+			){
+		referee = new EntityManagerReferee();
+		entityManager = referee.getConnection(database, username, password);
+		entityManager.getTransaction().begin();
+		
+		Query queryForDetails = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+id+",1,0,Null,0, Null,Null,0,0);",ClientRequestDetails.class);
+		
+		@SuppressWarnings("unchecked")
+		List<ClientRequestDetails> requestDetailsResult = (List<ClientRequestDetails>)queryForDetails.getResultList();
+		
+		EntityManagerFactory emf =entityManager.getEntityManagerFactory();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		emf.close();
+		return requestDetailsResult;
+	}
+	
 	@Override
 	public HashMap<ClientRequest,List<ClientRequestDetails>> getClientsRequestsDetails(
 			String database, 
@@ -48,6 +72,8 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		 * */
 		
 		entityManager.getTransaction().begin();
+		
+		
 		
 		Query query = entityManager.createNativeQuery("select * from SPRORDERSOUTINV (1,'"+startDate+"','"+endDate+"',0,0,0) where id in ("+inputIds+")",ClientRequest.class);
 		

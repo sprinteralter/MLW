@@ -81,32 +81,12 @@
                 <div class="gridStyle" ng-grid="gridOptions"></div>
                 <button class="takeData">Выбрать данные</button>
                 <div class="leftTAoverlay"></div>
-                <div class="leftTAloader">
+                <div class="leftTAloader" ng-show="loading()">
                     <img src="resources/images/spinner.gif" alt="spinner"/>
                 </div>
             </div>
             <div class="buttons" ng-click="sendData()">
-                <img onmouseover="stopstyling()" src="resources/images/generate.png" id="generate" alt="generate" title="Сгенерировать XML"/>
-                <script>
-                    var firsttimeout;
-                    var secondtimeout;
-                    var generate = document.getElementById('generate');
-                    function changestyle()
-                        {
-                                if (generate.style.visibility == 'visible') {
-                                    generate.style.visibility = 'hidden';
-                                    firsttimeout=setTimeout(changestyle, 500);
-                                } else {
-                                    generate.style.visibility = 'visible';
-                                    secondtimeout=setTimeout(changestyle, 1000);
-                                }
-                        }
-                    setTimeout(changestyle, 0);
-                    function stopstyling() {
-                         clearTimeout(firsttimeout);
-                         clearTimeout(secondtimeout);
-                    }
-                </script>
+                <img src="resources/images/generate.png" id="generate" alt="generate" title="Сгенерировать XML"/>
             </div>
             <div class="rightTA">
             	<textarea disabled="disabled">response:{{PostDataResponse}}</textarea>
