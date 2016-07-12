@@ -1,6 +1,7 @@
 package com.rosteach.entities.ferrero;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,10 @@ public class FerreroRequest {
     Integer AGENTID;
     Integer CLIENTID;
     Integer GOODSID;
-    Integer ITEMCOUNTORDER;
+    BigInteger ITEMCOUNTORDER;
    String IDOUT;
    java.sql.Date LOADINGDATE;
-   Integer ITEMCOUNTOUT;
+   BigInteger ITEMCOUNTOUT;
     Integer RES;
     Integer RESRATE;
     String CLIENTSNAMEORD;
@@ -86,11 +87,11 @@ public class FerreroRequest {
 	public void setGOODSID(int gOODSID) {
 		GOODSID = gOODSID;
 	}
-	public Integer getITEMCOUNTORDER() {
+	public BigInteger getITEMCOUNTORDER() {
 		return ITEMCOUNTORDER;
 	}
-	public void setITEMCOUNTORDER(int iTEMCOUNTORDER) {
-		ITEMCOUNTORDER = iTEMCOUNTORDER;
+	public void setITEMCOUNTORDER(BigInteger r) {
+		ITEMCOUNTORDER = r;
 	}
 	public String getIDOUT() {
 		return IDOUT;
@@ -107,11 +108,11 @@ public class FerreroRequest {
 		
 		LOADINGDATE = lOADINGDATE;
 	}
-	public Integer getITEMCOUNTOUT() {
+	public BigInteger getITEMCOUNTOUT() {
 		return ITEMCOUNTOUT;
 	}
-	public void setITEMCOUNTOUT(int iTEMCOUNTOUT) {
-		ITEMCOUNTOUT = iTEMCOUNTOUT;
+	public void setITEMCOUNTOUT(BigInteger r) {
+		ITEMCOUNTOUT = r;
 	}
 	public Integer getRES() {
 		return RES;

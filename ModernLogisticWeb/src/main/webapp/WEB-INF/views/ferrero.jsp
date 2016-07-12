@@ -14,21 +14,49 @@
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.min.js"></script>
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script>
 		<script type="text/javascript" src="resources/js/ferreroAngular.js"></script>
+		<script src="resources/js/calendar_ru.js" type="text/javascript"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Ferrero</title>
 </head>
-<body>
+<body ng-controller="MyCtrl">
+
 	<div id="header">
-		<h1>Modern Logistic<img class="logoIcon" src="resources/images/citizen_globe.gif"/>ftware</h1>
+		<h1>Modern Logistic<img class="logoIcon" src="resources/images/citizen_globe.gif"/>ftware</h1>	
+		
+</form>
 	</div>
+		{{PostDataResponse}}
+	
 	
 		<div id="content">
-		 <div id="centralBar" ng-controller="MyCtrl">
+		 <div id="centralBar" >
     		<div class="gridStyle" ng-grid="gridOptions"></div>
         </div>
         
+       	<div class="centralFormPart">
+					<!-- <form id="form" action="getOrders/get" method="get">  -->
+						<div><label class="labelStartDate" for="startDate">Нач. дата:</label></div> 
+						<div><input id="startDate" type="date" name="startDate" placeholder="date" required="required" ng-model="datestart"> </div>
+						<div><label class="labelEndDate" for="endDate">Кон. дата:</label></div>
+						<div><input id="endDate" type="date" name="endDate" placeholder="date" required="required" ng-model="dateend"></div>
+					<!-- </form> -->
         
+       
+       		
+					
+					 
+   					
+    
+   	
+					
+						<div class="formBottomPanel">
+						
+							 <button class="excelBut" ng-click="sendData()">Сгенерировать документ</button>
+						</div>
+ 				</div>
+        
+        </div>
 	
 </body>
 </html>

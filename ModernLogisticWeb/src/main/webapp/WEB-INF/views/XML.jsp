@@ -68,6 +68,7 @@
             <li><a href="resources/tabs-XML/tab-3.jsp">EDI Eko</a></li>
             <li><a href="resources/tabs-XML/tab-4.jsp">EDI LKTrans</a></li>
 			<li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
+			<li><a href="resources/tabs-XML/tab-6.jsp">EDI Food</a></li>
         </ul>
     </div>
     <div id="footer">
