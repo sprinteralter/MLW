@@ -43,17 +43,22 @@ public class FerreroRequest {
     String PRODTREENAME;
     String PAYTYPENAME;
     
+    public FerreroRequest() {
+		
+		// TODO Auto-generated constructor stub
+	}
    
+	
 	public String getPAYTYPENAME() {
 		return PAYTYPENAME;
 	}
 	public void setPAYTYPENAME(String pAYTYPENAME) {
 		PAYTYPENAME = pAYTYPENAME;
 	}
-	public int getIdorder() {
+	public Integer getIdorder() {
 		return idorder;
 	}
-	public void setIdorder(int idorder) {
+	public void setIdorder(Integer idorder) {
 		this.idorder = idorder;
 	}
 	public java.sql.Date getDOCDATEORDER() {
@@ -63,25 +68,25 @@ public class FerreroRequest {
 		DOCDATEORDER = dOCDATEORDER;
 		
 	}
-	public int getAGENTID() {
+	public Integer getAGENTID() {
 		return AGENTID;
 	}
 	public void setAGENTID(int aGENTID) {
 		AGENTID = aGENTID;
 	}
-	public int getCLIENTID() {
+	public Integer getCLIENTID() {
 		return CLIENTID;
 	}
-	public void setCLIENTID(int cLIENTID) {
+	public void setCLIENTID(Integer cLIENTID) {
 		CLIENTID = cLIENTID;
 	}
-	public int getGOODSID() {
+	public Integer getGOODSID() {
 		return GOODSID;
 	}
 	public void setGOODSID(int gOODSID) {
 		GOODSID = gOODSID;
 	}
-	public int getITEMCOUNTORDER() {
+	public Integer getITEMCOUNTORDER() {
 		return ITEMCOUNTORDER;
 	}
 	public void setITEMCOUNTORDER(int iTEMCOUNTORDER) {
@@ -102,19 +107,19 @@ public class FerreroRequest {
 		
 		LOADINGDATE = lOADINGDATE;
 	}
-	public int getITEMCOUNTOUT() {
+	public Integer getITEMCOUNTOUT() {
 		return ITEMCOUNTOUT;
 	}
 	public void setITEMCOUNTOUT(int iTEMCOUNTOUT) {
 		ITEMCOUNTOUT = iTEMCOUNTOUT;
 	}
-	public int getRES() {
+	public Integer getRES() {
 		return RES;
 	}
 	public void setRES(int rES) {
 		RES = rES;
 	}
-	public int getRESRATE() {
+	public Integer getRESRATE() {
 		return RESRATE;
 	}
 	public void setRESRATE(Integer r) {
@@ -138,7 +143,7 @@ public class FerreroRequest {
 	public void setGOODSNAME(String gOODSNAME) {
 		GOODSNAME = gOODSNAME;
 	}
-	public int getGOODSGROUP() {
+	public Integer getGOODSGROUP() {
 		return GOODSGROUP;
 	}
 	public void setGOODSGROUP(int gOODSGROUP) {
