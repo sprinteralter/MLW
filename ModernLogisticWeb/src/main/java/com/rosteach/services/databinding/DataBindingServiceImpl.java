@@ -15,6 +15,13 @@ public class DataBindingServiceImpl implements DataBindingService{
 	@Autowired
 	private BindingDataDAO dataDAO;
 	@Override
+	public List<ClientRequestDetails> getDetailsById(Integer id,
+			String database, 
+			String username, 
+			String password){
+		return dataDAO.getDetailsById(id, database, username, password);
+	};
+	@Override
 	public HashMap<ClientRequest,List<ClientRequestDetails>> getClientsRequests(
 			String database,
 			String username,

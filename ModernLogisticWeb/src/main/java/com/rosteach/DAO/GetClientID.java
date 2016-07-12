@@ -3,8 +3,6 @@ package com.rosteach.DAO;
  * @author Rostislav Pavlenko
  * */
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

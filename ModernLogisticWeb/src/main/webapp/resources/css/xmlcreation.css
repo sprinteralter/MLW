@@ -286,9 +286,14 @@ body{
     position: absolute;
     border-radius: 50%;
 }
-#content .buttons img:hover{
-     -webkit-transform: scale(0.9);
+#content .buttons #generate:hover{
+    -moz-transform: scale(0.9); /* Для Firefox */
+    -ms-transform: scale(0.9); /* Для IE */
+    -webkit-transform: scale(0.9); /* Для Safari, Chrome, iOS */
+    -o-transform: scale(0.9); /* Для Opera */
+    transform: scale(0.9);
 }
+
 #content .rightTA{
     margin: 0;
     padding:0.5%;

@@ -18,11 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import com.rosteach.xml.DocListInvoice;
 
-import java.sql.*;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Repository
 public class InsertionDocInvoice {
@@ -102,24 +100,13 @@ public class InsertionDocInvoice {
 			properties.put("javax.persistence.jdbc.user", login);
 			properties.put("javax.persistence.jdbc.password", password);
 			
-			/*Properties prop = new Properties();
-			prop.setProperty("user", login);
-			prop.setProperty("password", password);
-			prop.setProperty("encoding", "win1251");*/
 			/**
-			 * get connection to database method getConnection(url,user,password,encoding)
+			 * get connection from EntityManager to database
 			 * */
-			//Class.forName("org.firebirdsql.jdbc.FBDriver").newInstance();
-			//Connection conn= DriverManager.getConnection(dataBase,prop);
-			//System.out.println("Connection for Header execution Start with success!!!");
 			
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("database", properties); 
 		    EntityManager em =  emf.createEntityManager();
 		    em.getTransaction().begin();
-			/**
-			 * statement creation
-			 * */
-			//Statement stm = conn.createStatement();
 			/**
 			 * Creation of GetClientID for getClientId
 			 * */
@@ -140,6 +127,10 @@ public class InsertionDocInvoice {
 								double tempSum = 0;
 								double temp = 0;
 								
+								String parse = document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber();
+								
+								
+								String invoiceNumber = "CTT"+parse.substring(3, parse.length()); 
 								
 								/**
 								 * SQL query creation (insertion)
@@ -148,28 +139,16 @@ public class InsertionDocInvoice {
 										+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceDate()+"', "
 										+id.getClientId(path+s[j], x, em)+", 0, NULL, '"
 										+document.getDocumentInvoice().get(x).getTaxInvoice().get(0).getTaxNumber()+"', NULL, NULL, NULL, NULL, NULL, '"
-										+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber()+"', NULL, NULL, NULL, NULL, NULL, 0)");
-								
-								/*String sqlH ="EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"
-											+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceDate()+"', "
-											+id.getClientId(path+s[j], x, stm)+", 0, NULL, '"
-											+document.getDocumentInvoice().get(x).getTaxInvoice().get(0).getTaxNumber()+"', NULL, NULL, NULL, NULL, NULL, '"
-											+document.getDocumentInvoice().get(x).getInvoiceHeader().get(0).getInvoiceNumber()+"', NULL, NULL, NULL, NULL, NULL, 0)";*/
+										+invoiceNumber+"', NULL, NULL, NULL, NULL, NULL, 0)");
+
 								/**
-								 * process the result set
+								 * process the output id
 								 * */
-								//ResultSet rsHeader = stm.executeQuery(sqlH);
-								/*String val = "";
-									while(rsHeader.next()) {
-										val = rsHeader.getString("ID");
-									}*/
-								
 								int outputId = (Integer)headerQuery.getSingleResult();
 								
-								System.out.println("Connection for Header execution End with success!!! Output ID is: "+outputId);
 								for(int i=0;i<=document.getDocumentInvoice().get(x).getInvoiceLines().size()-1;i++){
 											/**
-											 * SQL query creation (insertion)
+											 * SQL query for details creation (insertion)
 											 * */
 											for(int z=0;z<=document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().size()-1;z++){
 												/*String sqlD ="EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT_CODE("+val+", "
@@ -179,7 +158,10 @@ public class InsertionDocInvoice {
 												Query detailsQuery = em.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINVDET_INSERT_CODE("+outputId+", "
 														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getEAN()+", "+"Null"+", "
 														+document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getInvoiceQuantity()+", Null)");
-												
+												/**
+												*executing our query
+												  */
+												detailsQuery.executeUpdate();
 												temp = Double.parseDouble(document.getDocumentInvoice().get(x).getInvoiceLines().get(i).getLines().get(z).getNetAmount());
 												System.out.println(temp);
 												tempSum+=temp;
@@ -195,7 +177,7 @@ public class InsertionDocInvoice {
 						}
 					}
 				}}
-				em.getTransaction().commit();
+			em.getTransaction().commit();
 			}
 			catch(Exception ex){
 				ex.getStackTrace();

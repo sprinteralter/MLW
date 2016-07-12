@@ -7,6 +7,10 @@ import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
 
 public interface DataBindingService {
+	public List<ClientRequestDetails> getDetailsById(Integer id,
+			String database, 
+			String username, 
+			String password);
 	public HashMap<ClientRequest,List<ClientRequestDetails>> getClientsRequests(
 			String database,
 			String username,
