@@ -126,7 +126,11 @@ public class XmlGenerator {
 			
 				note.setHEAD(head);
 				//creating our xml document
-				marshaller.marshal(note, new File("C:/Users/admin/Desktop/forgenxml","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
+				File directory = new File("C:/MLW/XMLDESADV/");
+				if(!directory.exists()){
+					directory.mkdirs();
+				}
+				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
 			}
 			EntityManagerFactory emf = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();
@@ -138,15 +142,15 @@ public class XmlGenerator {
 			System.out.println("-----------------------"+ex.getMessage());
 		}
 		catch(JsonMappingException ex){
-			System.out.println("-----------------------"+ex.getStackTrace());
+			System.out.println("-----------------------"+ex.getMessage());
 		}
 		catch(JsonParseException ex){
-			ex.getStackTrace();
+			System.out.println("-----------------------"+ex.getMessage());
 		}
 		catch(IOException ex){
-			ex.getStackTrace();
-		} catch (DatatypeConfigurationException e) {
-			e.printStackTrace();
+			System.out.println("-----------------------"+ex.getMessage());
+		} catch (DatatypeConfigurationException ex) {
+			System.out.println("-----------------------"+ex.getMessage());
 		}
 		return result;
 	}

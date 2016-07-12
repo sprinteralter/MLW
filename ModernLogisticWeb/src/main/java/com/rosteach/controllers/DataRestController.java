@@ -43,7 +43,7 @@ public class DataRestController {
 		GetDetails currentUser = new GetDetails();
 		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
 	}
-	@RequestMapping(value="/getOutcomeinVoices", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	@RequestMapping(value="/getSalesInvoises", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<SPROutcomeInvoice>> getAllSalesInvoice(){
 		return null;//new ResponseEntity<List<SalesInvoice>>(requestsService.getAllRequests(),HttpStatus.OK);
 	}

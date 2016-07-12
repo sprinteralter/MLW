@@ -86,7 +86,7 @@ app.controller('myCtrl', function($scope, $http) {
     };
     
     
-    $http.get('data/getOutcomeinVoices',{headers: { 'Content-Transfer-Encoding': 'utf-8' }}).
+    $http.get('data/getInvoices',{headers: { 'Content-Transfer-Encoding': 'utf-8' }}).
     success(function(data) {
         $scope.myData = data;
     });
