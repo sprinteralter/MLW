@@ -44,19 +44,18 @@ public class FerreroRequestServiceIMPL implements FerreroRequestService {
 	    EntityManager em =  emf.createEntityManager();
 	    Query oneDay = em.createNativeQuery("select"
 	    		+ " AGENTSNAME, CLIENTSNAMEORD,  ADRESSLOCORD, PAYTYPENAME, IDORDER, DOCDATEORDER, LOADINGDATE"
-	    		+ " from SPR_ORDERSINMIGRDET_RES5('"+startdate+"','"+enddate+"',5072) "
+	    		+ " from SPR_ORDERSINMIGRDET_RES_FER('"+startdate+"','"+enddate+"',5072) "
 	    		+ "group by AGENTSNAME, CLIENTSNAMEORD,  ADRESSLOCORD, PAYTYPENAME, IDORDER, DOCDATEORDER, LOADINGDATE");
 	    
 	    List<Object[]> order =  oneDay.getResultList(); 
 	    List<FerreroRequest24> orders24 = new ArrayList<FerreroRequest24>();
-	    
 	    FerreroRequest24 fr; 
 	    
 	    for(int i=0; i < order.size(); i++ ){
 	    	fr  = new FerreroRequest24();	    	
 	        Object[] r = (Object[]) order.get(i);
 	        
-	        	 fr.setAGENTSNAME((String) r[0]);
+	        	fr.setAGENTSNAME((String) r[0]);
 	 	        fr.setCLIENTSNAMEORD((String) r[1]);
 	 	        fr.setADRESSLOCORD((String) r[2]);	
 	 	        fr.setPAYTYPENAME((String) r[3]);
