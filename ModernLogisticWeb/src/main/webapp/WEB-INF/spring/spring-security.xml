@@ -62,7 +62,7 @@
 	</beans:bean>
 
 	<beans:bean id="failureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-		<beans:property name="defaultFailureUrl" value="/reg" />
-	</beans:bean>
+		<beans:property name="defaultFailureUrl" value="/login?error=true" />
+	</beans:bean> 
   
 </beans:beans>

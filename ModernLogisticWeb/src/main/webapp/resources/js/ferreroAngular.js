@@ -1,7 +1,3 @@
-/**
- * @author Pavlenko R.A.
- */
-
 
   	 
 		var xhr = new XMLHttpRequest();

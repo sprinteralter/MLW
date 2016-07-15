@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.min.js"></script>
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script>
 		<script type="text/javascript" src="resources/js/ferreroAngular.js"></script>
-		<script src="resources/js/calendar_ru.js" type="text/javascript"></script>
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Ferrero</title>
@@ -41,15 +40,7 @@
 						<div><label class="labelEndDate" for="endDate">Кон. дата:</label></div>
 						<div><input id="endDate" type="date" name="endDate" placeholder="date" required="required" ng-model="dateend"></div>
 					<!-- </form> -->
-        
-       
-       		
-					
-					 
-   					
-    
-   	
-					
+
 						<div class="formBottomPanel">
 						
 							 <button class="excelBut" ng-click="sendData()">Сгенерировать документ</button>

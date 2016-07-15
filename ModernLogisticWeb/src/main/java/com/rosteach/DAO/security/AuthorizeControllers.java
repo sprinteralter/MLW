@@ -1,5 +1,15 @@
 package com.rosteach.DAO.security;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +34,7 @@ public class AuthorizeControllers {
 	                               @RequestParam(value = "password") String password,
 	                               @RequestParam(value = "dataBase") String database
 	                               ) {
-	    	
-	    	
-			
+
 			User check = userDao.getUserByName(name, database);
 			
 			if(check == null){
@@ -52,17 +60,52 @@ public class AuthorizeControllers {
 				}
 				
 	       User user = new User(name, password, db, "USER");
-	       userDao.createUser(user);
-	       return new ModelAndView("login");
-			}
 	       
-			return new ModelAndView("reg");
+	       
+	       try{
+	       Map<String,String> properties = new HashMap<String,String>();
+			properties.put("javax.persistence.jdbc.url", db);
+			properties.put("javax.persistence.jdbc.user", name);
+			properties.put("javax.persistence.jdbc.password", password);
+			
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("database", properties); 
+			EntityManager em =  emf.createEntityManager();
+			//em.close();
+	       
+	       userDao.createUser(user);
+	       ModelAndView model = new ModelAndView("login");
+	       model.addObject("error", "Теперь вы можете войти, "+name+"!");
+	       return model;
+	       }catch(PersistenceException e){
+	    	   
+	    	   ModelAndView modelerr = new ModelAndView("reg");
+	    	   modelerr.addObject("error", "Проверьте правильность логина и пароля");
+		       return modelerr;
+	       }
+	       
+			}
+			
+			
+			ModelAndView err = new ModelAndView("reg");
+			err.addObject("error", "Пользователь "+ name + " уже существует!");
+			return err;
 	    }
 	    
+	    
+	    
 	    @RequestMapping(value = "/login", method = RequestMethod.GET)
-		public String login() {
+		public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
+			ModelAndView model = new ModelAndView();
+			if (error != null){
+				model.addObject("error", "Логин или пароль не верны!  <div><a href=\"./reg\">Вы здесь впервые?</a></div>");
+			}
+			return model;
+		}
+	    
+	  @RequestMapping(value = "/error", method = RequestMethod.GET)
+		public String error(HttpServletResponse resp) {
 			
-			return "login";
+			return "error";
 		}
 	
 }
