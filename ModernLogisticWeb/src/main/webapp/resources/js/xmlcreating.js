@@ -12,12 +12,12 @@ $(document).ready(function(){
         $('.deleteStep1').fadeIn(200);
         $('.leftTAoverlay').fadeIn(200,function(){
             $('.leftTAloader').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
-    						.animate({opacity: 1, top: "50%"}, 2000); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    						.animate({opacity: 1}, 200); // плaвнo прибaвляем прoзрaчнoсть
         });
         $('.buttons').fadeIn(2000);
-        refresh2=setInterval(signal2,1000);
-        refresh1 = clearInterval(refresh1);
+        $('#generate').show();
         stopSignal(refresh1, $('.step1 p'));
+        refresh2=setInterval(signal2,1000);
     });
     /* end */
     /* start */
@@ -27,7 +27,7 @@ $(document).ready(function(){
         $(this).fadeOut(500);
         $('.leftTAoverlay').fadeOut(200, function(){
              $('.leftTAloader').css("display", "none") // убирaем у мoдaльнoгo oкнa display: none;
-    						.animate({opacity: 0, top: "0%"}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    						.animate({opacity: 0}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
         });
         $('.buttons').fadeOut(200);
         setInterval(signal1,1000);
@@ -87,5 +87,56 @@ $(document).ready(function(){
     	$('.deleteStep1').fadeOut(200);
     	refresh3 = setInterval(signal3,1000); 
     	stopSignal(refresh2, $('.step2 p'));
+    	stopSignal(refresh1, $('.step1 p'));
     });
+    /*start sending files to FTP*/
+    $('.sendNotification').click(function(){
+    	$.ajax({
+    		method:"GET",
+    		url:"data/connectToFtpEDI",
+    		beforeSend: function(){
+    			$('.rightTAoverlay').fadeIn(200,function(){
+    	            $('.rightTAloader').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
+    	    						.animate({opacity: 0.5}, 200); // плaвнo прибaвляем прoзрaчнoсть
+    	        });
+    			$('#overlay').fadeIn(200, function(){
+    	             $('#loader').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
+    	    						.animate({opacity: 1}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    	             $('.leftTAloader').animate({opacity: 0.5}, 200);
+    	        });
+    			
+    		},
+    		success: function(data){
+    			/*$("#overlay").fadeOut(200, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+        			function(){ // пoсле выпoлнения предъидущей aнимaции
+    	    				$("#applymessage")
+        						.css("display", "none").animate({opacity: 0, top: "50%"}, 200);
+        		});
+    	    		$('.rightinput').text(data.ids);
+    	    		$('.rightinput').show();*/
+    			
+    	    },
+    	    error:function(){},
+    	    complete:function(){
+    	    	$('#overlay').fadeOut(200, function(){
+    	    		$('#loader').css("display", "none") // убирaем у мoдaльнoгo oкнa display: none;
+   	    						.animate({opacity: 0}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    	    		$('.sendConfirmation').show();
+    	    		$('.leftTAloader').animate({opacity: 1}, 200);
+    	    		$('.rightTAloader').animate({opacity: 1}, 200);
+    	    	});
+    	    	$("#generate").hide();
+    	    	$("#refresh").show();
+    	    	$('.step3').stop().css({"background": "rgb(56, 255, 126)"});
+    	    	$('.step3 p').stop().css({"color":"rgb(8, 48, 22)"});
+    	    	$('.step3 p').text('Шаг 3: Данные отправлены!');
+    	    	stopSignal(refresh3, $('.step3 p'));
+    	    }
+    	})
+    });
+    
+    $('#refresh').click(function(){
+    	location.reload();
+    });
+    
 });

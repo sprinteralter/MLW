@@ -32,7 +32,7 @@
 	</div>
 	<div id="content">
 		<div class="leftBar">
-	        <div class="back" title="Главная"><a href="<%=request.getContextPath()%>/"><img src="resources/images/left_arrow.png" width=30px height=30px/></a></div>
+	        <div class="back" title="Главная"><a href="<%=request.getContextPath()%>/"><img src="resources/images/previous.png" width=30px height=30px/></a></div>
 			<div class="info" title="Info"><a href="toolsInfo"><img src="resources/images/info.png" width=30px height=30px;/></a></div>
 		</div>
 		<div class="firstline">

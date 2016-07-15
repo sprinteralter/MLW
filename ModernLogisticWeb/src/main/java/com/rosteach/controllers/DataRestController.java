@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.rosteach.DAO.security.GetDetails;
+import com.rosteach.connection.FTPConnectionEDI;
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
+import com.rosteach.entities.DESADVnotification;
 //import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
 import com.rosteach.entities.SPROutcomeInvoice;
@@ -26,6 +28,7 @@ import com.rosteach.xmlgen.XmlGenerator;
 @RestController
 @RequestMapping(value= "/data")
 public class DataRestController {
+	
 	@Autowired
 	private SPROutcomeInvoiceService invoicesService;
 	
@@ -43,25 +46,30 @@ public class DataRestController {
 		GetDetails currentUser = new GetDetails();
 		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
 	}
-	@RequestMapping(value="/getSalesInvoises", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<SPROutcomeInvoice>> getAllSalesInvoice(){
-		return null;//new ResponseEntity<List<SalesInvoice>>(requestsService.getAllRequests(),HttpStatus.OK);
+	@RequestMapping(value="/connectToFtpEDI", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<String> checkConnectionFTP(){
+		String result;
+		
+		FTPConnectionEDI connection = new FTPConnectionEDI();
+			boolean check = connection.setConnection();
+			if(check==true){
+				boolean send = connection.sendFiles();
+				result = "{'result':'send_"+send+"'}";
+			}
+			else{
+				result = "{'result':'connection_"+check+"'}";
+			}
+		System.out.println(result);
+		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
 	/**
 	 * method for generating all needed data for xml confirmation
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<String> confirmRequests(@RequestBody String request){
-		System.out.println("------------------------------"+request);
-		
+	public ResponseEntity<List<DESADVnotification>> confirmRequests(@RequestBody String request){
 		XmlGenerator generator = new XmlGenerator();
-		
-		boolean result = generator.generateNotification(request);
-		
-		System.out.println("--------------------"+result);
-		
-		
-		return new ResponseEntity<String>(request,HttpStatus.OK);
+		List<DESADVnotification> result = generator.generateNotification(request);
+		return new ResponseEntity<List<DESADVnotification>>(result,HttpStatus.OK);
 	}
 	/**
 	 * method for transfer data between databases
@@ -78,9 +86,9 @@ public class DataRestController {
 		String endDate = new Gson().fromJson(request, DataBind.class).getEndDate();
 		
 		System.out.println("name---------------"+name);
-		HashMap<ClientRequest,List<ClientRequestDetails>> service = dataService.getClientsRequests("alter_curent", name, password, ids, startDate, endDate);
+		HashMap<ClientRequest,List<ClientRequestDetails>> service = dataService.getClientsRequests("alter", "SYSDBA", "strongpass", "335216,335217", "13.07.2016", "13.07.2016");
 		
-		return dataService.setClientsRequestsWithDetails(service,"sprinter_curent",name,"sysadmin");
+		return dataService.setClientsRequestsWithDetails(service,"sprinter","SYSDBA","strongpass");
 		//new ResponseEntity<List<ClientRequest>>(dataService.getRequests("alter", name, password, ""),HttpStatus.OK);ResponseEntity<List<ClientRequest>>
     }
 }

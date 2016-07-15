@@ -23,15 +23,18 @@ public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
 		entityManager.getTransaction().begin();
 		
 		LocalDate date = LocalDate.now();
+		int nextday = date.getDayOfMonth()+1;
+		String curDate = date.getDayOfMonth()+"."+date.getMonthValue()+"."+date.getYear();
+		System.out.println("---------------date------------"+curDate);
 		
-		System.out.println("---------------date------------"+date);
 		
-		
-		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'01.07.2016','01.07.2016',0,Null, Null,Null,0)", SPROutcomeInvoice.class);
+		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'"+curDate+"','"+curDate+"',0,Null,Null,Null,0)", SPROutcomeInvoice.class);
 				
 		@SuppressWarnings("unchecked")
 		List<SPROutcomeInvoice> invoices = query.getResultList();
+		
 		EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+		
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		emf.close();

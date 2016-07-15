@@ -60,7 +60,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		HashMap<ClientRequest,List<ClientRequestDetails>> resultMap= new HashMap<ClientRequest,List<ClientRequestDetails>>();
 		
 		Map<String,String> props = new HashMap<String,String>();
-		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.13/3050:"+database);
+		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.17/3050:"+database);
 		props.put("javax.persistence.jdbc.user", username);
 		props.put("javax.persistence.jdbc.password", password);
 		
@@ -110,7 +110,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		 * Set properties for our persistence unit and into entityManagerFactory
 		 * */
 		Map<String,String> props = new HashMap<String,String>();
-		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.13/3050:"+database);
+		props.put("javax.persistence.jdbc.url", "jdbc:firebirdsql:192.168.20.16/3050:"+database);
 		props.put("javax.persistence.jdbc.user", username);
 		props.put("javax.persistence.jdbc.password", password);
 		
@@ -128,9 +128,14 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 			//define our details collection per key request
 			List<ClientRequestDetails> details = clientsRequests.get(key);
 			
+			System.out.println("key----clientId--------------"+key.getClientid());
+			Query getSprinterId = entityManagerInsert.createNativeQuery("select ID from client where BASECODE="+key.getClientid());
+			Integer sprinterId= (Integer)getSprinterId.getSingleResult();
+			System.out.println("----------alterid"+sprinterId);
+			
 			Query query = entityManagerInsert.createNativeQuery("EXECUTE PROCEDURE EPRORDERSOUTINV_INSERT('"+
-																key.getDocdate()+"',"+
-																3+","+ //needed real data
+																"15.07.2016"+"',"+//key.getDocdate() needed
+																sprinterId+","+ 
 																0+","+
 																null+","+
 																key.getComment()+","+
@@ -138,8 +143,8 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 																null+","+
 																null+","+
 																null+","+
-																key.getComment1()+","+
-																key.getComment2()+","+
+																key.getComment1()+",'"+
+																key.getComment2()+"',"+
 																null+","+
 																null+","+
 																null+","+
@@ -159,11 +164,12 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 				System.out.println();
 				System.out.println("----------------------------"+clientsRequests.size());
 				System.out.println();*/
+			System.out.println("details size------------------------"+details.size());
+			
 			for(ClientRequestDetails detail: details){
 				System.out.println("---------------------------Successfuly started execution!");
-				
-				
-				Query queryForGOODSID = entityManagerInsert.createNativeQuery("select id from goods where code='4823001400725'");
+
+				Query queryForGOODSID = entityManagerInsert.createNativeQuery("select id from goods where code='"+detail.getGOODSCODE()+"'");
 				Integer GOODSID= (Integer) queryForGOODSID.getSingleResult();
 					
 					System.out.println("------------------------------GoodsId"+GOODSID);	
@@ -176,7 +182,6 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 					queryForDetails.executeUpdate();
 					
 				System.out.println("---------------------------Successfuly completed execution!");
-				break;
 			}
 			
 			//System.out.println("-------------------------------------------------------"+result.get(0));
@@ -186,6 +191,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 		 * */
 		entityManagerInsert.getTransaction().commit();
 		entityManagerInsert.close();
+		entityManagerFactoryInsert.close();
 		return null;
 	}
 	

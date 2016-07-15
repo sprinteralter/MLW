@@ -111,7 +111,7 @@
             	};
             	alert(JSON.stringify(request));
             	$.ajax({
-            		url: 'getData/databind',
+            		url: 'data/databind',
             		type: 'post',
             		contentType: "application/json; charset=utf-8",
             		dataType: 'json',

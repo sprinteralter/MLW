@@ -14,7 +14,7 @@ public class SPROutcomeInvoice {
 	private Integer CLIENTID;
 	private String CLIENTSNAME;
 	private String CLIENTNAME;
-    java.sql.Date DOCDATE;
+    private String DOCDATE;
     private Integer PAYTYPEID;
     private String PAYTYPESNAME;
     private Integer PAYTYPEDEFAULTPROFITSTATE;
@@ -126,11 +126,11 @@ public class SPROutcomeInvoice {
 		CLIENTNAME = cLIENTNAME;
 	}
 
-	public java.sql.Date getDOCDATE() {
+	public String getDOCDATE() {
 		return DOCDATE;
 	}
 
-	public void setDOCDATE(java.sql.Date dOCDATE) {
+	public void setDOCDATE(String dOCDATE) {
 		DOCDATE = dOCDATE;
 	}
 

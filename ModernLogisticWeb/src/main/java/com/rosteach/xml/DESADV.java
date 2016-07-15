@@ -8,6 +8,7 @@
 
 package com.rosteach.xml;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -114,17 +115,16 @@ public class DESADV {
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar deliverydate;
     @XmlElement(name = "ORDERNUMBER")
-    protected int ordernumber;
-    @XmlElement(name = "ORDERDATE", required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar orderdate;
+    protected String ordernumber;
+    @XmlElement(name = "ORDERDATE")
+    protected String orderdate;
     @XmlElement(name = "DELIVERYNOTENUMBER")
     protected String deliverynotenumber;
     @XmlElement(name = "DELIVERYNOTEDATE", required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar deliverynotedate;
     @XmlElement(name = "CAMPAIGNNUMBER")
-    protected int campaignnumber;
+    protected String campaignnumber;
     @XmlElement(name = "HEAD", required = true)
     protected DESADV.HEAD head;
 
@@ -196,7 +196,7 @@ public class DESADV {
      * Gets the value of the ordernumber property.
      * 
      */
-    public int getORDERNUMBER() {
+    public String getORDERNUMBER() {
         return ordernumber;
     }
 
@@ -204,7 +204,7 @@ public class DESADV {
      * Sets the value of the ordernumber property.
      * 
      */
-    public void setORDERNUMBER(int value) {
+    public void setORDERNUMBER(String value) {
         this.ordernumber = value;
     }
 
@@ -216,7 +216,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getORDERDATE() {
+    public String getORDERDATE() {
         return orderdate;
     }
 
@@ -228,7 +228,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setORDERDATE(XMLGregorianCalendar value) {
+    public void setORDERDATE(String value) {
         this.orderdate = value;
     }
 
@@ -276,7 +276,7 @@ public class DESADV {
      * Gets the value of the campaignnumber property.
      * 
      */
-    public int getCAMPAIGNNUMBER() {
+    public String getCAMPAIGNNUMBER() {
         return campaignnumber;
     }
 
@@ -284,7 +284,7 @@ public class DESADV {
      * Sets the value of the campaignnumber property.
      * 
      */
-    public void setCAMPAIGNNUMBER(int value) {
+    public void setCAMPAIGNNUMBER(String value) {
         this.campaignnumber = value;
     }
 
@@ -383,7 +383,7 @@ public class DESADV {
         @XmlElement(name = "BUYER")
         protected int buyer;
         @XmlElement(name = "DELIVERYPLACE")
-        protected int deliveryplace;
+        protected String deliveryplace;
         @XmlElement(name = "SENDER")
         protected String sender;
         @XmlElement(name = "RECIPIENT")
@@ -429,7 +429,7 @@ public class DESADV {
          * Gets the value of the deliveryplace property.
          * 
          */
-        public int getDELIVERYPLACE() {
+        public String getDELIVERYPLACE() {
             return deliveryplace;
         }
 
@@ -437,7 +437,7 @@ public class DESADV {
          * Sets the value of the deliveryplace property.
          * 
          */
-        public void setDELIVERYPLACE(int value) {
+        public void setDELIVERYPLACE(String value) {
             this.deliveryplace = value;
         }
 
@@ -654,7 +654,7 @@ public class DESADV {
                 @XmlElement(name = "DELIVEREDUNIT", required = true)
                 protected String deliveredunit;
                 @XmlElement(name = "ORDEREDQUANTITY")
-                protected int orderedquantity;
+                protected Double orderedquantity;
                 @XmlElement(name = "ORDERUNIT", required = true)
                 protected String orderunit;
                 @XmlElement(name = "PRICE")
@@ -754,7 +754,7 @@ public class DESADV {
                  * Gets the value of the orderedquantity property.
                  * 
                  */
-                public int getORDEREDQUANTITY() {
+                public Double getORDEREDQUANTITY() {
                     return orderedquantity;
                 }
 
@@ -762,8 +762,8 @@ public class DESADV {
                  * Sets the value of the orderedquantity property.
                  * 
                  */
-                public void setORDEREDQUANTITY(int value) {
-                    this.orderedquantity = value;
+                public void setORDEREDQUANTITY(Double orderquantity) {
+                    this.orderedquantity = orderquantity;
                 }
 
                 /**
