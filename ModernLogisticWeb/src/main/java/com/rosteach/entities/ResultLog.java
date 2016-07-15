@@ -1,6 +1,6 @@
 package com.rosteach.entities;
 
-public class DESADVnotification {
+public class ResultLog {
 	private String totalname;
 	private String totaldate;
 	private String totalbuyer;
@@ -10,7 +10,7 @@ public class DESADVnotification {
 	private Integer totalorderedquantity;
 	private Double totalorderedprice;
 	
-	public DESADVnotification(){
+	public ResultLog(){
 		
 	}
 

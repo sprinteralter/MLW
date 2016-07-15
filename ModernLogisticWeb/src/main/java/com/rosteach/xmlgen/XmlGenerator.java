@@ -23,8 +23,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rosteach.DAO.security.GetDetails;
-import com.rosteach.entities.DESADVnotification;
 import com.rosteach.entities.EntityManagerReferee;
+import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
 import com.rosteach.util.DateUtils;
@@ -39,14 +39,14 @@ public class XmlGenerator{
 	public XmlGenerator(){
 	}
 	
-	public boolean generateConfirmation(String request){
-		return true;
+	public List<ResultLog> generateConfirmation(String request){
+		return null;
 	}
 	
-	public List<DESADVnotification> generateNotification(String request){
+	public List<ResultLog> generateNotification(String request){
 		//needed variables for confirmation resultlist
-		DESADVnotification confirmation = new DESADVnotification();
-		List<DESADVnotification> confirmationList = new LinkedList<DESADVnotification>();
+		ResultLog result = new ResultLog();
+		List<ResultLog> resultList = new LinkedList<ResultLog>();
 		try{
 			//creating JAXB context and Marshaller for XML
 			JAXBContext context = JAXBContext.newInstance(DESADV.class);
@@ -82,8 +82,8 @@ public class XmlGenerator{
 				note.setNUMBER(number+1);
 				
 				note.setDATE(date);
-				confirmation.setTotalname("Уведомление об отгрузке по расходной накладной: "+invoice.getREGNUMBER());
-				confirmation.setTotaldate(localdate.toString());
+				result.setTotalname("Уведомление об отгрузке по расходной накладной: "+invoice.getREGNUMBER());
+				result.setTotaldate(localdate.toString());
 		
 				note.setDELIVERYDATE(deliverydate);
 				
@@ -165,7 +165,7 @@ public class XmlGenerator{
 					directory.mkdirs();
 				}
 				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+localdate+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
-				confirmationList.add(confirmation);
+				resultList.add(result);
 			}
 			EntityManagerFactory emf = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();
@@ -186,6 +186,6 @@ public class XmlGenerator{
 		} catch (DatatypeConfigurationException ex) {
 			System.out.println("-----------------------"+ex.getMessage());
 		}
-		return confirmationList;
+		return resultList;
 	}
 }

@@ -17,9 +17,9 @@ import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.connection.FTPConnectionEDI;
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
-import com.rosteach.entities.DESADVnotification;
 //import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
+import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 //import com.rosteach.services.ClientsRequestsService;
 import com.rosteach.services.SPROutcomeInvoiceService;
@@ -67,11 +67,15 @@ public class DataRestController {
 	 * method for generating all needed data for xml confirmation
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<DESADVnotification>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
+	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
+		List<ResultLog> result =null;
 		XmlGenerator generator = new XmlGenerator();
-		List<DESADVnotification> result = generator.generateNotification(request);
-		System.out.println(option);
-		return new ResponseEntity<List<DESADVnotification>>(result,HttpStatus.OK);
+		if(option=="notificate"){
+			result = generator.generateNotification(request);
+		}else if(option=="confirm"){
+			result = generator.generateConfirmation(request);
+		}
+		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
 	}
 	/**
 	 * method for transfer data between databases

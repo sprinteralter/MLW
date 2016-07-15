@@ -56,6 +56,7 @@
 	            <select ng-model="selectedData">
 	  				<option value="confirm">Подтверждение</option>
 	  				<option value="notificate">Уведомление</option>
+	  				<option value="" selected="selected"></option>
 				</select>
 			</div>
             <button ng-click="sendData()" class="accOption">Выбрать операцию</button>
