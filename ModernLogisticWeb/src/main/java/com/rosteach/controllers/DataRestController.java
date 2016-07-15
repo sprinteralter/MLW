@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,9 +67,10 @@ public class DataRestController {
 	 * method for generating all needed data for xml confirmation
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<DESADVnotification>> confirmRequests(@RequestBody String request){
+	public ResponseEntity<List<DESADVnotification>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
 		XmlGenerator generator = new XmlGenerator();
 		List<DESADVnotification> result = generator.generateNotification(request);
+		System.out.println(option);
 		return new ResponseEntity<List<DESADVnotification>>(result,HttpStatus.OK);
 	}
 	/**

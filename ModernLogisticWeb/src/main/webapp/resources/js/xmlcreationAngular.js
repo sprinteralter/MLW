@@ -6,6 +6,7 @@ var app = angular.module('myApp', ['ngGrid']);
 app.controller('myCtrl', function($scope, $http ) {    
 	
 	$scope.myData=null;
+	$scope.selectedData=null;
 	$scope.PostDataResponse;
 	$scope.selectedRows = [];
 	
@@ -33,9 +34,10 @@ app.controller('myCtrl', function($scope, $http ) {
     $scope.sendData = function(){
     	var config = {
                 headers : {
-                	'Content-Transfer-Encoding': 'utf-8'
+                	'Content-Transfer-Encoding': 'utf-8',
+                	'key': $scope.selectedData
                 }
-         }
+        }
     	 $http.post('data/confirm', $scope.selectedRows, config)
          .success(function (data, status, headers, config) {
              $scope.PostDataResponse = data;

@@ -50,6 +50,16 @@
             <p class="accMess"></p>
             <button class="accMessOk">Ok</button>
         </div>
+        <div id="selectoption">
+        	<div class="selection">
+        		<p>Выберите операцию</p>
+	            <select ng-model="selectedData">
+	  				<option value="confirm">Подтверждение</option>
+	  				<option value="notificate">Уведомление</option>
+				</select>
+			</div>
+            <button ng-click="sendData()" class="accOption">Выбрать операцию</button>
+        </div>
         <div id="overlay"></div>
         <div id="header">    
             <div class="infoBar">
@@ -86,7 +96,7 @@
                 </div>
             </div>
             <div class="buttons">
-                <img ng-click="sendData()" id="generate" src="resources/images/generate.png" alt="generate" title="Сгенерировать XML"/>
+                <img id="generate" src="resources/images/generate.png" alt="generate" title="Сгенерировать XML"/>
                 <img id="refresh" src="resources/images/refresh.png" alt="refresh" title="Повторная операция"/>
             </div>
             <div class="rightTA">

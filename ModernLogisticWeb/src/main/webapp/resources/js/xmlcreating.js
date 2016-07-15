@@ -80,6 +80,12 @@ $(document).ready(function(){
     	$(tag).stop().css({"color":"rgb(128, 128, 128)","borderColor":"rgb(128, 128, 128)"});
     }
     $('#generate').click(function(){
+    	$('#overlay').fadeIn(200, function(){
+            $('#selectoption').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
+   						.animate({opacity: 1}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    	});
+    });
+    $('.accOption').click(function(){
     	$('.step2').stop().css({"background": "rgb(56, 255, 126)"});
     	$('.step2 p').stop().css({"color":"rgb(8, 48, 22)"});
     	$('.step2 p').text('Шаг 2: документы сгенерированы!');
