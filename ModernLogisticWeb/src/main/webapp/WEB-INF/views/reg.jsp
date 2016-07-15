@@ -51,6 +51,9 @@
 
   <form role="form" enctype="multipart/form-data" class="form-signin" action="./useradd" method="post">
     <h2 class="form-signin-heading">Регистрация</h2>
+    <c:if test="${not empty error }">
+    <h5 class="form-signin-heading" style="color:red"> ${error}</h5>
+    </c:if>
     <div class="form-group"><input type="text" class="input-block-level" name="name" placeholder="Имя пользователя"></div>
     <div class="form-group"><input type="password" class="input-block-level" name="password" placeholder="пароль"></div>
  	<div class="form-group">

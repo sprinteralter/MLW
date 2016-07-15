@@ -21,6 +21,9 @@
             <c:url value="/j_spring_security_check" var="loginUrl"/>
             <form action="${loginUrl}" method="post">
                 <h2 class="form-signin-heading">Войти в систему</h2>
+                <c:if test="${not empty error }">
+               <h2 class="form-signin-heading" style="color:red"> ${error }</h2>
+                </c:if>
                 <input type="text" class="form-control-left" name="j_username" placeholder="Login" required autofocus value="">
                 <input type="password" class="form-control-right" name="password" placeholder="Password" required value=""><br>
                 <label>База данных: </label>
