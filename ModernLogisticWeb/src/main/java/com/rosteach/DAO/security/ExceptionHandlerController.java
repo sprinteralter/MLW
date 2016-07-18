@@ -30,7 +30,7 @@ public class ExceptionHandlerController {
         	
         StringBuilder sb = new  StringBuilder();
         Throwable cause = e.getCause();
-        while(cause.getCause() != null) {
+        while(cause != null) {
         	sb.append(cause.getCause()+"\n\n");
             cause = cause.getCause();
         }
