@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rosteach.DAO.security.GetDetails;
+import com.rosteach.entities.ClientRequestDetails;
 import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
@@ -89,14 +90,14 @@ public class XmlGenerator{
 				
 				Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				Integer orderid = (Integer)getorderId.getSingleResult();
-				
+				System.out.println("------------------------------orderid------------------------"+orderid);
 				//selecting ordernum from orders as comment2
 				Query getComment = entityManager.createNativeQuery("select COMMENT2 from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				String ordernumber = (String)getComment.getSingleResult();
-				
+				System.out.println("------------------------------ordernumber------------------------"+ordernumber);
 				Query getOrdersDate = entityManager.createNativeQuery("select DOCDATE from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				java.sql.Date orderdate = (java.sql.Date)getOrdersDate.getSingleResult();
-				
+				System.out.println("------------------------------orderdate------------------------"+orderdate);
 				note.setORDERNUMBER(ordernumber);
 				note.setORDERDATE(orderdate.toString());
 				note.setDELIVERYNOTENUMBER(invoice.getREGNUMBER());//regnumber from SPROutcomeinvoice
@@ -124,35 +125,80 @@ public class XmlGenerator{
 						DESADV.HEAD.PACKINGSEQUENCE packingSequence = new DESADV.HEAD.PACKINGSEQUENCE();
 						List<DESADV.HEAD.PACKINGSEQUENCE.POSITION> list= new ArrayList<DESADV.HEAD.PACKINGSEQUENCE.POSITION>();
 						
-						//query for details
-						Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+invoice.getID()+",Null,0,Null,Null,0,0)", SPROutcomeInvoiceDetails.class);	
+						//query for details of OrdersOutcomeInvoices
+						Query getORDERSOUTINVDET = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+orderid+",Null,0,Null,0, Null,Null,0,0) order by GOODSID", ClientRequestDetails.class);	
 						@SuppressWarnings("unchecked")
-						List<SPROutcomeInvoiceDetails> details = query.getResultList();
+						List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList();
 						
+						//query for details of OutcomeInvoices
+						Query getOutcomeDetails = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+invoice.getID()+",Null,0,Null,Null,0,0) order by GOODSID", SPROutcomeInvoiceDetails.class);	
+						@SuppressWarnings("unchecked")
+						List<SPROutcomeInvoiceDetails> outcomeDetails = getOutcomeDetails.getResultList();
 						
-						//query for client table from our database
-							for(int i =0; i<details.size();i++){
-								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
-								position.setPOSITIONNUMBER(i+1);
-								position.setPRODUCT(details.get(i).getGOODSCODE());
+							for(int i =0; i<ORDERSOUTINVDET.size();i++){
+								Integer OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
+								boolean checkpoint = false;
+								int checknumber=0;
+								for(int j =0; j<outcomeDetails.size()-1;j++){
+									Integer OutcomeGOODSID = outcomeDetails.get(j).getGOODSID(); 
+									if(OutcomeGOODSID.equals(OrderGOODSID)){
+										checkpoint=true;
+										checknumber=j;
+									}
+								}
+								System.out.println("--------------------checkpoint-------------------------"+checkpoint);
+									
+								if(checkpoint==false){
+									System.out.println("------------------nullPosition-------------------");
+									DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
+									position.setPOSITIONNUMBER(i+1);
+									position.setPRODUCT(null);
+									
+									position.setPRODUCTIDBUYER(0);//from clients 
+									position.setDELIVEREDQUANTITY(0.0);
+									
+									Query getORDERUNIT = entityManager.createNativeQuery("select SNAME from MEASURE where ID ="+outcomeDetails.get(checknumber).getMEASUREID());  
+									String orderUnit = (String)getORDERUNIT.getSingleResult();
+									position.setDELIVEREDUNIT(orderUnit);
+									
+									//setting our queries for orders details
+									Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+ORDERSOUTINVDET.get(i).getGOODSID());  
+									Double orderquantity = (Double)getORDEREDQUANTITY.getSingleResult();
+									position.setORDEREDQUANTITY(orderquantity);
 								
-								position.setPRODUCTIDBUYER(0);//from clients 
-								position.setDELIVEREDQUANTITY(details.get(i).getITEMCOUNT());
-								position.setDELIVEREDUNIT(details.get(i).getMEASURESNAME());
-								
-								//setting our queries for orders details
-								Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+details.get(i).getGOODSID());  
-								Double orderquantity = (Double)getORDEREDQUANTITY.getSingleResult();
-								position.setORDEREDQUANTITY(orderquantity);
-								
-								Query getORDERUNIT = entityManager.createNativeQuery("select SNAME from MEASURE where ID ="+details.get(i).getMEASUREID());  
-								String orderUnit = (String)getORDERUNIT.getSingleResult();
-								position.setORDERUNIT(orderUnit);
-								
-								position.setPRICE(details.get(i).getENDPRICE());
-								position.setDESCRIPTION(details.get(i).getGOODSNAME());
-								
-								list.add(position);
+									position.setORDERUNIT(orderUnit);
+									
+									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
+									position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
+									
+									list.add(position);
+								}
+								else{
+									System.out.println("------------------fullPosition-------------------");
+									DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
+									position.setPOSITIONNUMBER(i+1);
+									position.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
+									
+									position.setPRODUCTIDBUYER(0);//from clients 
+									position.setDELIVEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
+									position.setDELIVEREDUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
+									
+									//setting our queries for orders details
+									Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+outcomeDetails.get(i).getGOODSID());  
+									Double orderquantity = (Double)getORDEREDQUANTITY.getSingleResult();
+									position.setORDEREDQUANTITY(orderquantity);
+									
+									Query getORDERUNIT = entityManager.createNativeQuery("select SNAME from MEASURE where ID ="+1);  
+									String orderUnit = (String)getORDERUNIT.getSingleResult();
+									position.setORDERUNIT(orderUnit);
+									
+									System.out.println("--------------------------------"+outcomeDetails.get(checknumber).getENDPRICE());
+									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
+									position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
+									
+									list.add(position);
+									System.out.println("------------------fullFillPosition-------------------");
+								}	
 							}
 						
 				packingSequence.setPOSITION(list);

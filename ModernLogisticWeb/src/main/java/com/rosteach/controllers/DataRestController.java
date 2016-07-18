@@ -70,9 +70,9 @@ public class DataRestController {
 	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
 		List<ResultLog> result =null;
 		XmlGenerator generator = new XmlGenerator();
-		if(option=="notificate"){
+		if(option.equals("notificate")){
 			result = generator.generateNotification(request);
-		}else if(option=="confirm"){
+		}else if(option.equals("confirm")){
 			result = generator.generateConfirmation(request);
 		}
 		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
