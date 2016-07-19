@@ -30,6 +30,8 @@ import com.rosteach.xmlgen.XmlGenerator;
 @RequestMapping(value= "/data")
 public class DataRestController {
 	
+
+	
 	@Autowired
 	private SPROutcomeInvoiceService invoicesService;
 	

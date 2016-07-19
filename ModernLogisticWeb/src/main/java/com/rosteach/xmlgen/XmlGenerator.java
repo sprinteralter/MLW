@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -21,13 +22,19 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rosteach.DAO.order_info.Order_infoDAO;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.entities.ClientRequestDetails;
 import com.rosteach.entities.EntityManagerReferee;
+import com.rosteach.entities.Order_info;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
@@ -37,10 +44,13 @@ import com.rosteach.xml.DESADV.HEAD;
 import com.rosteach.xml.ordersp.ORDRSP;
 import com.rosteach.xml.ordersp.ORDRSP.HEAD.POSITION;
 
+
 public class XmlGenerator{
 	
 	private final GetDetails userdet = new GetDetails();
-
+	
+	@Autowired
+	public Order_infoDAO ord_info;
 	
 	public XmlGenerator(){
 	}
@@ -77,16 +87,32 @@ public class XmlGenerator{
 
 					Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ out.getCLIENTID());
 					String glnQ = (String) getPOSTCODE.getSingleResult();
+					Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");  
+					Integer orderid = (Integer)getorderId.getSingleResult();
+					//Order_info order = ord_info.getOrder_info_byKod(orderid); 	//get order by id
 					
+					EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
+				    EntityManager em =  emf.createEntityManager();					
+					Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();// oi.get(0);
+					
+					ord.setNUMBER(order.getOrder_kod());
 					ord.setHEAD(new ORDRSP.HEAD());
 					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
-					ord.getHEAD().setBuyer(Long.valueOf(glnQ)); //BUYER FROM ORDER.XML
+					ord.getHEAD().setBuyer(order.getBuyer()); 	//BUYER FROM ORDER.XML
 					ord.getHEAD().setDeliveryplace(Long.valueOf(glnQ));
 					ord.getHEAD().setSender(Long.valueOf("9863762978175"));
 					ord.getHEAD().setRecipient(Long.valueOf(glnQ));
 					
-					Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");  
-					Integer orderid = (Integer)getorderId.getSingleResult();
+					//add ORDERSP forming date and number
+					order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
+					order.setOrdersp_number(ord.getORDERNUMBER());
+					//ord_info.persistOrder(order);
+					
+					em.getTransaction().begin();
+				    em.persist(order);
+				    em.getTransaction().commit();
+				    em.close();
+				    
 					Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+out.getID()+",Null,0,Null,Null,0,0)", SPROutcomeInvoiceDetails.class);	
 					List<SPROutcomeInvoiceDetails> positions= (List<SPROutcomeInvoiceDetails>) query.getResultList();
 					
@@ -102,6 +128,7 @@ public class XmlGenerator{
 						p.setORDEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
 						p.setACCEPTEDQUANTITY(0.0);
 						p.setPRODUCTIDBUYER(ORDERSOUTINVDET.get(i).getITEMPRICE());
+						
 						
 						for(SPROutcomeInvoiceDetails o : positions ){
 							int outGoodsID = o.getGOODSID();
@@ -120,6 +147,7 @@ public class XmlGenerator{
 						if( p.getACCEPTEDQUANTITY().intValue() == 0 ){
 							p.setPRODUCTTYPE(3);
 						}
+						
 						ord.getHEAD().getPOSITION().add(p);
 					}
 					

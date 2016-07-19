@@ -17,15 +17,21 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.rosteach.DAO.order_info.Order_infoDAO;
+import com.rosteach.entities.Order_info;
 import com.rosteach.services.EdiService;
 import com.rosteach.xml.eko.ORDER;
 import com.rosteach.xml.eko.ORDER.HEAD.POSITION;
 
 @Repository
 public class EkoDAOImpl implements EkoDAO {
-
+	
+	@Autowired
+	public Order_infoDAO ord_info;
+	
 	@Override
 	public String Insert(String database, String name, String password, String path) throws SQLException, InstantiationException, IllegalAccessException {
 
@@ -52,6 +58,10 @@ public class EkoDAOImpl implements EkoDAO {
 			
 			//create order and get returned Order ID
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), ord.getNUMBER());
+			
+			ord_info.createOrder(orderID, ord.getNUMBER(), ord.getHEAD().getBUYER(), ord.getDATE().toGregorianCalendar().getTime());
+			
+		    
 			
 			//get list of order goods position
 			List<POSITION> positions = ord.getHEAD().getPOSITION();

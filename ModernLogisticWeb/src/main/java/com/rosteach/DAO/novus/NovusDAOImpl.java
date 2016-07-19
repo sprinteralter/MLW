@@ -1,24 +1,34 @@
 package com.rosteach.DAO.novus;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.xml.bind.JAXBContext;
 
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
+import com.rosteach.DAO.order_info.Order_infoDAO;
+import com.rosteach.entities.Order_info;
 import com.rosteach.services.EdiService;
 import com.rosteach.xml.novus.ORDER;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
 public class NovusDAOImpl implements NovusDAO {
+	
+	@Autowired
+	public Order_infoDAO ord_info;
 	
 	@Override
 	public String Insert(String database, String name, String password, String path) throws SQLException{
@@ -49,6 +59,10 @@ public class NovusDAOImpl implements NovusDAO {
 			}
 			
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
+			
+			//add buyer and orderID to mysql
+			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime());
+
 			
 			List<POSITION> positions = ord.getHEAD().getPOSITION();
 			for (POSITION p : positions){

@@ -6,13 +6,18 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.rosteach.DAO.order_info.Order_infoDAO;
 import com.rosteach.services.EdiService;
 import com.rosteach.xml.novus.ORDER;
 import com.rosteach.xml.novus.ORDER.HEAD.POSITION;
 
 public class SocratDAOImpl implements SocratDAO{
 
+	@Autowired
+	public Order_infoDAO ord_info;
+	
 	@Override
 	public String Insert(String database, String name, String password, String path)
 			throws SQLException, InstantiationException, IllegalAccessException {
@@ -40,7 +45,8 @@ public class SocratDAOImpl implements SocratDAO{
 			
 			//create order and get returned Order ID
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
-			
+			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime());
+
 			//get list of order goods position
 			List<POSITION> positions = ord.getHEAD().getPOSITION();
 			

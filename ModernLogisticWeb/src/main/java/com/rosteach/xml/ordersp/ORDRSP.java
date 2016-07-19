@@ -104,7 +104,7 @@ import com.rosteach.xml.lktrans.ORDER;
 public class ORDRSP {
 
     @XmlElement(name = "NUMBER")
-    protected short number;
+    protected long number;
     @XmlElement(name = "DATE", required = true)
     @XmlSchemaType(name = "date")
     protected XMLGregorianCalendar date;
@@ -131,7 +131,7 @@ public class ORDRSP {
      * Gets the value of the number property.
      * 
      */
-    public short getNUMBER() {
+    public long getNUMBER() {
         return number;
     }
 
@@ -139,8 +139,8 @@ public class ORDRSP {
      * Sets the value of the number property.
      * 
      */
-    public void setNUMBER(short value) {
-        this.number = value;
+    public void setNUMBER(long l) {
+        this.number = l;
     }
 
     /**
