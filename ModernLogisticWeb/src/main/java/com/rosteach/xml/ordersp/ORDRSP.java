@@ -123,7 +123,7 @@ public class ORDRSP {
     @XmlElement(name = "ACTION")
     protected byte action;
     @XmlElement(name = "CAMPAIGNNUMBER")
-    protected byte campaignnumber;
+    protected String campaignnumber;
     @XmlElement(name = "HEAD", required = true)
     protected ORDRSP.HEAD head;
 
@@ -299,7 +299,7 @@ public class ORDRSP {
      * Gets the value of the campaignnumber property.
      * 
      */
-    public byte getCAMPAIGNNUMBER() {
+    public String getCAMPAIGNNUMBER() {
         return campaignnumber;
     }
 
@@ -307,8 +307,8 @@ public class ORDRSP {
      * Sets the value of the campaignnumber property.
      * 
      */
-    public void setCAMPAIGNNUMBER(byte value) {
-        this.campaignnumber = value;
+    public void setCAMPAIGNNUMBER(String campaignNumber2) {
+        this.campaignnumber = campaignNumber2;
     }
 
     /**

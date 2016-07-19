@@ -46,39 +46,37 @@ public class XmlGenerator{
 	}
 	
 	public List<ResultLog> generateConfirmation(String request){
+		
+		List<ResultLog> resultList = new LinkedList<ResultLog>();
 		try {
 			ObjectMapper mapper = new ObjectMapper(); 
 			List<SPROutcomeInvoice> inputInvoices = null;
 			inputInvoices = mapper.readValue(request, new TypeReference<List<SPROutcomeInvoice>>(){});
-
-
+			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 			for (SPROutcomeInvoice out : inputInvoices){
+				ResultLog result = new ResultLog();
 				ORDRSP ord = new ORDRSP();
 				GregorianCalendar c = new GregorianCalendar();
 				DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
-				
-					
+
 				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");	
-			
-					
-				EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
+				
+				Query getCampaignNumber = entityManager.createNativeQuery("select DOGNUM from CLIENT where id ="+ out.getCLIENTID());  
+				String campaignNumber = (String)getCampaignNumber.getSingleResult();
+				ord.setCAMPAIGNNUMBER(campaignNumber);
+				
+				
 				Query orderQ = entityManager.createNativeQuery("select COMMENT2, DOCDATE from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");
 				  
 				List<Object[]> respQ = orderQ.getResultList();
-					
-			
+
 					ord.setDATE(datatypeFactory.newInstance().newXMLGregorianCalendar(format.format(c.getTime())));
 					ord.setORDERNUMBER(String.valueOf(respQ.get(0)[0]));
 						c.setTime(format.parse(String.valueOf(respQ.get(0)[1])));
 					ord.setORDERDATE(datatypeFactory.newInstance().newXMLGregorianCalendar(format.format(c.getTime())));
-					
-					
-					
-					com.rosteach.xml.ordersp.ORDRSP.HEAD orderSPHead = new com.rosteach.xml.ordersp.ORDRSP.HEAD();
-					
+
 					Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ out.getCLIENTID());
 					String glnQ = (String) getPOSTCODE.getSingleResult();
-					System.out.println(glnQ + " QGLN");
 					
 					ord.setHEAD(new ORDRSP.HEAD());
 					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
@@ -89,14 +87,12 @@ public class XmlGenerator{
 					
 					Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");  
 					Integer orderid = (Integer)getorderId.getSingleResult();
-					System.out.println(orderid + " ORDERID");
 					Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+out.getID()+",Null,0,Null,Null,0,0)", SPROutcomeInvoiceDetails.class);	
 					List<SPROutcomeInvoiceDetails> positions= (List<SPROutcomeInvoiceDetails>) query.getResultList();
 					
 					Query getORDERSOUTINVDET = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+orderid+",Null,0,Null,0, Null,Null,0,0) order by GOODSID", ClientRequestDetails.class);	
 					@SuppressWarnings("unchecked")
 					List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList();
-					System.out.println(ORDERSOUTINVDET.size() + " SIZE");
 					
 					for (int i=0; i < ORDERSOUTINVDET.size(); i++){
 						POSITION p = new POSITION();
@@ -106,11 +102,13 @@ public class XmlGenerator{
 						p.setORDEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
 						p.setACCEPTEDQUANTITY(0.0);
 						p.setPRODUCTIDBUYER(ORDERSOUTINVDET.get(i).getITEMPRICE());
+						
 						for(SPROutcomeInvoiceDetails o : positions ){
 							int outGoodsID = o.getGOODSID();
 							int ordGoodsID = ORDERSOUTINVDET.get(i).getGOODSID();
 							if(outGoodsID == ordGoodsID){
 								p.setACCEPTEDQUANTITY(o.getITEMCOUNT());
+								p.setPRICE(o.getENDPRICE());
 							}
 						}
 						if(p.getORDEREDQUANTITY().intValue() == p.getACCEPTEDQUANTITY().intValue()){
@@ -123,43 +121,9 @@ public class XmlGenerator{
 							p.setPRODUCTTYPE(3);
 						}
 						ord.getHEAD().getPOSITION().add(p);
-						
 					}
 					
 					
-					/*
-					for (int i=0; i < positions.size(); i++){
-						POSITION p = new POSITION();
-						p.setPOSITIONNUMBER((short) i);
-						p.setPRODUCT(Long.valueOf(positions.get(i).getGOODSCODE()));
-						p.setDESCRIPTION(positions.get(i).getGOODSNAME());
-						
-						
-						Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");  
-						Integer orderid = (Integer)getorderId.getSingleResult();
-						Query ordQuant = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+positions.get(i).getGOODSID()); 
-						Double ordQ = (Double) ordQuant.getSingleResult(); 
-						
-						p.setORDEREDQUANTITY(ordQ);
-						p.setACCEPTEDQUANTITY(positions.get(i).getITEMCOUNT());
-						if(p.getORDEREDQUANTITY().intValue() == p.getACCEPTEDQUANTITY().intValue()){
-							p.setPRODUCTTYPE(1);
-						}
-						if(p.getORDEREDQUANTITY().intValue() != p.getACCEPTEDQUANTITY().intValue() && p.getACCEPTEDQUANTITY().intValue() != 0 ){
-							p.setPRODUCTTYPE(2);
-						}
-						if( p.getACCEPTEDQUANTITY().intValue() == 0 ){
-							p.setPRODUCTTYPE(3);
-						}
-						ord.getHEAD().getPOSITION().add(p);
-					}
-					*/
-					
-					for (POSITION p : ord.getHEAD().getPOSITION()){
-						System.out.println(p.getPRODUCT());
-						System.out.println(p.getDESCRIPTION());
-
-					}
 					String date = String.valueOf(format.format(new Date()));
 					File directory = new File("C:/MLW/XMLORDERSP/"+date+"/");
 					if(!directory.exists()){
@@ -170,16 +134,27 @@ public class XmlGenerator{
 					Marshaller marshaller = context.createMarshaller();
 					marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 					marshaller.marshal(ord, new File("C:/MLW/XMLORDERSP/"+date+"/","ORDERSP_"+userdet.getName()+"_"+out.getREGNUMBER()+".xml"));
-
+					
+					result.setTotalbuyer(String.valueOf(ord.getHEAD().getBuyer()));
+					result.setTotaldate(String.valueOf(ord.getDELIVERYDATE()));
+					result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
+					result.setTotaldeliveryquantity(100);
+					result.setTotalname("name");
+					result.setTotalorderedprice(99.99);
+					result.setTotalorderedquantity(99);
+					resultList.add(result);
 					
 			}
+			
 			} catch (Exception  e) {
 				e.printStackTrace();
 				return (List<ResultLog>) e;
 			}
 		
-		return null;
+		return resultList;
 	}
+	
+	//*********************************************************************************************
 	
 	public List<ResultLog> generateNotification(String request){
 		//needed variables for confirmation resultlist
