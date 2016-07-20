@@ -69,8 +69,8 @@ app.controller('MyCtrl', function($scope, $http) {
 	        columnDefs: [
 	{field: 'agentsname', displayName: 'Торговый агент', width: "10%", enableCellEdit: false},
 	{field: 'clientsnameord', displayName: 'Название точки', width: "10%", enableCellEdit: false},
-	{field: 'adresslocord', displayName: 'Адресс точки', width: "10%", enableCellEdit: false},
-	{field: 'paytypename', displayName: 'форма опаты', width: "10%", enableCellEdit: false},
+	{field: 'adresslocord', displayName: 'Адрес точки', width: "10%", enableCellEdit: false},
+	{field: 'paytypename', displayName: 'форма оплаты', width: "10%", enableCellEdit: false},
 	{field: 'idorder', displayName: '№ заявки', width: "10%", enableCellEdit: false},
 	{field: 'docdateorder', displayName: 'Дата заявки', width: "10%", enableCellEdit: false},
 	{field: 'zakaz', displayName: 'кол-во заказов', width: "10%", enableCellEdit: false},

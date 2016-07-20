@@ -94,9 +94,9 @@ public class XmlGenerator{
 					
 					EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
 				    EntityManager em =  emf.createEntityManager();					
-					    //Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();// oi.get(0);
+					Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();// oi.get(0);
 					
-					ord.setNUMBER(132); // order.getOrder_kod());
+					ord.setNUMBER(order.getOrder_kod()); // order.getOrder_kod());
 					ord.setHEAD(new ORDRSP.HEAD());
 					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
 					ord.getHEAD().setBuyer(Long.valueOf(glnQ));//order.getBuyer()); 	//BUYER FROM ORDER.XML
@@ -105,14 +105,15 @@ public class XmlGenerator{
 					ord.getHEAD().setRecipient(Long.valueOf(glnQ));
 					
 					//add ORDERSP forming date and number
-				//	order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
-				//	order.setOrdersp_number(ord.getORDERNUMBER());
+					order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
+					order.setOrdersp_number(ord.getORDERNUMBER());
 					//ord_info.persistOrder(order);
 					
-				/*	em.getTransaction().begin();
+					em.getTransaction().begin();
 				    em.persist(order);
 				    em.getTransaction().commit();
-				    em.close();*/
+				    em.clear();
+				    em.close();
 				    
 					Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+out.getID()+",Null,0,Null,Null,0,0) order by GOODSID", SPROutcomeInvoiceDetails.class);	
 					List<SPROutcomeInvoiceDetails> outcome= (List<SPROutcomeInvoiceDetails>) query.getResultList(); //rashod naklad
@@ -121,23 +122,9 @@ public class XmlGenerator{
 					@SuppressWarnings("unchecked")
 					List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList(); //zayavka ot client
 					
-				/*	for (int i=0; i < outcome.size(); i++){
-						POSITION p = new POSITION();
-						p.setPOSITIONNUMBER((short)i);
-						p.setPRODUCT(outcome.get(i).getGOODSCODE());
-						p.setDESCRIPTION(outcome.get(i).getGOODSNAME());
-						
-						for(ClientRequestDetails zayavkaPos : ORDERSOUTINVDET){
-							
-							int outGoodsID = outcome.get(i).getGOODSID();
-							int ordGoodsID = zayavkaPos.getGOODSID();
-							if(outGoodsID == ordGoodsID){
-							p.setORDEREDQUANTITY(zayavkaPos.getite);
-							}
-						}
-						
-						
-					}*/
+					double orderedquantity = 0;
+					double deliveryprice=0;
+					double deliveryquantity=0;
 					
 					for (int i=0; i < ORDERSOUTINVDET.size(); i++){
 						POSITION p = new POSITION();
@@ -153,12 +140,15 @@ public class XmlGenerator{
 							int outGoodsID = o.getGOODSID();
 							int ordGoodsID = ORDERSOUTINVDET.get(i).getGOODSID();
 							if(ordGoodsID == outGoodsID ){
+								deliveryprice+=o.getSUMITEMPRICEWITHOVERH();
 								p.setACCEPTEDQUANTITY(o.getITEMCOUNT());
 								p.setPRICE(o.getENDPRICE());
 								break;
 							}
 							
 						}
+						
+						
 						if(p.getORDEREDQUANTITY().intValue() == p.getACCEPTEDQUANTITY().intValue()){
 							p.setPRODUCTTYPE(1);
 						}
@@ -168,7 +158,10 @@ public class XmlGenerator{
 						if( p.getACCEPTEDQUANTITY().intValue() == 0 ){
 							p.setPRODUCTTYPE(3);
 						}
-					
+						orderedquantity+=p.getORDEREDQUANTITY();
+						
+						deliveryquantity+=p.getACCEPTEDQUANTITY();
+						
 						ord.getHEAD().getPOSITION().add(p);
 					}
 					
@@ -185,13 +178,17 @@ public class XmlGenerator{
 					marshaller.marshal(ord, new File("C:/MLW/XMLORDERSP/"+date+"/","ORDERSP_"+userdet.getName()+"_"+out.getREGNUMBER()+".xml"));
 					
 					//result.setTotalbuyer(String.valueOf(ord.getHEAD().getBuyer()));
-					result.setTotaldate(String.valueOf(ord.getDELIVERYDATE()));
-					//result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
-					result.setTotaldeliveryquantity(out.getBUYPRICEENDSUMM().intValue());
-					result.setTotalname("Подтверждение заказа");
-					result.setTotalorderedprice(out.getBUYPRICEENDSUMMGOODSBASED());
 					
+					//result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
+					result.setTotalname("Подтв. заказа("+ord.getORDERNUMBER()+")");
+					result.setTotaldate(ord.getDATE().toString());
+					result.setTotalorderedquantity((int) orderedquantity);
+					result.setTotaldeliveryprice(deliveryprice);	
+					result.setTotaldeliveryquantity((int) deliveryquantity);
+					result.setTotalInfo("ok");
 					resultList.add(result);
+					entityManager.clear();
+					
 					
 			}
 			
