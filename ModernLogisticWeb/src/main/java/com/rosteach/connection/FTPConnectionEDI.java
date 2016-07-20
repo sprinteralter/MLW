@@ -39,12 +39,12 @@ public class FTPConnectionEDI {
 		return ftpClient.isConnected();
 	}
 	
-	public boolean sendFiles(){
+	public boolean sendFiles(String path){
 		try{
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			
 			LocalDate date = LocalDate.now();
-			File pack = new File("C:/MLW/XMLDESADV/"+date+"/");
+			File pack = new File(path);
 			System.out.println("-----------pack name-----------"+pack.getName());
 			if(pack.isDirectory()){
 				String s[] = pack.list();
@@ -54,7 +54,7 @@ public class FTPConnectionEDI {
 				System.out.println("-----------number of files----------"+size);
 				System.out.println("-----------starting sending----------");
 				for(int i=0;i<s.length;i++){
-					File localFile = new File("C:/MLW/XMLDESADV/"+date+"/",s[i]);
+					File localFile = new File(path,s[i]);
 					System.out.println("-----------file name---------"+s[i]);
 					String ftpFileName ="outbox/"+ s[i];
 					

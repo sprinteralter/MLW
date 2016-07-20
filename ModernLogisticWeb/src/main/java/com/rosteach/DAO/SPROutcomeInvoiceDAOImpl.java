@@ -24,7 +24,7 @@ public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
 		
 		LocalDate date = LocalDate.now();
 		int nextday = date.getDayOfMonth()+1;
-		String curDate = date.getDayOfMonth()+"."+date.getMonthValue()+"."+date.getYear();
+		String curDate = nextday+"."+date.getMonthValue()+"."+date.getYear();
 		System.out.println("---------------date------------"+curDate);
 		
 		

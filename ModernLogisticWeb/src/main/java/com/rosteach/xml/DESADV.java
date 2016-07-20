@@ -107,13 +107,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 public class DESADV {
 
     @XmlElement(name = "NUMBER")
-    protected int number;
+    protected long number;
     @XmlElement(name = "DATE", required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar date;
+    protected String date;
     @XmlElement(name = "DELIVERYDATE", required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar deliverydate;
+    protected String deliverydate;
     @XmlElement(name = "ORDERNUMBER")
     protected String ordernumber;
     @XmlElement(name = "ORDERDATE")
@@ -121,8 +119,7 @@ public class DESADV {
     @XmlElement(name = "DELIVERYNOTENUMBER")
     protected String deliverynotenumber;
     @XmlElement(name = "DELIVERYNOTEDATE", required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar deliverynotedate;
+    protected String deliverynotedate;
     @XmlElement(name = "CAMPAIGNNUMBER")
     protected String campaignnumber;
     @XmlElement(name = "HEAD", required = true)
@@ -132,7 +129,7 @@ public class DESADV {
      * Gets the value of the number property.
      * 
      */
-    public int getNUMBER() {
+    public long getNUMBER() {
         return number;
     }
 
@@ -140,7 +137,7 @@ public class DESADV {
      * Sets the value of the number property.
      * 
      */
-    public void setNUMBER(int value) {
+    public void setNUMBER(long value) {
         this.number = value;
     }
 
@@ -152,7 +149,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getDATE() {
+    public String getDATE() {
         return date;
     }
 
@@ -164,7 +161,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setDATE(XMLGregorianCalendar date2) {
+    public void setDATE(String date2) {
         this.date = date2;
     }
 
@@ -176,7 +173,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getDELIVERYDATE() {
+    public String getDELIVERYDATE() {
         return deliverydate;
     }
 
@@ -188,7 +185,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setDELIVERYDATE(XMLGregorianCalendar value) {
+    public void setDELIVERYDATE(String value) {
         this.deliverydate = value;
     }
 
@@ -256,7 +253,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public XMLGregorianCalendar getDELIVERYNOTEDATE() {
+    public String getDELIVERYNOTEDATE() {
         return deliverynotedate;
     }
 
@@ -268,7 +265,7 @@ public class DESADV {
      *     {@link XMLGregorianCalendar }
      *     
      */
-    public void setDELIVERYNOTEDATE(XMLGregorianCalendar value) {
+    public void setDELIVERYNOTEDATE(String value) {
         this.deliverynotedate = value;
     }
 
@@ -387,7 +384,7 @@ public class DESADV {
         @XmlElement(name = "SENDER")
         protected String sender;
         @XmlElement(name = "RECIPIENT")
-        protected int recipient;
+        protected String recipient;
         @XmlElement(name = "EDIINTERCHANGEID")
         protected int ediinterchangeid;
         @XmlElement(name = "PACKINGSEQUENCE", required = true)
@@ -461,7 +458,7 @@ public class DESADV {
          * Gets the value of the recipient property.
          * 
          */
-        public int getRECIPIENT() {
+        public String getRECIPIENT() {
             return recipient;
         }
 
@@ -469,7 +466,7 @@ public class DESADV {
          * Sets the value of the recipient property.
          * 
          */
-        public void setRECIPIENT(int value) {
+        public void setRECIPIENT(String value) {
             this.recipient = value;
         }
 

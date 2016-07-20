@@ -18,14 +18,9 @@ import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -215,54 +210,47 @@ public class XmlGenerator{
 			List<SPROutcomeInvoice> inputInvoices = mapper.readValue(request, new TypeReference<List<SPROutcomeInvoice>>(){});
 			
 			//date formatting
-			LocalDate localdate = LocalDate.now();
-						
-			System.out.println("--------------date------------"+DateUtils.asDate(localdate));
-			
-			GregorianCalendar c = new GregorianCalendar();
-			
-			//c.setTime(inputInvoices.get(0).getDOCDATE());
-			XMLGregorianCalendar deliverydate = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-			
-			c.setTime(DateUtils.asDate(localdate));
-			XMLGregorianCalendar date = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-			
+			LocalDate.now();
 			
 			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 			entityManager.getTransaction().begin();
 			
 			for(SPROutcomeInvoice invoice: inputInvoices){
+				
+				
 				ResultLog result = new ResultLog();
 				//creating our notification entity and setters parameters
 				DESADV note = new DESADV();
-				int number=0; 
-				
-				// prehead settings of DESADV
-				note.setNUMBER(number+1);
-				
-				note.setDATE(date);
-				result.setTotalname("Ув. об отгрузке("+invoice.getREGNUMBER()+")");
-				result.setTotaldate(localdate.toString());
-		
-				note.setDELIVERYDATE(deliverydate);
 				
 				Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				int orderid = (int)getorderId.getSingleResult();
-				System.out.println("------------------------------orderid------------------------"+orderid);
+				
+				EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
+			    EntityManager em =  emf.createEntityManager();					
+			    Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();
+				
+				// prehead settings of DESADV
+				note.setNUMBER(order.getId());
+				
+				note.setDATE(LocalDate.now().toString());
+				result.setTotalname("Ув. об отгрузке("+invoice.getREGNUMBER()+")");
+				result.setTotaldate(LocalDate.now().toString());
+		
+				note.setDELIVERYDATE(invoice.getDOCDATE());
+				
+				
 				
 				//selecting ordernum from orders as comment2
 				Query getComment = entityManager.createNativeQuery("select COMMENT2 from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
-				String ordernumber = (String)getComment.getSingleResult();
-				System.out.println("------------------------------ordernumber------------------------"+ordernumber);
+				String ordernumber = (String)getComment.getSingleResult();		
 				
 				Query getOrdersDate = entityManager.createNativeQuery("select DOCDATE from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				java.sql.Date orderdate = (java.sql.Date)getOrdersDate.getSingleResult();
-				System.out.println("------------------------------orderdate------------------------"+orderdate);
 				
 				note.setORDERNUMBER(ordernumber);
 				note.setORDERDATE(orderdate.toString());
 				note.setDELIVERYNOTENUMBER(invoice.getREGNUMBER());//regnumber from SPROutcomeinvoice
-				note.setDELIVERYNOTEDATE(deliverydate);
+				note.setDELIVERYNOTEDATE(invoice.getDOCDATE());
 				
 				Query getCampaignNumber = entityManager.createNativeQuery("select DOGNUM from CLIENT where id ="+ invoice.getCLIENTID());  
 				String campaignNumber = (String)getCampaignNumber.getSingleResult();
@@ -272,15 +260,15 @@ public class XmlGenerator{
 					DESADV.HEAD head = new HEAD();
 					
 					head.setSUPPLIER("9863762978175");//final value
-					head.setBUYER(0);
+					head.setBUYER(0);//order.getBuyer());
 					
 					Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ invoice.getCLIENTID());  
 					String postcode = (String)getPOSTCODE.getSingleResult();
 					
 					head.setDELIVERYPLACE(postcode);//postcode from clients
 					head.setSENDER("9863762978175");//final value
-					head.setRECIPIENT(0);
-					head.setEDIINTERCHANGEID(0);
+					head.setRECIPIENT(postcode);
+					//head.setEDIINTERCHANGEID(0);
 			
 						//setting details into packingsequence
 						DESADV.HEAD.PACKINGSEQUENCE packingSequence = new DESADV.HEAD.PACKINGSEQUENCE();
@@ -298,14 +286,13 @@ public class XmlGenerator{
 						
 						
 						int orderedquantity = 0;
-						double deliveryprice = 0;
 						int deliveryquantity = 0;
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
 								
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
 								position.setPOSITIONNUMBER(i+1);
 								position.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
-								position.setPRODUCTIDBUYER(0);//from clients 
+								//position.setPRODUCTIDBUYER(0);//from clients 
 								position.setDELIVEREDUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
 								
 								Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+" and GOODSID ="+ORDERSOUTINVDET.get(i).getGOODSID());  
@@ -320,8 +307,6 @@ public class XmlGenerator{
 								for(int j =0; j<outcomeDetails.size();j++){
 									int OutcomeGOODSID = outcomeDetails.get(j).getGOODSID(); 
 									if(OutcomeGOODSID==OrderGOODSID){
-										System.out.println("--------------OutcomeGOODSID---------------"+OutcomeGOODSID);
-										System.out.println("--------------OutcomeGOODSID---------------"+OrderGOODSID);
 										checkpoint=true;
 										checknumber=j;
 										break;
@@ -334,16 +319,25 @@ public class XmlGenerator{
 								}
 								else{
 									position.setDELIVEREDQUANTITY(outcomeDetails.get(checknumber).getITEMCOUNT());
-									position.setPRICE(outcomeDetails.get(checknumber).getSUMITEMPRICEWITHOVERH());
+									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
 								}
-								System.out.println("-----------------------------------------"+outcomeDetails.get(checknumber).getITEMCOUNT());
+								
 								orderedquantity+=position.getORDEREDQUANTITY();
-								deliveryprice+=position.getPRICE();
 								deliveryquantity+=position.getDELIVEREDQUANTITY();
 								list.add(position);
 							}
+				//block for updating our MySQL DATA
+				em.getTransaction().begin();
+					order.setDesadv_date(DateUtils.asDate(LocalDate.now()));
+					order.setDesadv_user(userdet.getName());
+				em.persist(order);
+				em.getTransaction().commit();
+				em.clear();
+				em.close();
+								
+				//setting result list
 				result.setTotalorderedquantity(orderedquantity);
-				result.setTotaldeliveryprice(deliveryprice);	
+				result.setTotaldeliveryprice(invoice.getMAINSUMM());	
 				result.setTotaldeliveryquantity(deliveryquantity);
 				result.setTotalInfo("");
 				
@@ -352,11 +346,11 @@ public class XmlGenerator{
 			
 				note.setHEAD(head);
 				//creating our xml document
-				File directory = new File("C:/MLW/XMLDESADV/"+localdate+"/");
+				File directory = new File("C:/MLW/XMLDESADV/"+LocalDate.now()+"/");
 				if(!directory.exists()){
 					directory.mkdirs();
 				}
-				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+localdate+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
+				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+LocalDate.now()+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
 				resultList.add(result);
 				outcomeDetails=null;
 			}
@@ -364,6 +358,7 @@ public class XmlGenerator{
 			entityManager.getTransaction().commit();
 			entityManager.close();
 			emf.close();
+			
 		}
 		catch(JAXBException ex){
 			System.out.println("-----------------------"+ex.getMessage());
@@ -376,9 +371,7 @@ public class XmlGenerator{
 		}
 		catch(IOException ex){
 			System.out.println("-----------------------"+ex.getMessage());
-		} catch (DatatypeConfigurationException ex) {
-			System.out.println("-----------------------"+ex.getMessage());
-		}
+		} 
 		return resultList;
 	}
 }

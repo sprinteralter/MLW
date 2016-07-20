@@ -101,7 +101,56 @@ $(document).ready(function(){
     });
     /*start sending files to FTP*/
     $('.sendNotification').click(function(){
+    	var key = $(this).attr("value");
     	$.ajax({
+    		headers: {'key': key},   
+    		method:"GET",
+    		url:"data/connectToFtpEDI",
+    		beforeSend: function(){
+    			$('.rightTAoverlay').fadeIn(200,function(){
+    	            $('.rightTAloader').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
+    	    						.animate({opacity: 0.5}, 200); // плaвнo прибaвляем прoзрaчнoсть
+    	        });
+    			$('#overlay').fadeIn(200, function(){
+    	             $('#loader').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
+    	    						.animate({opacity: 1}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    	             $('.leftTAloader').animate({opacity: 0.5}, 200);
+    	        });
+    			
+    		},
+    		success: function(data){
+    			/*$("#overlay").fadeOut(200, // снaчaлa плaвнo пoкaзывaем темную пoдлoжку
+        			function(){ // пoсле выпoлнения предъидущей aнимaции
+    	    				$("#applymessage")
+        						.css("display", "none").animate({opacity: 0, top: "50%"}, 200);
+        		});
+    	    		$('.rightinput').text(data.ids);
+    	    		$('.rightinput').show();*/
+    			
+    	    },
+    	    error:function(){},
+    	    complete:function(){
+    	    	$('#overlay').fadeOut(200, function(){
+    	    		$('#loader').css("display", "none") // убирaем у мoдaльнoгo oкнa display: none;
+   	    						.animate({opacity: 0}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+    	    		$('.sendConfirmation').show();
+    	    		$('.leftTAloader').animate({opacity: 1}, 200);
+    	    		$('.rightTAloader').animate({opacity: 1}, 200);
+    	    	});
+    	    	$("#generate").hide();
+    	    	$("#refresh").show();
+    	    	$('.step3').stop().css({"background": "rgb(56, 255, 126)"});
+    	    	$('.step3 p').stop().css({"color":"rgb(8, 48, 22)"});
+    	    	$('.step3 p').text('Шаг 3: Данные отправлены!');
+    	    	stopSignal(refresh3, $('.step3 p'));
+    	    }
+    	})
+    });
+    
+    $('.sendConfirmation').click(function(){
+    	var key = $(this).attr("value");
+    	$.ajax({
+    		headers: {'key': key},   
     		method:"GET",
     		url:"data/connectToFtpEDI",
     		beforeSend: function(){

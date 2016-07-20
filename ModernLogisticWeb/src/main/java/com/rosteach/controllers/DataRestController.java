@@ -1,5 +1,6 @@
 package com.rosteach.controllers;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,13 +51,19 @@ public class DataRestController {
 		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
 	}
 	@RequestMapping(value="/connectToFtpEDI", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<String> checkConnectionFTP(){
+	public ResponseEntity<String> checkConnectionFTP(@RequestHeader("key") int option){
 		String result;
-		
+		String path="";
+		System.out.println("---------------------------------"+option);
+		if(option==1){
+			path = "C:/MLW/XMLDESADV/"+LocalDate.now()+"/";
+		}else{
+			path = "C:/MLW/XMLORDERSP/"+LocalDate.now()+"/";
+		}
 		FTPConnectionEDI connection = new FTPConnectionEDI();
 			boolean check = connection.setConnection();
 			if(check==true){
-				boolean send = connection.sendFiles();
+				boolean send = connection.sendFiles(path);
 				result = "{'result':'send_"+send+"'}";
 			}
 			else{

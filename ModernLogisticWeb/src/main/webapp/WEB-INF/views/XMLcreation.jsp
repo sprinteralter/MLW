@@ -102,8 +102,8 @@
             </div>
             <div class="rightTA">
             	<div class="rightTATextArea" ng-grid="gridResult"></div>
-            	<button class="sendConfirmation">Отправить подтверждение</button>
-                <button class="sendNotification">Отправить уведомление</button>
+            	<button class="sendConfirmation" value="0">Отправить подтверждение</button>
+                <button class="sendNotification" value="1">Отправить уведомление</button>
                 <div class="rightTAoverlay"></div>
                 <div class="rightTAloader">
                     <img src="resources/images/spinner.gif" alt="spinner"/>
