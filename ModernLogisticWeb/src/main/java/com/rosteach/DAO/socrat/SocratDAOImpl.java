@@ -45,7 +45,7 @@ public class SocratDAOImpl implements SocratDAO{
 			
 			//create order and get returned Order ID
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
-			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime());
+			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime(), name);
 
 			//get list of order goods position
 			List<POSITION> positions = ord.getHEAD().getPOSITION();

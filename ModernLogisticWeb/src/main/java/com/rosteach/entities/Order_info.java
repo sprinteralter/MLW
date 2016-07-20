@@ -17,22 +17,16 @@ public class Order_info {
 		private long id;
 		private long order_kod;
 		private long buyer;
-		private String desadv_number;
+		private String desadv_user;
 		private Date desadv_date;
-		private String ordersp_number;
+		private String ordersp_user;
 		private Date ordersp_date;
 		private Date order_date;
 		private String order_number;
+		private String order_user;
 		
 		public Order_info(){
-			order_kod=0;
-			buyer=0;
-			desadv_number=null;
-			desadv_date = null;
-			ordersp_number = null;
-			ordersp_date = null;
-			order_date = null;
-			order_number = null;
+			
 		}
 		
 		public long getId() {
@@ -63,20 +57,28 @@ public class Order_info {
 			this.ordersp_date = ordersp;
 		}
 
-		public String getDesadv_number() {
-			return desadv_number;
+		public String getDesadv_user() {
+			return desadv_user;
 		}
 
-		public void setDesadv_number(String desadv_number) {
-			this.desadv_number = desadv_number;
+		public void setDesadv_user(String desadv_user) {
+			this.desadv_user = desadv_user;
 		}
 
-		public String getOrdersp_number() {
-			return ordersp_number;
+		public String getOrdersp_user() {
+			return ordersp_user;
 		}
 
-		public void setOrdersp_number(String ordersp_number) {
-			this.ordersp_number = ordersp_number;
+		public void setOrdersp_user(String ordersp_user) {
+			this.ordersp_user = ordersp_user;
+		}
+
+		public String getOrder_user() {
+			return order_user;
+		}
+
+		public void setOrder_user(String order_user) {
+			this.order_user = order_user;
 		}
 
 		public Date getOrder_date() {

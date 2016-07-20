@@ -102,11 +102,11 @@ public class XmlGenerator{
 					ord.getHEAD().setBuyer(Long.valueOf(order.getBuyer()));//order.getBuyer()); 	//BUYER FROM ORDER.XML
 					ord.getHEAD().setDeliveryplace(Long.valueOf(glnQ));
 					ord.getHEAD().setSender(Long.valueOf("9863762978175"));
-					ord.getHEAD().setRecipient(Long.valueOf(glnQ));
+					ord.getHEAD().setRecipient(Long.valueOf(order.getBuyer()));
 					
 					//add ORDERSP forming date and number
 					order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
-					order.setOrdersp_number(ord.getORDERNUMBER());
+					order.setOrdersp_user(userdet.getName());
 					//ord_info.persistOrder(order);
 					
 					em.getTransaction().begin();

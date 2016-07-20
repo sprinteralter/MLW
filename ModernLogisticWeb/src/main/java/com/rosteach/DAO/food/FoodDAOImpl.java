@@ -56,7 +56,7 @@ public class FoodDAOImpl implements FoodDAO {
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
 			
 			//add buer and orderID to mysql
-			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime());
+			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime(), name);
 		    
 			//get list of order goods position
 			List<POSITION> positions = ord.getHEAD().getPOSITION();

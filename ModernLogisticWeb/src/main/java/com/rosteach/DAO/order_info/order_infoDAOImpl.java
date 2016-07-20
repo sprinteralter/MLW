@@ -22,12 +22,13 @@ public class order_infoDAOImpl implements Order_infoDAO {
     EntityManager em =  emf.createEntityManager();
 
     @Override
-	public void createOrder(long order_kod, String order_number, long buyer, Date order_date) {
+	public void createOrder(long order_kod, String order_number, long buyer, Date order_date, String user) {
 	    Order_info ordInfo = new Order_info();
 	    ordInfo.setOrder_kod(order_kod);
 	    ordInfo.setBuyer(buyer);
 	    ordInfo.setOrder_number(order_number);
 	    ordInfo.setOrder_date(order_date);
+	    ordInfo.setOrder_user(user);
 	    em.getTransaction().begin();
 	    em.persist(ordInfo);
 	    em.getTransaction().commit();
