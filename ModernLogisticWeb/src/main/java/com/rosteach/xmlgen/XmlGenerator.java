@@ -99,7 +99,7 @@ public class XmlGenerator{
 					ord.setNUMBER(order.getOrder_kod()); // order.getOrder_kod());
 					ord.setHEAD(new ORDRSP.HEAD());
 					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
-					ord.getHEAD().setBuyer(Long.valueOf(glnQ));//order.getBuyer()); 	//BUYER FROM ORDER.XML
+					ord.getHEAD().setBuyer(Long.valueOf(order.getBuyer()));//order.getBuyer()); 	//BUYER FROM ORDER.XML
 					ord.getHEAD().setDeliveryplace(Long.valueOf(glnQ));
 					ord.getHEAD().setSender(Long.valueOf("9863762978175"));
 					ord.getHEAD().setRecipient(Long.valueOf(glnQ));
