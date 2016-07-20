@@ -23,6 +23,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -93,32 +94,50 @@ public class XmlGenerator{
 					
 					EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
 				    EntityManager em =  emf.createEntityManager();					
-					Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();// oi.get(0);
+					    //Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();// oi.get(0);
 					
-					ord.setNUMBER(order.getOrder_kod());
+					ord.setNUMBER(132); // order.getOrder_kod());
 					ord.setHEAD(new ORDRSP.HEAD());
 					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
-					ord.getHEAD().setBuyer(order.getBuyer()); 	//BUYER FROM ORDER.XML
+					ord.getHEAD().setBuyer(Long.valueOf(glnQ));//order.getBuyer()); 	//BUYER FROM ORDER.XML
 					ord.getHEAD().setDeliveryplace(Long.valueOf(glnQ));
 					ord.getHEAD().setSender(Long.valueOf("9863762978175"));
 					ord.getHEAD().setRecipient(Long.valueOf(glnQ));
 					
 					//add ORDERSP forming date and number
-					order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
-					order.setOrdersp_number(ord.getORDERNUMBER());
+				//	order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
+				//	order.setOrdersp_number(ord.getORDERNUMBER());
 					//ord_info.persistOrder(order);
 					
-					em.getTransaction().begin();
+				/*	em.getTransaction().begin();
 				    em.persist(order);
 				    em.getTransaction().commit();
-				    em.close();
+				    em.close();*/
 				    
-					Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+out.getID()+",Null,0,Null,Null,0,0)", SPROutcomeInvoiceDetails.class);	
-					List<SPROutcomeInvoiceDetails> positions= (List<SPROutcomeInvoiceDetails>) query.getResultList();
+					Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+out.getID()+",Null,0,Null,Null,0,0) order by GOODSID", SPROutcomeInvoiceDetails.class);	
+					List<SPROutcomeInvoiceDetails> outcome= (List<SPROutcomeInvoiceDetails>) query.getResultList(); //rashod naklad
 					
 					Query getORDERSOUTINVDET = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+orderid+",Null,0,Null,0, Null,Null,0,0) order by GOODSID", ClientRequestDetails.class);	
 					@SuppressWarnings("unchecked")
-					List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList();
+					List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList(); //zayavka ot client
+					
+				/*	for (int i=0; i < outcome.size(); i++){
+						POSITION p = new POSITION();
+						p.setPOSITIONNUMBER((short)i);
+						p.setPRODUCT(outcome.get(i).getGOODSCODE());
+						p.setDESCRIPTION(outcome.get(i).getGOODSNAME());
+						
+						for(ClientRequestDetails zayavkaPos : ORDERSOUTINVDET){
+							
+							int outGoodsID = outcome.get(i).getGOODSID();
+							int ordGoodsID = zayavkaPos.getGOODSID();
+							if(outGoodsID == ordGoodsID){
+							p.setORDEREDQUANTITY(zayavkaPos.getite);
+							}
+						}
+						
+						
+					}*/
 					
 					for (int i=0; i < ORDERSOUTINVDET.size(); i++){
 						POSITION p = new POSITION();
@@ -130,13 +149,15 @@ public class XmlGenerator{
 						p.setPRODUCTIDBUYER(ORDERSOUTINVDET.get(i).getITEMPRICE());
 						
 						
-						for(SPROutcomeInvoiceDetails o : positions ){
+						for(SPROutcomeInvoiceDetails o : outcome ){ //SPROutcomeInvoiceDetails o : positions  
 							int outGoodsID = o.getGOODSID();
 							int ordGoodsID = ORDERSOUTINVDET.get(i).getGOODSID();
-							if(outGoodsID == ordGoodsID){
+							if(ordGoodsID == outGoodsID ){
 								p.setACCEPTEDQUANTITY(o.getITEMCOUNT());
 								p.setPRICE(o.getENDPRICE());
+								break;
 							}
+							
 						}
 						if(p.getORDEREDQUANTITY().intValue() == p.getACCEPTEDQUANTITY().intValue()){
 							p.setPRODUCTTYPE(1);
@@ -147,7 +168,7 @@ public class XmlGenerator{
 						if( p.getACCEPTEDQUANTITY().intValue() == 0 ){
 							p.setPRODUCTTYPE(3);
 						}
-						
+					
 						ord.getHEAD().getPOSITION().add(p);
 					}
 					
@@ -166,10 +187,10 @@ public class XmlGenerator{
 					result.setTotalbuyer(String.valueOf(ord.getHEAD().getBuyer()));
 					result.setTotaldate(String.valueOf(ord.getDELIVERYDATE()));
 					result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
-					result.setTotaldeliveryquantity(100);
-					result.setTotalname("name");
-					result.setTotalorderedprice(99.99);
-					result.setTotalorderedquantity(99);
+					result.setTotaldeliveryquantity(out.getBUYPRICEENDSUMM().intValue());
+					result.setTotalname("Подтверждение заказа");
+					result.setTotalorderedprice(out.getBUYPRICEENDSUMMGOODSBASED());
+					
 					resultList.add(result);
 					
 			}

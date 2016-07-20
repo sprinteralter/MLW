@@ -11,6 +11,7 @@ import javax.persistence.Persistence;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.rosteach.entities.Order_info;
 
