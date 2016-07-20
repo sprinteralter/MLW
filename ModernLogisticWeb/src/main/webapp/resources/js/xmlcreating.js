@@ -82,13 +82,13 @@ $(document).ready(function(){
     $('#generate').click(function(){
     	$('#overlay').fadeIn(200, function(){
             $('#selectoption').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
-   						.animate({opacity: 1}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+   						.animate({opacity: 1}, 200); 
     	});
     });
     $('.accOption').click(function(){
     	$('#overlay').fadeOut(200, function(){
             $('#selectoption').css("display", "none") // убирaем у мoдaльнoгo oкнa display: none;
-   						.animate({opacity: 0}, 200); // плaвнo прибaвляем прoзрaчнoсть oднoвременнo сo съезжaнием вниз
+   						.animate({opacity: 0}, 200); 
     	});
     	$('.step2').stop().css({"background": "rgb(56, 255, 126)"});
     	$('.step2 p').stop().css({"color":"rgb(8, 48, 22)"});
@@ -144,7 +144,7 @@ $(document).ready(function(){
     	    }
     	})
     });
-    
+
     $('#refresh').click(function(){
     	location.reload();
     });

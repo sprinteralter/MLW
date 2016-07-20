@@ -1,10 +1,9 @@
 package com.rosteach.entities;
 
 public class ResultLog {
+	private String totalInfo; 
 	private String totalname;
 	private String totaldate;
-	private String totalbuyer;
-	private String totaldeliveryplace;
 	private Integer totaldeliveryquantity;
 	private Double totaldeliveryprice;
 	private Integer totalorderedquantity;
@@ -12,6 +11,14 @@ public class ResultLog {
 	
 	public ResultLog(){
 		
+	}
+
+	public String getTotalInfo() {
+		return totalInfo;
+	}
+
+	public void setTotalInfo(String totalInfo) {
+		this.totalInfo = totalInfo;
 	}
 
 	public String getTotalname() {
@@ -28,22 +35,6 @@ public class ResultLog {
 
 	public void setTotaldate(String date) {
 		this.totaldate = date;
-	}
-
-	public String getTotalbuyer() {
-		return totalbuyer;
-	}
-
-	public void setTotalbuyer(String totalbuyer) {
-		this.totalbuyer = totalbuyer;
-	}
-
-	public String getTotaldeliveryplace() {
-		return totaldeliveryplace;
-	}
-
-	public void setTotaldeliveryplace(String totaldeliveryplace) {
-		this.totaldeliveryplace = totaldeliveryplace;
 	}
 
 	public Integer getTotaldeliveryquantity() {
@@ -77,5 +68,4 @@ public class ResultLog {
 	public void setTotalorderedprice(Double totalorderedprice) {
 		this.totalorderedprice = totalorderedprice;
 	}
-	
 }

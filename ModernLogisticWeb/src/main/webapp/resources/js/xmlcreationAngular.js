@@ -3,14 +3,14 @@
  */
 var app = angular.module('myApp', ['ngGrid']);
 
-app.controller('myCtrl', function($scope, $http ) {    
+app.controller('myCtrl', function($scope, $http){    
 	
 	$scope.myData=null;
 	$scope.selectedData=null;
-	$scope.PostDataResponse;
+	$scope.responseData=null;
 	$scope.selectedRows = [];
-	
-    $scope.gridOptions = {
+    
+	$scope.gridOptions = {
         data: 'myData',
         enableRowSelection: true,
         selectedItems: $scope.selectedRows,
@@ -30,6 +30,22 @@ app.controller('myCtrl', function($scope, $http ) {
               {field: 'agentsname', displayName: 'Имя агента', width: "*"}
         ]
     };
+	
+	$scope.gridResult = {
+	        data: 'responseData',
+	        showFooter: true,
+	        enableColumnResize: true,
+	        showColumnMenu:true,
+	        showFilter: true,
+	        columnDefs: [
+	              {field: 'totalinfo', displayName: 'Инфо', width: "*"},
+	              {field: 'totalname', displayName: 'Операция', width: "*"},
+	              {field: 'totaldate', displayName: 'Дата', width: "*"},
+	              {field: 'totalorderedquantity', displayName: 'Заказано(общ.)', width: "*"},
+	              {field: 'totaldeliveryquantity', displayName: 'Поставка(общ.)', width: "*"},
+	              {field: 'totaldeliveryprice', displayName: 'Цена', width: "*"}
+	        ]
+	    };
     
     $scope.sendData = function(){
     	var config = {
@@ -40,7 +56,7 @@ app.controller('myCtrl', function($scope, $http ) {
         }
     	 $http.post('data/confirm', $scope.selectedRows, config)
          .success(function (data, status, headers, config) {
-             $scope.PostDataResponse = data;
+             $scope.responseData = data;
          })
          .error(function (data, status, header, config) {
              $scope.ResponseDetails = "Data: " + data +
@@ -50,21 +66,8 @@ app.controller('myCtrl', function($scope, $http ) {
          });
     };
     
-    /*$scope.refreshData = function(){
-    	$http.get('data/getInvoices',{headers: { 'Content-Transfer-Encoding': 'utf-8' }}).
-        success(function(data) {
-            $scope.myData = data;
-        })
-        .error(function (data, status, header, config) {
-            $scope.ResponseDetails = "Data: " + data +
-                "<hr />status: " + status +
-                "<hr />headers: " + header +
-                "<hr />config: " + config;
-        });
-    };*/
-    
-    $http.get('data/getInvoices',{headers: { 'Content-Transfer-Encoding': 'utf-8' }}).
-    success(function(data) {
+    $http.get('data/getInvoices',{headers: { 'Content-Transfer-Encoding': 'utf-8' }})
+    .success(function(data){
         $scope.myData = data;
     });
 });

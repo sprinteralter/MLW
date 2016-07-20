@@ -184,9 +184,9 @@ public class XmlGenerator{
 					marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 					marshaller.marshal(ord, new File("C:/MLW/XMLORDERSP/"+date+"/","ORDERSP_"+userdet.getName()+"_"+out.getREGNUMBER()+".xml"));
 					
-					result.setTotalbuyer(String.valueOf(ord.getHEAD().getBuyer()));
+					//result.setTotalbuyer(String.valueOf(ord.getHEAD().getBuyer()));
 					result.setTotaldate(String.valueOf(ord.getDELIVERYDATE()));
-					result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
+					//result.setTotaldeliveryplace(String.valueOf(ord.getHEAD().getDeliveryplace()));
 					result.setTotaldeliveryquantity(out.getBUYPRICEENDSUMM().intValue());
 					result.setTotalname("Подтверждение заказа");
 					result.setTotalorderedprice(out.getBUYPRICEENDSUMMGOODSBASED());
@@ -207,8 +207,7 @@ public class XmlGenerator{
 	
 	public List<ResultLog> generateNotification(String request){
 		//needed variables for confirmation resultlist
-		ResultLog result = new ResultLog();
-		List<ResultLog> resultList = new LinkedList<ResultLog>();
+		List<ResultLog> resultList = new ArrayList<ResultLog>();
 		try{
 			//creating JAXB context and Marshaller for XML
 			JAXBContext context = JAXBContext.newInstance(DESADV.class);
@@ -235,7 +234,8 @@ public class XmlGenerator{
 			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 			entityManager.getTransaction().begin();
 			
-			for(SPROutcomeInvoice invoice: inputInvoices){	
+			for(SPROutcomeInvoice invoice: inputInvoices){
+				ResultLog result = new ResultLog();
 				//creating our notification entity and setters parameters
 				DESADV note = new DESADV();
 				int number=0; 
@@ -244,21 +244,24 @@ public class XmlGenerator{
 				note.setNUMBER(number+1);
 				
 				note.setDATE(date);
-				result.setTotalname("Уведомление об отгрузке по расходной накладной: "+invoice.getREGNUMBER());
+				result.setTotalname("Ув. об отгрузке("+invoice.getREGNUMBER()+")");
 				result.setTotaldate(localdate.toString());
 		
 				note.setDELIVERYDATE(deliverydate);
 				
 				Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
-				Integer orderid = (Integer)getorderId.getSingleResult();
+				int orderid = (int)getorderId.getSingleResult();
 				System.out.println("------------------------------orderid------------------------"+orderid);
+				
 				//selecting ordernum from orders as comment2
 				Query getComment = entityManager.createNativeQuery("select COMMENT2 from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				String ordernumber = (String)getComment.getSingleResult();
 				System.out.println("------------------------------ordernumber------------------------"+ordernumber);
+				
 				Query getOrdersDate = entityManager.createNativeQuery("select DOCDATE from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
 				java.sql.Date orderdate = (java.sql.Date)getOrdersDate.getSingleResult();
 				System.out.println("------------------------------orderdate------------------------"+orderdate);
+				
 				note.setORDERNUMBER(ordernumber);
 				note.setORDERDATE(orderdate.toString());
 				note.setDELIVERYNOTENUMBER(invoice.getREGNUMBER());//regnumber from SPROutcomeinvoice
@@ -296,72 +299,57 @@ public class XmlGenerator{
 						@SuppressWarnings("unchecked")
 						List<SPROutcomeInvoiceDetails> outcomeDetails = getOutcomeDetails.getResultList();
 						
+						
+						int orderedquantity = 0;
+						double deliveryprice = 0;
+						int deliveryquantity = 0;
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
-								Integer OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
+								
+								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
+								position.setPOSITIONNUMBER(i+1);
+								position.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
+								position.setPRODUCTIDBUYER(0);//from clients 
+								position.setDELIVEREDUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
+								
+								Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+" and GOODSID ="+ORDERSOUTINVDET.get(i).getGOODSID());  
+								double orderquantity = (double)getORDEREDQUANTITY.getSingleResult();
+								position.setORDEREDQUANTITY(orderquantity);
+								position.setORDERUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
+								position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
+								
+								int OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
 								boolean checkpoint = false;
 								int checknumber=0;
-								for(int j =0; j<outcomeDetails.size()-1;j++){
-									Integer OutcomeGOODSID = outcomeDetails.get(j).getGOODSID(); 
-									if(OutcomeGOODSID.equals(OrderGOODSID)){
+								for(int j =0; j<outcomeDetails.size();j++){
+									int OutcomeGOODSID = outcomeDetails.get(j).getGOODSID(); 
+									if(OutcomeGOODSID==OrderGOODSID){
+										System.out.println("--------------OutcomeGOODSID---------------"+OutcomeGOODSID);
+										System.out.println("--------------OutcomeGOODSID---------------"+OrderGOODSID);
 										checkpoint=true;
 										checknumber=j;
+										break;
 									}
 								}
-								System.out.println("--------------------checkpoint-------------------------"+checkpoint);
 									
 								if(checkpoint==false){
-									System.out.println("------------------nullPosition-------------------");
-									DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
-									position.setPOSITIONNUMBER(i+1);
-									position.setPRODUCT(null);
-									
-									position.setPRODUCTIDBUYER(0);//from clients 
 									position.setDELIVEREDQUANTITY(0.0);
-									
-									Query getORDERUNIT = entityManager.createNativeQuery("select SNAME from MEASURE where ID ="+outcomeDetails.get(checknumber).getMEASUREID());  
-									String orderUnit = (String)getORDERUNIT.getSingleResult();
-									position.setDELIVEREDUNIT(orderUnit);
-									
-									//setting our queries for orders details
-									Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+ORDERSOUTINVDET.get(i).getGOODSID());  
-									Double orderquantity = (Double)getORDEREDQUANTITY.getSingleResult();
-									position.setORDEREDQUANTITY(orderquantity);
-								
-									position.setORDERUNIT(orderUnit);
-									
-									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
-									position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
-									
-									list.add(position);
+									position.setPRICE(0.0);
 								}
 								else{
-									System.out.println("------------------fullPosition-------------------");
-									DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
-									position.setPOSITIONNUMBER(i+1);
-									position.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
-									
-									position.setPRODUCTIDBUYER(0);//from clients 
-									position.setDELIVEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
-									position.setDELIVEREDUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
-									
-									//setting our queries for orders details
-									Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+"and GOODSID ="+outcomeDetails.get(i).getGOODSID());  
-									Double orderquantity = (Double)getORDEREDQUANTITY.getSingleResult();
-									position.setORDEREDQUANTITY(orderquantity);
-									
-									Query getORDERUNIT = entityManager.createNativeQuery("select SNAME from MEASURE where ID ="+1);  
-									String orderUnit = (String)getORDERUNIT.getSingleResult();
-									position.setORDERUNIT(orderUnit);
-									
-									System.out.println("--------------------------------"+outcomeDetails.get(checknumber).getENDPRICE());
-									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
-									position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
-									
-									list.add(position);
-									System.out.println("------------------fullFillPosition-------------------");
-								}	
+									position.setDELIVEREDQUANTITY(outcomeDetails.get(checknumber).getITEMCOUNT());
+									position.setPRICE(outcomeDetails.get(checknumber).getSUMITEMPRICEWITHOVERH());
+								}
+								System.out.println("-----------------------------------------"+outcomeDetails.get(checknumber).getITEMCOUNT());
+								orderedquantity+=position.getORDEREDQUANTITY();
+								deliveryprice+=position.getPRICE();
+								deliveryquantity+=position.getDELIVEREDQUANTITY();
+								list.add(position);
 							}
-						
+				result.setTotalorderedquantity(orderedquantity);
+				result.setTotaldeliveryprice(deliveryprice);	
+				result.setTotaldeliveryquantity(deliveryquantity);
+				result.setTotalInfo("");
+				
 				packingSequence.setPOSITION(list);
 				head.setPACKINGSEQUENCE(packingSequence);
 			
@@ -373,6 +361,7 @@ public class XmlGenerator{
 				}
 				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+localdate+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
 				resultList.add(result);
+				outcomeDetails=null;
 			}
 			EntityManagerFactory emf = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();

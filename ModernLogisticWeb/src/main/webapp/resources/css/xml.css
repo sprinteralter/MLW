@@ -225,7 +225,6 @@ body{
     height: 100%;
     width:30%;
     border-radius: 5px 0 0 5px;
-
 }
 .infoBar .infoBarLeft .infoBarIcon{
     height: 100%;
@@ -290,7 +289,7 @@ body{
     float:left;
 }
 .ui-tabs .ui-tabs-panel .back img,.ui-tabs .ui-tabs-panel .info img,.ui-tabs .ui-tabs-panel .home img{
-    border-radius: 25px 25px 25px 25px;
+    border-radius: 5px 5px 5px 5px;
 }
 .ui-tabs .ui-tabs-panel .leftTA{
     margin: 0;

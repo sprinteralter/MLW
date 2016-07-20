@@ -28,12 +28,12 @@
 			
 			<div class="leftBar">
 				<div class="back" title="Tools">
-					<a href="Tools"><img src="resources/images/left_arrow.png"
+					<a href="Tools"><img src="resources/images/previous.png"
 						width=30px height=30px; /></a>
 				</div>
 				<div class="home" title="Home">
 					<a href="<%=request.getContextPath()%>/"><img
-						src="resources/images/home_w.png" width=30px height=30px; /></a>
+						src="resources/images/home.png" width=30px height=30px; /></a>
 				</div>
 				<div class="info" title="Info">
 					<a href="Tools"><img src="resources/images/info.png" width=30px

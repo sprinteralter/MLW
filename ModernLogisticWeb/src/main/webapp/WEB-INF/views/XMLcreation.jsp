@@ -52,8 +52,8 @@
         </div>
         <div id="selectoption">
         	<div class="selection">
-        		<p>Выберите операцию</p>
-	            <select ng-model="selectedData">
+        		<label for="selectionTab">Выберите операцию</label>
+	            <select ng-model="selectedData" id="selectionTab">
 	            	<option value="" selected="selected"></option>
 	  				<option value="confirm">Подтверждение</option>
 	  				<option value="notificate">Уведомление</option>
@@ -101,7 +101,7 @@
                 <img id="refresh" src="resources/images/refresh.png" alt="refresh" title="Повторная операция"/>
             </div>
             <div class="rightTA">
-            	<textarea class="rightTATextArea" disabled="disabled">{{PostDataResponse}}</textarea>
+            	<div class="rightTATextArea" ng-grid="gridResult"></div>
             	<button class="sendConfirmation">Отправить подтверждение</button>
                 <button class="sendNotification">Отправить уведомление</button>
                 <div class="rightTAoverlay"></div>
