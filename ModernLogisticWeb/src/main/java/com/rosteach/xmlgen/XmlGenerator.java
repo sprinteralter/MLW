@@ -35,6 +35,8 @@ import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
 import com.rosteach.util.DateUtils;
+import com.rosteach.util.JsonMapperUtil;
+import com.rosteach.util.QueryManagerUtil;
 import com.rosteach.xml.DESADV;
 import com.rosteach.xml.DESADV.HEAD;
 import com.rosteach.xml.ordersp.ORDRSP;
@@ -198,108 +200,73 @@ public class XmlGenerator{
 	//*********************************************************************************************
 	
 	public List<ResultLog> generateNotification(String request){
-		//needed variables for confirmation resultlist
-		List<ResultLog> resultList = new ArrayList<ResultLog>();
+		/**
+		 * Initialize our result collection to send data as response
+		 */
+		List<ResultLog> resultList = new LinkedList<ResultLog>();
 		try{
-			//creating JAXB context and Marshaller for XML
+			/**
+			 * creating JAXB context and Marshaller for XML generation
+			 */
 			JAXBContext context = JAXBContext.newInstance(DESADV.class);
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			//our input collection of outcominvoices
-			ObjectMapper mapper = new ObjectMapper(); 
-			List<SPROutcomeInvoice> inputInvoices = mapper.readValue(request, new TypeReference<List<SPROutcomeInvoice>>(){});
-			
-			//date formatting
-			LocalDate.now();
-			
+			/**
+			 * get our input List as OutcomeInvoices
+			 */
+			List<SPROutcomeInvoice> inputInvoices=JsonMapperUtil.getInputInvoices(request);
+			/**
+			 * create our JPA manager and connect to FireBird and begin transaction
+			 */
 			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 			entityManager.getTransaction().begin();
 			
 			for(SPROutcomeInvoice invoice: inputInvoices){
-				
-				
-				ResultLog result = new ResultLog();
 				//creating our notification entity and setters parameters
 				DESADV note = new DESADV();
 				
-				Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
-				int orderid = (int)getorderId.getSingleResult();
+				/**
+				 * get parameters for Order from QueryManager
+				 */
+				int orderid = QueryManagerUtil.getOrderIdBySPRoiID(invoice.getID(), entityManager);
+				String ordernumber = QueryManagerUtil.getOrderNumberBySPRoiID(invoice.getID(), entityManager);
+				java.sql.Date orderdate = QueryManagerUtil.getOrderDateBySPRoiID(invoice.getID(), entityManager);
 				
 				EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
 			    EntityManager em =  emf.createEntityManager();					
 			    Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();
 				
-				// prehead settings of DESADV
-				note.setNUMBER(order.getId());
-				
-				note.setDATE(LocalDate.now().toString());
-				result.setTotalname("Ув. об отгрузке("+invoice.getREGNUMBER()+")");
-				result.setTotaldate(LocalDate.now().toString());
-		
-				note.setDELIVERYDATE(invoice.getDOCDATE());
-				
-				
-				
-				//selecting ordernum from orders as comment2
-				Query getComment = entityManager.createNativeQuery("select COMMENT2 from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
-				String ordernumber = (String)getComment.getSingleResult();		
-				
-				Query getOrdersDate = entityManager.createNativeQuery("select DOCDATE from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ invoice.getID()+"'");  
-				java.sql.Date orderdate = (java.sql.Date)getOrdersDate.getSingleResult();
-				
-				note.setORDERNUMBER(ordernumber);
-				note.setORDERDATE(orderdate.toString());
-				note.setDELIVERYNOTENUMBER(invoice.getREGNUMBER());//regnumber from SPROutcomeinvoice
-				note.setDELIVERYNOTEDATE(invoice.getDOCDATE());
-				
-				Query getCampaignNumber = entityManager.createNativeQuery("select DOGNUM from CLIENT where id ="+ invoice.getCLIENTID());  
-				String campaignNumber = (String)getCampaignNumber.getSingleResult();
-				note.setCAMPAIGNNUMBER(campaignNumber);
-					
+			    /**
+				 * begin to setUp or DESADV entity and ResultList according to XML notification parameters
+				 */
+			    note.setPreHEADParameters(order.getId(), LocalDate.now().toString(), invoice.getDOCDATE(),
+			    						  ordernumber, orderdate.toString(), invoice.getREGNUMBER(),
+			    						  invoice.getDOCDATE(), QueryManagerUtil.getCampaignNumberByClientID(invoice.getCLIENTID(), entityManager));
 					//head settings
 					DESADV.HEAD head = new HEAD();
+					String postcode = QueryManagerUtil.getRecipientByClientID(invoice.getCLIENTID(), entityManager);
 					
-					head.setSUPPLIER("9863762978175");//final value
-					head.setBUYER(0);//order.getBuyer());
-					
-					Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ invoice.getCLIENTID());  
-					String postcode = (String)getPOSTCODE.getSingleResult();
-					
-					head.setDELIVERYPLACE(postcode);//postcode from clients
-					head.setSENDER("9863762978175");//final value
-					head.setRECIPIENT(postcode);
-					//head.setEDIINTERCHANGEID(0);
-			
+					head.setPrePositionPsrameters(order.getBuyer(), postcode,postcode);
+					//head.setEDIINTERCHANGEID(0);			
 						//setting details into packingsequence
 						DESADV.HEAD.PACKINGSEQUENCE packingSequence = new DESADV.HEAD.PACKINGSEQUENCE();
 						List<DESADV.HEAD.PACKINGSEQUENCE.POSITION> list= new ArrayList<DESADV.HEAD.PACKINGSEQUENCE.POSITION>();
 						
 						//query for details of OrdersOutcomeInvoices
-						Query getORDERSOUTINVDET = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+orderid+",Null,0,Null,0, Null,Null,0,0) order by GOODSID", ClientRequestDetails.class);	
-						@SuppressWarnings("unchecked")
-						List<ClientRequestDetails> ORDERSOUTINVDET = getORDERSOUTINVDET.getResultList();
+						List<ClientRequestDetails> ORDERSOUTINVDET = QueryManagerUtil.getOrdersDetailsByID(orderid, entityManager);
 						
 						//query for details of OutcomeInvoices
-						Query getOutcomeDetails = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET ("+invoice.getID()+",Null,0,Null,Null,0,0) order by GOODSID", SPROutcomeInvoiceDetails.class);	
-						@SuppressWarnings("unchecked")
-						List<SPROutcomeInvoiceDetails> outcomeDetails = getOutcomeDetails.getResultList();
-						
+						List<SPROutcomeInvoiceDetails> outcomeDetails = QueryManagerUtil.getOutcomeDetailsByID(invoice.getID(), entityManager);
 						
 						int orderedquantity = 0;
 						int deliveryquantity = 0;
+						double deliveryprice = 0;
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
-								
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
-								position.setPOSITIONNUMBER(i+1);
-								position.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
-								//position.setPRODUCTIDBUYER(0);//from clients 
-								position.setDELIVEREDUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
-								
-								Query getORDEREDQUANTITY = entityManager.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+orderid+" and GOODSID ="+ORDERSOUTINVDET.get(i).getGOODSID());  
-								double orderquantity = (double)getORDEREDQUANTITY.getSingleResult();
-								position.setORDEREDQUANTITY(orderquantity);
-								position.setORDERUNIT(ORDERSOUTINVDET.get(i).getMEASURESNAME());
-								position.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
+								position.setParameters(i+1, ORDERSOUTINVDET.get(i).getGOODSCODE(),
+														ORDERSOUTINVDET.get(i).getMEASURESNAME(), 
+														QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager),
+														ORDERSOUTINVDET.get(i).getMEASURESNAME(), ORDERSOUTINVDET.get(i).getGOODSNAME());
 								
 								int OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
 								boolean checkpoint = false;
@@ -312,38 +279,44 @@ public class XmlGenerator{
 										break;
 									}
 								}
-									
+								/**
+								 * check our markup to set position para depends on input Invoices 
+								 */
 								if(checkpoint==false){
-									position.setDELIVEREDQUANTITY(0.0);
-									position.setPRICE(0.0);
+									position.setDelPriceAndQuantity(0.0, 0);
 								}
 								else{
-									position.setDELIVEREDQUANTITY(outcomeDetails.get(checknumber).getITEMCOUNT());
-									position.setPRICE(outcomeDetails.get(checknumber).getENDPRICE());
+									position.setDelPriceAndQuantity(outcomeDetails.get(checknumber).getITEMCOUNT(), outcomeDetails.get(checknumber).getENDPRICE());
 								}
 								
 								orderedquantity+=position.getORDEREDQUANTITY();
 								deliveryquantity+=position.getDELIVEREDQUANTITY();
+								deliveryprice+=outcomeDetails.get(checknumber).getSUMITEMPRICEWITHOVERH();
 								list.add(position);
+								entityManager.clear();
 							}
-				//block for updating our MySQL DATA
-				em.getTransaction().begin();
-					order.setDesadv_date(DateUtils.asDate(LocalDate.now()));
-					order.setDesadv_user(userdet.getName());
-				em.persist(order);
-				em.getTransaction().commit();
-				em.clear();
-				em.close();
-								
-				//setting result list
-				result.setTotalorderedquantity(orderedquantity);
-				result.setTotaldeliveryprice(invoice.getMAINSUMM());	
-				result.setTotaldeliveryquantity(deliveryquantity);
-				result.setTotalInfo("");
+						//block for updating our MySQL DATA
+						em.getTransaction().begin();
+							order.setDesadv_date(DateUtils.asDate(LocalDate.now()));
+							order.setDesadv_user(userdet.getName());
+						em.persist(order);
+						em.getTransaction().commit();
+						em.clear();
+						em.close();
+										
+						/**
+						 * ResultList creation with result parameters
+						 */
+						ResultLog result = new ResultLog("Ок","Ув. об отгрузке("+invoice.getREGNUMBER()+")",
+														LocalDate.now().toString(),
+														deliveryquantity,
+														deliveryprice,
+														orderedquantity);
+					
+						packingSequence.setPOSITION(list);
+					
+					head.setPACKINGSEQUENCE(packingSequence);
 				
-				packingSequence.setPOSITION(list);
-				head.setPACKINGSEQUENCE(packingSequence);
-			
 				note.setHEAD(head);
 				//creating our xml document
 				File directory = new File("C:/MLW/XMLDESADV/"+LocalDate.now()+"/");
@@ -352,13 +325,11 @@ public class XmlGenerator{
 				}
 				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+LocalDate.now()+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
 				resultList.add(result);
-				outcomeDetails=null;
 			}
 			EntityManagerFactory emf = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();
 			entityManager.close();
 			emf.close();
-			
 		}
 		catch(JAXBException ex){
 			System.out.println("-----------------------"+ex.getMessage());

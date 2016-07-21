@@ -19,11 +19,14 @@ public class DateUtils {
 		return sqlDate;
 	}
 
-	/*public static LocalDate asLocalDate(Date date) {
-	    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+	public static String getNextDate(){
+		LocalDate date = LocalDate.now();
+		String nextDate = "";
+		if(date.getDayOfWeek().getValue()==5){
+			nextDate=date.plusDays(3).toString();
+		}else{
+			nextDate=date.plusDays(1).toString();
+		} 
+		return nextDate;
 	}
-
-	public static LocalDateTime asLocalDateTime(Date date) {
-	    return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-	}*/
 }

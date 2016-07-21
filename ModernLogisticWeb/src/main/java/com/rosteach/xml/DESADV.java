@@ -126,6 +126,22 @@ public class DESADV {
     protected DESADV.HEAD head;
 
     /**
+     * global setter the values of all DESADV preHEAD tags property.
+     * 
+     */
+    public void setPreHEADParameters(long number,String date2,String deliverydate,
+    								String ordernumber,String orderdate,String deliverynotenumber,
+    								String deliverynotedate, String campaignnumber){
+    	this.number = number;
+    	this.date = date2;
+    	this.deliverydate = deliverydate;
+    	this.ordernumber = ordernumber;
+    	this.orderdate = orderdate;
+    	this.deliverynotenumber = deliverynotenumber;
+    	this.deliverynotedate = deliverynotedate;
+    	this.campaignnumber = campaignnumber;
+    }
+    /**
      * Gets the value of the number property.
      * 
      */
@@ -378,7 +394,7 @@ public class DESADV {
         @XmlElement(name = "SUPPLIER")
         protected String supplier;
         @XmlElement(name = "BUYER")
-        protected int buyer;
+        protected long buyer;
         @XmlElement(name = "DELIVERYPLACE")
         protected String deliveryplace;
         @XmlElement(name = "SENDER")
@@ -389,8 +405,16 @@ public class DESADV {
         protected int ediinterchangeid;
         @XmlElement(name = "PACKINGSEQUENCE", required = true)
         protected DESADV.HEAD.PACKINGSEQUENCE packingsequence;
+        
+        public void setPrePositionPsrameters(long buyer, String deliveryplace,String recipient){
+        	this.supplier = "9863762978175";
+			this.buyer = buyer;
+			this.deliveryplace = deliveryplace;
+			this.sender = "9863762978175";
+			this.recipient = recipient;
+        }
 
-        /**
+		/**
          * Gets the value of the supplier property.
          * 
          */
@@ -410,7 +434,7 @@ public class DESADV {
          * Gets the value of the buyer property.
          * 
          */
-        public int getBUYER() {
+        public long getBUYER() {
             return buyer;
         }
 
@@ -418,7 +442,7 @@ public class DESADV {
          * Sets the value of the buyer property.
          * 
          */
-        public void setBUYER(int value) {
+        public void setBUYER(long value) {
             this.buyer = value;
         }
 
@@ -658,8 +682,23 @@ public class DESADV {
                 protected double price;
                 @XmlElement(name = "DESCRIPTION", required = true)
                 protected String description;
-
-                /**
+                public POSITION(){
+                	
+                }                
+                public void setParameters(int positionnumber,String product,
+                				String deliveredunit,double orderedquantity,String orderunit,String description){
+                	this.positionnumber = positionnumber;
+					this.product = product;
+					this.deliveredunit = deliveredunit;
+					this.orderedquantity = orderedquantity;
+					this.orderunit = orderunit;
+					this.description = description;
+                }
+                public void setDelPriceAndQuantity(double deliveredquantity,double price){
+                	this.deliveredquantity = deliveredquantity;
+                	this.price = price;
+                }
+				/**
                  * Gets the value of the positionnumber property.
                  * 
                  */

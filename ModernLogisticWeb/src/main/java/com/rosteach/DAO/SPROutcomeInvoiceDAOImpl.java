@@ -1,6 +1,5 @@
 package com.rosteach.DAO;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
+import com.rosteach.util.DateUtils;
 
 @Repository
 public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
@@ -21,21 +21,16 @@ public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
 	public List<SPROutcomeInvoice> getInvoicesByLocalDate(String database, String username, String password) {
 		entityManager = new EntityManagerReferee().getConnection(database, username, password);
 		entityManager.getTransaction().begin();
-		
-		LocalDate date = LocalDate.now();
-		int nextday = date.getDayOfMonth()+1;
-		String curDate = nextday+"."+date.getMonthValue()+"."+date.getYear();
-		System.out.println("---------------date------------"+curDate);
-		
-		
-		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'"+curDate+"','"+curDate+"',0,Null,Null,Null,0)", SPROutcomeInvoice.class);
-				
+
+		String date = DateUtils.getNextDate();
+
+		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'"+date+"','"+date+"',0,Null,Null,Null,0)", SPROutcomeInvoice.class);	
 		@SuppressWarnings("unchecked")
 		List<SPROutcomeInvoice> invoices = query.getResultList();
 		
 		EntityManagerFactory emf = entityManager.getEntityManagerFactory();
-		
 		entityManager.getTransaction().commit();
+		entityManager.clear();
 		entityManager.close();
 		emf.close();
 		return invoices;

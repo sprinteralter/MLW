@@ -12,7 +12,15 @@ public class ResultLog {
 	public ResultLog(){
 		
 	}
-
+	public ResultLog(String info,String name, String date, 
+					int delquantity,double delprice, int ordquantity){
+		this.totalInfo = info;
+		this.totalname = name;
+		this.totaldate = date;
+		this.totaldeliveryquantity = delquantity;
+		this.totaldeliveryprice = delprice;
+		this.totalorderedquantity = ordquantity;
+	}
 	public String getTotalInfo() {
 		return totalInfo;
 	}
