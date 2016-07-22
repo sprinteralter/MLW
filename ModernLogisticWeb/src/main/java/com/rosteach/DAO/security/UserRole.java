@@ -2,9 +2,9 @@ package com.rosteach.DAO.security;
 
 public enum UserRole {
 	
-	ADMIN,
-    USER,
-    ANONYMOUS;
+	ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_ANONYMOUS;
  
     UserRole() {
     }

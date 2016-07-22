@@ -31,10 +31,10 @@ public class DatabaseFilter extends UsernamePasswordAuthenticationFilter {
 	{
 		String username = request.getParameter("j_username");
 		String extraInput = request.getParameter(getExtraParameter());
-
 		String combinedUsername = username + getDelimiter() + extraInput;
-
-		System.out.println("Combined username = " + combinedUsername);
+		
+		System.out.println("Combined username = " + combinedUsername + " " +request.getRemoteAddr());
+		
 		return combinedUsername;
 	}
 

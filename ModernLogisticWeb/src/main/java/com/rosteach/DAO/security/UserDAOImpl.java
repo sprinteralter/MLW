@@ -4,8 +4,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -38,6 +41,8 @@ public class UserDAOImpl implements UserDAO {
 		 EntityManager em =  emf.createEntityManager();
 		Query query = em.createNativeQuery("SELECT * FROM users_auth where name = '"+name+"' and db = '"+db+"'", User.class);
 		try{
+	
+	        
 	    return (User)query.getResultList().get(0);
 		} catch (IndexOutOfBoundsException e){
 			e.printStackTrace();

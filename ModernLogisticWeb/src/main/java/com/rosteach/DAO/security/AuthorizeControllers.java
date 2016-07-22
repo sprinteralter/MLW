@@ -1,6 +1,10 @@
 package com.rosteach.DAO.security;
 
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,15 +12,26 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class AuthorizeControllers {
@@ -32,7 +47,8 @@ public class AuthorizeControllers {
 	    @RequestMapping(value = "/useradd", method = RequestMethod.POST)             //register add user
 	    public ModelAndView addAdv(@RequestParam(value = "name") String name,
 	                               @RequestParam(value = "password") String password,
-	                               @RequestParam(value = "dataBase") String database
+	                               @RequestParam(value = "dataBase") String database,
+	                               HttpServletRequest request
 	                               ) {
 
 			User check = userDao.getUserByName(name, database);
@@ -94,18 +110,61 @@ public class AuthorizeControllers {
 	    
 	    
 	    @RequestMapping(value = "/login", method = RequestMethod.GET)
-		public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
+		public ModelAndView login(@RequestParam(value = "error", required = false) String error, HttpServletRequest request) throws IOException {
 			ModelAndView model = new ModelAndView();
-			if (error != null){
-				model.addObject("error", "Логин или пароль не верны!  <div><a href=\"./reg\">Вы здесь впервые?</a></div>");
-			}
+			boolean match;
+			
+			//IpAddressMatcher matcher = new IpAddressMatcher("192.168.20.13"); //192.168.0.0/16
+			 if (!(request.getRemoteAddr().equals("192.168.20.1")))//matcher.matches(request) == true)
+		        	match = true;
+		        else match= false;
+
+		        if (match == true){
+		        	if (error != null){
+						model.addObject("error", "Логин или пароль не верны!  <div><a href=\"./reg\">Вы здесь впервые?</a></div>");
+					}
+					return model;
+		        } else model.setViewName("denied");		       
+
 			return model;
 		}
+	    
+	    @RequestMapping(value = "/keyauth", method = RequestMethod.POST)
+		public ModelAndView keyauth(@RequestParam(value = "error", required = false) String error, HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) throws IOException {
+			ModelAndView model = new ModelAndView("home");
+			
+			MultipartFile mf =  file;
+			File f = new File("key");
+			mf.transferTo(f);
+			FileReader reader = new FileReader(f);
+			char[] cbuf = new char[(int)f.length()];
+			reader.read(cbuf);
+			String s = new String(cbuf);
+			String encoded = new String(Base64.getDecoder().decode(s));
+			
+			
+			
+			UserDetails userDetails = new UserDetailsServiceIMPL().loadUserByUsername(encoded);
+			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			HttpSession session = request.getSession(true);
+		    session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+			return model;
+		}
+	    
+	    
 	    
 	  @RequestMapping(value = "/error", method = RequestMethod.GET)
 		public String error(HttpServletResponse resp) {
 			
 			return "error";
 		}
+	  
+	  
+	  @RequestMapping(value = "/admin", method = RequestMethod.GET)
+		public String admin(HttpServletResponse resp) {
+			return "admin";
+		}
+	  
 	
 }

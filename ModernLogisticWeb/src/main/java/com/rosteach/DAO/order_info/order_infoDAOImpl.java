@@ -32,6 +32,7 @@ public class order_infoDAOImpl implements Order_infoDAO {
 	    em.getTransaction().begin();
 	    em.persist(ordInfo);
 	    em.getTransaction().commit();
+	    
 	}
 
 	@Override
