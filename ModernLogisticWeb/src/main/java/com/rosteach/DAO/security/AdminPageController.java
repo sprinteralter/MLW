@@ -33,41 +33,13 @@ public class AdminPageController {
 	UserDAO userDao;
 	
 	 @RequestMapping(value = "/generateKey", method = RequestMethod.POST)             //register add user
-	    public String outKey(@RequestParam(value = "name") String name,
+	    public ModelAndView outKey(@RequestParam(value = "name") String name,
 	                               @RequestParam(value = "domain") String database,
 	                               HttpServletResponse response
 	                              
 	                               ) {
 
-		
-			
-			/*	
-				String db = "";
-		    	
-		    	if(database.equals("alter_ros")){
-					db="jdbc:firebirdsql:192.168.20.85/3050:alter_ros";
-				} 
-				if(database.equals("Alter")){
-					db="jdbc:firebirdsql:192.168.20.17/3050:alter";
-				} 
-				if(database.equals("alter_curent")){
-					db="jdbc:firebirdsql:192.168.20.13/3050:alter_curent";
-				}	
-				
-				if(database.equals("sprinter_curent")){
-					db="jdbc:firebirdsql:192.168.20.13/3050:sprinter_curent";
-				}	
-				
-				if(database.equals("Sprinter")){
-					db="jdbc:firebirdsql:192.168.20.16/3050:sprinter";
-					
-					
-					
-	    }
-				EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
-				EntityManager em =  emf.createEntityManager();
-				Query query = em.createNativeQuery("SELECT * FROM users_auth where name = '"+name+"' and db = '"+db+"'", User.class);	*/
-		 
+		 ModelAndView mv = new ModelAndView();
 				User user = userDao.getUserByName(name, database);
 				String splitter = user.getName()+":"+user.getPassword()+":"+database;
 				String encoded = Base64.getEncoder().encodeToString(splitter.getBytes());
@@ -103,7 +75,7 @@ public class AdminPageController {
 				
 	           
 				//
-		return "admin";
+		return mv;
 	 }
 
 }
