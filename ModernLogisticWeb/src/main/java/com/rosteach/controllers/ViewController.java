@@ -91,4 +91,22 @@ public class ViewController {
 		mav.addObject("database", "База: "+database.substring(start,end));
 		return mav;
 	}
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test(){
+		ModelAndView mav = new ModelAndView();
+		
+		GetDetails currentUser = new GetDetails();
+		String database = currentUser.getDB();
+		String username = currentUser.getName();
+		
+		int start = database.lastIndexOf(':')+1;
+		int end = database.length();
+		
+		Date date = new Date();
+		logger.info("test page downloaded with success!  Server date & time is: {}.",date.getTime());
+		
+		mav.addObject("username", "Имя: "+username);
+		mav.addObject("database", "База: "+database.substring(start,end));
+		return mav;
+	}
 }

@@ -47,7 +47,7 @@
 			<div class="item"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h5>N/A</h5></div></div>
 			<div class="item"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h5>N/A</h5></div></div>
 			<div class="item"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h5>N/A</h5></div></div>
-			<div class="item end"><a href="#"><img src="resources/images/closed.png"/></a><div class="icon"><h5>N/A</h5></div></div>
+			<div class="item end"><a href="test"><img src="resources/images/closed.png"/></a><div class="icon"><h5>N/A</h5></div></div>
 		</div>
 	</div>
 	<div id="footer">

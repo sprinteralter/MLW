@@ -221,6 +221,10 @@ public class XmlGenerator{
 			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 			entityManager.getTransaction().begin();
 			
+			EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
+		    EntityManager em =  emf.createEntityManager();
+		    em.getTransaction().begin();
+		    
 			for(SPROutcomeInvoice invoice: inputInvoices){
 				//creating our notification entity and setters parameters
 				DESADV note = new DESADV();
@@ -232,8 +236,7 @@ public class XmlGenerator{
 				String ordernumber = QueryManagerUtil.getOrderNumberBySPRoiID(invoice.getID(), entityManager);
 				java.sql.Date orderdate = QueryManagerUtil.getOrderDateBySPRoiID(invoice.getID(), entityManager);
 				
-				EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
-			    EntityManager em =  emf.createEntityManager();					
+									
 			    Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();
 				
 			    /**
@@ -296,13 +299,11 @@ public class XmlGenerator{
 								entityManager.clear();
 							}
 						//block for updating our MySQL DATA
-						em.getTransaction().begin();
+						
 							order.setDesadv_date(DateUtils.asDate(LocalDate.now()));
 							order.setDesadv_user(userdet.getName());
 						em.persist(order);
-						em.getTransaction().commit();
-						em.clear();
-						em.close();
+						
 										
 						/**
 						 * ResultList creation with result parameters
@@ -326,10 +327,15 @@ public class XmlGenerator{
 				marshaller.marshal(note, new File("C:/MLW/XMLDESADV/"+LocalDate.now()+"/","DESADV_"+userdet.getName()+"_"+invoice.getREGNUMBER()+".xml"));
 				resultList.add(result);
 			}
-			EntityManagerFactory emf = entityManager.getEntityManagerFactory();
+			
+			em.getTransaction().commit();
+			em.clear();
+			em.close();
+			
+			EntityManagerFactory emfBird = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();
 			entityManager.close();
-			emf.close();
+			emfBird.close();
 		}
 		catch(JAXBException ex){
 			System.out.println("-----------------------"+ex.getMessage());

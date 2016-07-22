@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -43,7 +42,6 @@ public class FTPConnectionEDI {
 		try{
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			
-			LocalDate date = LocalDate.now();
 			File pack = new File(path);
 			System.out.println("-----------pack name-----------"+pack.getName());
 			if(pack.isDirectory()){

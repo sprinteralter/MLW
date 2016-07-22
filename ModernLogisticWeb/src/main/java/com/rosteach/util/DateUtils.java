@@ -18,7 +18,7 @@ public class DateUtils {
 		java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 		return sqlDate;
 	}
-
+	
 	public static String getNextDate(){
 		LocalDate date = LocalDate.now();
 		String nextDate = "";
