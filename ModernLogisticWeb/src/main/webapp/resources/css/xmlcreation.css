@@ -286,6 +286,7 @@ body{
     top: 45%;
     left: 0;
     position: absolute;
+    opacity:0.5;
     border-radius: 50%;
 }
 #content .buttons #refresh{
@@ -295,6 +296,7 @@ body{
     left: 0;
     position: absolute;
     border-radius: 50%;
+    opacity:0.5;
     display:none;
 }
 #content .buttons #generate:hover,
@@ -304,6 +306,7 @@ body{
     -webkit-transform: scale(0.9); /* Äëÿ Safari, Chrome, iOS */
     -o-transform: scale(0.9); /* Äëÿ Opera */
     transform: scale(0.9);
+    opacity:1;
 }
 #content .rightTA{
     margin: 0;
@@ -635,4 +638,3 @@ body{
 /* End of my code
 ***
 */
-

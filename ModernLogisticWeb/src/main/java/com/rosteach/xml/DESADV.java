@@ -398,13 +398,13 @@ public class DESADV {
         @XmlElement(name = "SENDER")
         protected String sender;
         @XmlElement(name = "RECIPIENT")
-        protected String recipient;
+        protected long recipient;
         @XmlElement(name = "EDIINTERCHANGEID")
         protected int ediinterchangeid;
         @XmlElement(name = "PACKINGSEQUENCE", required = true)
         protected DESADV.HEAD.PACKINGSEQUENCE packingsequence;
         
-        public void setPrePositionPsrameters(long buyer, String deliveryplace,String recipient){
+        public void setPrePositionPsrameters(long buyer, String deliveryplace,long recipient){
         	this.supplier = "9863762978175";
 			this.buyer = buyer;
 			this.deliveryplace = deliveryplace;
@@ -480,7 +480,7 @@ public class DESADV {
          * Gets the value of the recipient property.
          * 
          */
-        public String getRECIPIENT() {
+        public long getRECIPIENT() {
             return recipient;
         }
 
@@ -488,7 +488,7 @@ public class DESADV {
          * Sets the value of the recipient property.
          * 
          */
-        public void setRECIPIENT(String value) {
+        public void setRECIPIENT(long value) {
             this.recipient = value;
         }
 
@@ -667,7 +667,7 @@ public class DESADV {
                 @XmlElement(name = "PRODUCT")
                 protected String product;
                 @XmlElement(name = "PRODUCTIDBUYER")
-                protected int productidbuyer;
+                protected String productidbuyer;
                 @XmlElement(name = "DELIVEREDQUANTITY")
                 protected Double deliveredquantity;
                 @XmlElement(name = "DELIVEREDUNIT", required = true)
@@ -684,13 +684,15 @@ public class DESADV {
                 	
                 }                
                 public void setParameters(int positionnumber,String product,
-                				String deliveredunit,double orderedquantity,String orderunit,String description){
+                				String deliveredunit,double orderedquantity,
+                				String orderunit,String description,String productidbuyer){
                 	this.positionnumber = positionnumber;
 					this.product = product;
 					this.deliveredunit = deliveredunit;
 					this.orderedquantity = orderedquantity;
 					this.orderunit = orderunit;
 					this.description = description;
+					this.productidbuyer = productidbuyer;
                 }
                 public void setDelPriceAndQuantity(double deliveredquantity,double price){
                 	this.deliveredquantity = deliveredquantity;
@@ -732,7 +734,7 @@ public class DESADV {
                  * Gets the value of the productidbuyer property.
                  * 
                  */
-                public int getPRODUCTIDBUYER() {
+                public String getPRODUCTIDBUYER() {
                     return productidbuyer;
                 }
 
@@ -740,7 +742,7 @@ public class DESADV {
                  * Sets the value of the productidbuyer property.
                  * 
                  */
-                public void setPRODUCTIDBUYER(int value) {
+                public void setPRODUCTIDBUYER(String value) {
                     this.productidbuyer = value;
                 }
 

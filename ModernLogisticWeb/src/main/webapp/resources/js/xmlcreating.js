@@ -84,6 +84,8 @@ $(document).ready(function(){
             $('#selectoption').css("display", "block") // убирaем у мoдaльнoгo oкнa display: none;
    						.animate({opacity: 1}, 200); 
     	});
+    	$(this).fadeOut(200);
+    	$('#fix').fadeIn(200);
     });
     $('.accOption').click(function(){
     	$('#overlay').fadeOut(200, function(){

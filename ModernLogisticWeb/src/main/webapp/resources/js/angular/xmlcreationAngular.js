@@ -38,7 +38,7 @@ app.controller('myCtrl', function($scope, $http){
 	        showColumnMenu:true,
 	        showFilter: true,
 	        columnDefs: [
-	              {field: 'totalinfo', displayName: 'Инфо', width: "*"},
+	              {field: 'totalInfo', displayName: 'Инфо', width: "*"},
 	              {field: 'totalname', displayName: 'Операция', width: "*"},
 	              {field: 'totaldate', displayName: 'Дата', width: "*"},
 	              {field: 'totalorderedquantity', displayName: 'Заказано(общ.)', width: "*"},

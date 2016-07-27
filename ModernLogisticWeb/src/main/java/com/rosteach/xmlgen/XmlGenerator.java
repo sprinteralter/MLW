@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -228,17 +229,16 @@ public class XmlGenerator{
 			for(SPROutcomeInvoice invoice: inputInvoices){
 				//creating our notification entity and setters parameters
 				DESADV note = new DESADV();
-				
 				/**
 				 * get parameters for Order from QueryManager
 				 */
 				int orderid = QueryManagerUtil.getOrderIdBySPRoiID(invoice.getID(), entityManager);
 				String ordernumber = QueryManagerUtil.getOrderNumberBySPRoiID(invoice.getID(), entityManager);
 				java.sql.Date orderdate = QueryManagerUtil.getOrderDateBySPRoiID(invoice.getID(), entityManager);
-				
-									
-			    Order_info order =(Order_info) em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class).getSingleResult();
-				
+				/**
+				 * get Order from QueryManager as MySQL instance
+				 */				
+			    Order_info order =QueryManagerUtil.getOrder_infoByID(orderid, em);
 			    /**
 				 * begin to setUp or DESADV entity and ResultList according to XML notification parameters
 				 */
@@ -249,7 +249,7 @@ public class XmlGenerator{
 					DESADV.HEAD head = new HEAD();
 					String postcode = QueryManagerUtil.getRecipientByClientID(invoice.getCLIENTID(), entityManager);
 					
-					head.setPrePositionPsrameters(order.getBuyer(), postcode,postcode);
+					head.setPrePositionPsrameters(order.getBuyer(), postcode,order.getBuyer());
 					//head.setEDIINTERCHANGEID(0);			
 						//setting details into packingsequence
 						DESADV.HEAD.PACKINGSEQUENCE packingSequence = new DESADV.HEAD.PACKINGSEQUENCE();
@@ -264,12 +264,14 @@ public class XmlGenerator{
 						int orderedquantity = 0;
 						int deliveryquantity = 0;
 						double deliveryprice = 0;
+						
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
 								position.setParameters(i+1, ORDERSOUTINVDET.get(i).getGOODSCODE(),
 														ORDERSOUTINVDET.get(i).getMEASURESNAME(), 
 														QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager),
-														ORDERSOUTINVDET.get(i).getMEASURESNAME(), ORDERSOUTINVDET.get(i).getGOODSNAME());
+														ORDERSOUTINVDET.get(i).getMEASURESNAME(), ORDERSOUTINVDET.get(i).getGOODSNAME(),
+														QueryManagerUtil.getProductIdBuyerByParam(ORDERSOUTINVDET.get(i).getGOODSID(),invoice.getCLIENTID(),entityManager));
 								
 								int OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
 								boolean checkpoint = false;
@@ -294,17 +296,15 @@ public class XmlGenerator{
 								
 								orderedquantity+=position.getORDEREDQUANTITY();
 								deliveryquantity+=position.getDELIVEREDQUANTITY();
-								deliveryprice+=outcomeDetails.get(checknumber).getSUMITEMPRICEWITHOVERH();
+								deliveryprice+=outcomeDetails.get(checknumber).getSUMITEMPRICE();
 								list.add(position);
 								entityManager.clear();
 							}
 						//block for updating our MySQL DATA
-						
 							order.setDesadv_date(DateUtils.asDate(LocalDate.now()));
 							order.setDesadv_user(userdet.getName());
-						em.persist(order);
-						
-										
+							em.persist(order);
+							em.clear();
 						/**
 						 * ResultList creation with result parameters
 						 */
@@ -331,6 +331,7 @@ public class XmlGenerator{
 			em.getTransaction().commit();
 			em.clear();
 			em.close();
+			emf.close();
 			
 			EntityManagerFactory emfBird = entityManager.getEntityManagerFactory();
 			entityManager.getTransaction().commit();

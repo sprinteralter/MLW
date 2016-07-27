@@ -112,12 +112,12 @@ public class AuthorizeControllers {
 	    @RequestMapping(value = "/login", method = RequestMethod.GET)
 		public ModelAndView login(@RequestParam(value = "error", required = false) String error, HttpServletRequest request) throws IOException {
 			ModelAndView model = new ModelAndView();
-			boolean match;
+			final boolean match = true;
 			
 			//IpAddressMatcher matcher = new IpAddressMatcher("192.168.20.13"); //192.168.0.0/16
-			 if (!(request.getRemoteAddr().equals("192.168.20.1")))//matcher.matches(request) == true)
+			 /*if (!(request.getRemoteAddr().equals("192.168.20.1")))//matcher.matches(request) == true)
 		        	match = true;
-		        else match= false;
+		        else match= false;*/
 
 		        if (match == true){
 		        	if (error != null){

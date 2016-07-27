@@ -4,6 +4,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,14 @@ import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
 //import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
+import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 //import com.rosteach.services.ClientsRequestsService;
 import com.rosteach.services.SPROutcomeInvoiceService;
 import com.rosteach.services.databinding.DataBindingService;
+import com.rosteach.util.QueryManagerUtil;
+import com.rosteach.validators.QueryValidator;
 import com.rosteach.xmlgen.XmlGenerator;
 
 @RestController
@@ -77,12 +84,34 @@ public class DataRestController {
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
-		List<ResultLog> result =null;
+		
+		GetDetails userdet = new GetDetails();
+		EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
+		entityManager.getTransaction().begin();
+		
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
+	    EntityManager em =  emf.createEntityManager();
+	    em.getTransaction().begin();
+	    
+	    List<ResultLog> result = new QueryValidator().checkAllForXMLGen(request, entityManager, em);
+	    System.out.println("------------size------------"+result.size());
+	    em.getTransaction().commit();
+		em.clear();
+		em.close();
+		emf.close();
+		
+		EntityManagerFactory emfBird = entityManager.getEntityManagerFactory();
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		emfBird.close();
+		
 		XmlGenerator generator = new XmlGenerator();
-		if(option.equals("notificate")){
-			result = generator.generateNotification(request);
-		}else if(option.equals("confirm")){
-			result = generator.generateConfirmation(request);
+		if(result.size()==0){
+			if(option.equals("notificate")){
+				result = generator.generateNotification(request);
+			}else if(option.equals("confirm")){
+				result = generator.generateConfirmation(request);
+			}
 		}
 		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
 	}

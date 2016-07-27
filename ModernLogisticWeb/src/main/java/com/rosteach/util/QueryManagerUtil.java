@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import com.rosteach.entities.ClientRequestDetails;
+import com.rosteach.entities.Order_info;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
 
 public class QueryManagerUtil{
@@ -87,5 +88,24 @@ public class QueryManagerUtil{
 		@SuppressWarnings("unchecked")
 		List<SPROutcomeInvoiceDetails> outcomeDetails = getOutcomeDetails.getResultList();
 		return outcomeDetails;
+	}
+	/**
+	 * input types: int,EntityManager 
+	 * method to get Order according to orderid from firebird (MySQL)
+	 * return type: Order_info
+	 * */
+	public static Order_info getOrder_infoByID(int orderid,EntityManager em){
+		Query getOrder_info = em.createNativeQuery("Select * from users_auth.order_info where order_kod = "+orderid, Order_info.class);	
+		Order_info order = (Order_info)getOrder_info.getSingleResult();
+		return order;
+	}
+	/**
+	 * input types: int goodsid,int clientid,EntityManager 
+	 * method to get productIdBuyer as PRODCODE from PRODLINK(FIREBIRD)
+	 * return type: String
+	 * */
+	public static String getProductIdBuyerByParam(int goodsid,int clientid,EntityManager em){
+		Query getPRODUCTIDBUYER = em.createNativeQuery("select prodcode from prodlink where clientid="+clientid+"and goodsid="+goodsid);	
+		return (String)getPRODUCTIDBUYER.getSingleResult();
 	}
 }

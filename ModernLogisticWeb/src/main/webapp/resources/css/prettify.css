@@ -1,0 +1,297 @@
+html, body { 
+	height: 100%; 
+	width: 100%;
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+header{
+	margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 10%;
+    border-bottom: 1px solid rgb(0, 153, 204); 
+    background: whitesmoke;
+    box-sizing: border-box;
+}
+.infoBar{
+	margin:0;
+	padding:0;
+	width: 100%;
+	height: 100%;
+}
+.infoBar .infoBarLeft{
+	margin:0;
+	padding:0;
+    height: 100%;
+    width:30%;
+    box-sizing: border-box;
+    float:left;
+    position:relative;
+}
+.infoBar .infoBarLeft .infoBarIconLeft{
+    height: 50%;
+    width: 100%;
+    margin: 0;
+    padding: 0 5%;
+    bottom: 0;
+    float: left;
+    box-sizing: border-box;
+    position:absolute;
+}
+.infoBar .infoBarLeft .infoBarIconLeft img{
+    height: 100%;
+    width: auto;
+    margin: 0;
+    margin-right: 0.5%;
+    cursor: pointer;
+    border: 0.5px solid whitesmoke;
+    border-radius: 5px 5px 0 0;
+    box-sizing: border-box;
+    opacity: 0.4;
+}
+.infoBar .infoBarLeft .infoBarIconLeft img:hover{
+    opacity: 1;
+}
+.infoBar .infoBarCenter{
+	margin:0;
+	padding:0;
+    height: 100%;
+    width:40%;
+    text-align: center;
+	text-transform: uppercase;
+	float:left;
+}
+.infoBar .infoBarCenter h1{
+    margin: 0;
+    padding: 0;
+    font-size: 1.75rem;
+}
+.infoBar .infoBarRight{
+	margin:0;
+	padding:0;
+    float:left;
+    height: 100%;
+    width:30%;
+    position: relative;
+}
+.infoBar .infoBarRight .infoBarIconRight{
+	margin:0;
+	padding:0;
+    height: 50%;
+    width: 100%;
+    margin: 0;
+    padding: 0 5%;
+    bottom: 0;
+    box-sizing: border-box;
+    position: absolute;
+}
+.infoBar .infoBarRight .infoBarIconRight img{
+	margin:0;
+	padding:0;
+    bottom: 0;
+    height: 100%;
+    width: auto;
+    margin-left: 0.5%;
+    cursor: pointer;
+    border: 0.5px solid whitesmoke;
+    border-radius: 5px 5px 0 0;
+    box-sizing: border-box;
+    opacity: 0.4;
+}
+.infoBar .infoBarRight .infoBarIconRight img:hover{
+    /*border-top: 0.5px solid rgb(0, 153, 204);
+    border-left: 0.5px solid rgb(0, 153, 204);
+    border-right: 0.5px solid rgb(0, 153, 204);*/
+    opacity: 1;
+}
+#wizard{
+	margin:0;
+	padding: 0.3% 0.5%;
+	width:100%;
+	height:85%;
+	box-sizing:border-box;
+	clear:both;
+}
+#wizard #rootwizard{
+	margin:0;
+	padding:0;
+	height:100%;
+}
+#wizard #rootwizard .tableLeft{
+	margin:0;
+	padding:0;
+	height:100%;
+}
+#wizard #rootwizard .tab-content{
+	margin:0;
+	padding:0 0.2%;
+	height:100%;
+	border:1px solid grey;
+}
+footer{
+	margin: 0;
+    padding: 0;
+	height: 5%;
+    text-align: center;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    background: rgb(0, 153, 204);
+}
+footer:before{
+    content: "";
+    display: inline-block;
+    min-height: inherit;
+    height: 100%;
+    vertical-align: middle;
+}
+footer h4{
+    margin: 0;
+    font-size: 1rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/**************Login overlay*************/
+#loginInfo{
+    margin: auto;
+    padding: 0;
+    position: absolute;
+    top:50%;
+    left:50%;
+    width: 500px;
+    height: 300px;
+    margin-top: -150px;
+    margin-left: -250px;
+    background: white;
+    box-sizing: border-box;
+    z-index: 5;
+    border: 5px double #dddddd;
+    border-radius: 5px;
+    display: none;
+}
+#loginInfo #dropZone{
+    margin: 1%;
+    padding: 1%;
+    width: 20%;
+    height: 30%;
+    border: 2px solid #dddddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    float: left;
+    cursor: pointer;
+}
+#loginInfo #dropZone img:hover{
+    -webkit-transform: scale(1.1);
+}
+#loginInfo #dropZone img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#loginInfo .userInfo{
+    margin:1%;
+    width: 70%;
+    height: 30%;
+    float: left;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+#loginInfo .userCancel{
+    margin: 1%;
+    width: 4%;
+    height: 30%;
+    float: right;
+    box-sizing: border-box;
+}
+#loginInfo .userCancel img{
+	margin: 0%;
+    width: 100%;
+    cursor: pointer;
+}
+#loginInfo .userCancel img:hover{
+    -webkit-transform: scale(1.1);
+}
+#loginInfo p{
+    display: table-cell;
+    vertical-align: bottom;
+    margin: 0;
+}
+#loginInfo .userInfo .userName{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    box-sizing: border-box;
+    display: table;
+}
+#loginInfo .userInfo .userDatabase{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    display: table;
+    box-sizing: border-box;
+}
+#loginInfo .userInfo .userDatabase{
+    margin: 0;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    box-sizing: border-box;
+}
+#loginInfo .userInfo .userButtons{
+    margin: 0;
+    padding: 3%;
+    height: 40%;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    display: table;
+}
+#loginInfo .userInfo .userButtons a{
+    text-decoration: none;
+    color: black;
+    width: 50%;
+    display: table-cell;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+}
+#loginInfo .userInfo .userButtons a:hover{
+    background: #D9853B;
+    border-color: #756C5A;
+    color:#453920;
+}
+#loginInfo .userFoto:before,
+#loginInfo .userCancel:before,
+#loginInfo .userInfo:before,
+#loginInfo .userFoto:after,
+#loginInfo .userCancel:after,
+#loginInfo .userInfo:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+#loginInfo .userFoto:after,
+#loginInfo .userInfo:after {
+	clear: both;
+}
+#overlay{
+    z-index:3; /* пoдлoжкa дoлжнa быть выше слoев элементoв сaйтa, нo ниже слoя мoдaльнoгo oкнa */
+	position:fixed; /* всегдa перекрывaет весь сaйт */
+	background-color:whitesmoke; /* silver */
+	opacity:0.8; /* нo немнoгo прoзрaчнa */
+    filter: alpha(opacity=60);
+	width:100%; 
+	height:100%; /* рaзмерoм вo весь экрaн */
+    top:0; /* сверху и слевa 0, oбязaтельные свoйствa! */
+	left:0;
+	cursor:pointer;
+	display:none; /* в oбычнoм сoстoянии её нет) */
+}
