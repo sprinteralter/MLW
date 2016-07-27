@@ -32,11 +32,12 @@ public class QueryValidator{
 			for(SPROutcomeInvoice invoice:inputInvoices){
 				int exPosition = 0;
 				int goodsid = 0;
+				int mainclientid= 0;
 				int clientid = invoice.getCLIENTID();
 				int id = invoice.getID();
 				int temp = 0;
 				try{
-					clientid=invoice.getID();
+					id=invoice.getID();
 					List<SPROutcomeInvoiceDetails> details = QueryManagerUtil.getOutcomeDetailsByID(invoice.getID(), fireBird);
 					
 					/**
@@ -57,6 +58,8 @@ public class QueryValidator{
 					exPosition+=1;//5
 					Order_info order_info = QueryManagerUtil.getOrder_infoByID(orderid, mySQL);
 					
+					mainclientid = order_info.getOrder_main_clientId();
+					
 					exPosition+=1;//6
 					temp=orderid;
 					List<ClientRequestDetails> ordersList = QueryManagerUtil.getOrdersDetailsByID(orderid, fireBird);
@@ -70,7 +73,7 @@ public class QueryValidator{
 						double orderedQuantity = QueryManagerUtil.getOrderQuantityByParam(orderid, detail.getGOODSID(), fireBird);
 						
 						exPosition+=1;//9
-						String productidBuyer = QueryManagerUtil.getProductIdBuyerByParam(detail.getGOODSID(),invoice.getCLIENTID(),fireBird);
+						String productidBuyer = QueryManagerUtil.getProductIdBuyerByParam(detail.getGOODSID(),mainclientid,fireBird);
 						fireBird.clear();
 					}
 					mySQL.clear();
@@ -79,7 +82,7 @@ public class QueryValidator{
 					ResultLog res = new ResultLog();
 					res.setTotalInfo("Ошибка по позиции: "+id+"!");
 					System.out.println("-------------"+exPosition);
-					res.setTotalname(getFullMessage(exPosition,clientid,goodsid,id,temp));
+					res.setTotalname(getFullMessage(exPosition,clientid,goodsid,id,temp,mainclientid));
 					System.out.println("---------------totalName-----------------"+res.getTotalname());
 					resLog.add(res);
 				}
@@ -98,7 +101,7 @@ public class QueryValidator{
 		return resLog;
 	} 
 	
-	public static String getFullMessage(int position, int clientid, int goodsid, int id,int orderid){
+	public static String getFullMessage(int position, int clientid, int goodsid, int id,int orderid,int mainclientid){
 	    String res = "";
 	    if(position==0){
 	    	res = "Товаров по расходной накладной c кодом "+id+"не обнаружено!!!";
@@ -125,7 +128,7 @@ public class QueryValidator{
 			res = "Отсутствует поле 'Количество', в таблице Заявки от клиентов(Товары); Код клиента: "+clientid+"; Товар:"+goodsid+" !";
 		}
 	    else if(position==9){
-			res = "Отсутствует артикул покупателя! Клиент: "+clientid+"; Товар: "+goodsid;
+			res = "Отсутствует артикул покупателя! Клиент: "+mainclientid+"; Товар: "+goodsid;
 		}
 	    
 	    return res;

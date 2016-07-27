@@ -4,12 +4,20 @@
 var app = angular.module('myApp', ['ngGrid']);
 
 app.controller('myCtrl', function($scope, $http){    
-	
+	$scope.overlay=false;
+	$scope.selectbar=false;
 	$scope.myData=null;
 	$scope.selectedData=null;
 	$scope.responseData=null;
 	$scope.selectedRows = [];
+	$scope.checkResults = [];
+	$scope.option = "";
     
+	$scope.showOverlayAndSelectBar = function(){
+		$scope.overlay = !$scope.overlay;
+		$scope.selectbar = !$scope.selectbar;
+	}
+	
 	$scope.gridOptions = {
         data: 'myData',
         enableRowSelection: true,
@@ -22,7 +30,7 @@ app.controller('myCtrl', function($scope, $http){
               {field: 'id', displayName: 'Код', width: "*"},
               {field: 'regnumber', displayName: 'Рег. номер', width: "*"},
               {field: 'docdate', displayName: 'Дата', width: "*"},
-              {field: 'clientid', displayName: 'Код клиента', width: "*"},
+              {field: 'clientid', showdisplayName: 'Код клиента', width: "*"},
               {field: 'clientsname', displayName: 'Наим. клиента', width: "*"},
               {field: 'clientadresslocation', displayName: 'Адрес клиента', width: "*"},
               {field: 'endsumm', displayName: 'Сумма', width: "*"},
@@ -42,8 +50,7 @@ app.controller('myCtrl', function($scope, $http){
 	              {field: 'totalname', displayName: 'Операция', width: "*"},
 	              {field: 'totaldate', displayName: 'Дата', width: "*"},
 	              {field: 'totalorderedquantity', displayName: 'Заказано(общ.)', width: "*"},
-	              {field: 'totaldeliveryquantity', displayName: 'Поставка(общ.)', width: "*"},
-	              {field: 'totaldeliveryprice', displayName: 'Цена', width: "*"}
+	              {field: 'totaldeliveryquantity', displayName: 'Поставка(общ.)', width: "*"}
 	        ]
 	    };
     

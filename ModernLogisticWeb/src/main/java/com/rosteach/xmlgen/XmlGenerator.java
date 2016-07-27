@@ -263,7 +263,6 @@ public class XmlGenerator{
 						
 						int orderedquantity = 0;
 						int deliveryquantity = 0;
-						double deliveryprice = 0;
 						
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
@@ -271,7 +270,7 @@ public class XmlGenerator{
 														ORDERSOUTINVDET.get(i).getMEASURESNAME(), 
 														QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager),
 														ORDERSOUTINVDET.get(i).getMEASURESNAME(), ORDERSOUTINVDET.get(i).getGOODSNAME(),
-														QueryManagerUtil.getProductIdBuyerByParam(ORDERSOUTINVDET.get(i).getGOODSID(),invoice.getCLIENTID(),entityManager));
+														QueryManagerUtil.getProductIdBuyerByParam(ORDERSOUTINVDET.get(i).getGOODSID(),order.getOrder_main_clientId(),entityManager));
 								
 								int OrderGOODSID = ORDERSOUTINVDET.get(i).getGOODSID();
 								boolean checkpoint = false;
@@ -296,7 +295,6 @@ public class XmlGenerator{
 								
 								orderedquantity+=position.getORDEREDQUANTITY();
 								deliveryquantity+=position.getDELIVEREDQUANTITY();
-								deliveryprice+=outcomeDetails.get(checknumber).getSUMITEMPRICE();
 								list.add(position);
 								entityManager.clear();
 							}
@@ -311,7 +309,7 @@ public class XmlGenerator{
 						ResultLog result = new ResultLog("Ок","Ув. об отгрузке("+invoice.getREGNUMBER()+")",
 														LocalDate.now().toString(),
 														deliveryquantity,
-														deliveryprice,
+														0,
 														orderedquantity);
 					
 						packingSequence.setPOSITION(list);

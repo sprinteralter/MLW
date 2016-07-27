@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-
 @Entity
 public class Order_info {
 	
@@ -24,6 +23,7 @@ public class Order_info {
 		private Date order_date;
 		private String order_number;
 		private String order_user;
+		private int order_main_clientId;
 		
 		public Order_info(){
 			
@@ -96,7 +96,12 @@ public class Order_info {
 		public void setOrder_number(String order_number) {
 			this.order_number = order_number;
 		}
-		
-		
-		
+
+		public int getOrder_main_clientId() {
+			return order_main_clientId;
+		}
+
+		public void setOrder_main_clientId(int order_main_clientId) {
+			this.order_main_clientId = order_main_clientId;
+		}
 }

@@ -25,7 +25,7 @@ public class DateUtils {
 		if(date.getDayOfWeek().getValue()==5){
 			nextDate=date.plusDays(3).toString();
 		}else{
-			nextDate=date.plusDays(1).toString();
+			nextDate=date.plusDays(1).toString();//.plusDays(1).toString();
 		} 
 		return nextDate;
 	}

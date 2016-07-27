@@ -10,7 +10,7 @@ header{
     padding: 0;
     width: 100%;
     height: 10%;
-    border-bottom: 1px solid rgb(0, 153, 204); 
+    border-bottom: 1px solid #6CC7E7; 
     background: whitesmoke;
     box-sizing: border-box;
 }
@@ -125,9 +125,88 @@ header{
 }
 #wizard #rootwizard .tab-content{
 	margin:0;
-	padding:0 0.2%;
+	padding:0.5% 0.5%;
 	height:100%;
-	border:1px solid grey;
+	border-top: 1px solid #dddddd;
+	border-bottom: 1px solid #dddddd;
+	border-right: 1px solid #dddddd;
+	box-sizing: border-box;
+}
+#wizard #rootwizard .tab-content .tab-pane{
+	margin:0;
+	padding:0;
+	height:100%;
+	width:100%;
+	position: relative;
+}
+#wizard #rootwizard .tab-content .tab-pane .tab-pane-overlay{
+ 	z-index:3; /* пoдлoжкa дoлжнa быть выше слoев элементoв сaйтa, нo ниже слoя мoдaльнoгo oкнa */
+	background-color:black; /* чернaя */
+	opacity:0.5; /* нo немнoгo прoзрaчнa */
+    filter: alpha(opacity=50);
+	width:100%; 
+	height:47.5%; /* рaзмерoм вo весь экрaн */
+    top:0; /* сверху и слевa 0, oбязaтельные свoйствa! */
+	left:0;
+	cursor:pointer;
+    border-radius: 5px;
+    text-align: center;
+    position: absolute;
+}
+#wizard #rootwizard .tab-content .tab-pane .tab-pane-overlay img{
+	width:25px;
+	height:25px;
+	margin-top:10%;
+}
+#wizard #rootwizard .tab-content .tab-pane-top-grid{
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgb(212,212,212);
+    border-radius: 5px 0 0 5px;
+    width: 97%; 
+    height: 47.5%;
+    box-sizing: border-box;
+    float:left;
+}
+#wizard #rootwizard .tab-content #takeData{
+	margin: 0;
+    padding: 0;
+    width:3%;
+    height:47.5%;
+    border:none;
+    border-radius: 0 5px 5px 0;
+    color: white;
+    display: inline-block;
+    background: url('../images/tick.svg') left center no-repeat;
+  	padding-left: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+#wizard #rootwizard .tab-content #takeData:hover{
+	background-color: #6CC7E7;
+}
+#wizard #rootwizard .tab-content #selectbar{
+	margin: 0;
+	padding: 0;
+	height: 5%;
+	width: 100%;
+	border: 1px solid black;
+	box-sizing:border-box;
+}
+#wizard #rootwizard .tab-content #selectbar .btn .btn-info{
+	margin: 0;
+	padding: 0;
+	height:100%;
+}
+#wizard #rootwizard .tab-content .tab-pane-bottom-grid{
+	margin: 0;
+    padding: 0;
+    border: 1px solid rgb(212,212,212);
+    border-radius: 5px 0 0 5px;
+    width: 97%; 
+    height: 47.5%;
+    box-sizing: border-box;
+    float:left;
 }
 footer{
 	margin: 0;
@@ -136,7 +215,7 @@ footer{
     text-align: center;
     text-transform: uppercase;
     box-sizing: border-box;
-    background: rgb(0, 153, 204);
+    background: #6CC7E7;
 }
 footer:before{
     content: "";
@@ -151,8 +230,6 @@ footer h4{
     display: inline-block;
     vertical-align: middle;
 }
-
-
 /**************Login overlay*************/
 #loginInfo{
     margin: auto;
