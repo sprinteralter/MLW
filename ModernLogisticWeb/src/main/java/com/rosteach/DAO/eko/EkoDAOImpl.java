@@ -59,7 +59,7 @@ public class EkoDAOImpl implements EkoDAO {
 			//create order and get returned Order ID
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), ord.getNUMBER());
 			
-			ord_info.createOrder(orderID, ord.getNUMBER(), ord.getHEAD().getBUYER(), ord.getDATE().toGregorianCalendar().getTime(), name);
+			ord_info.createOrder(orderID, ord.getNUMBER(), ord.getHEAD().getBUYER(), ord.getDATE().toGregorianCalendar().getTime(), name, 25851);
 			
 		    
 			
