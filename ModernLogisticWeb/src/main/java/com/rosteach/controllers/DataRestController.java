@@ -58,11 +58,10 @@ public class DataRestController {
 		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
 	}
 	@RequestMapping(value="/connectToFtpEDI", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<String> checkConnectionFTP(@RequestHeader("key") int option){
+	public ResponseEntity<String> checkConnectionFTP(@RequestHeader("key") String option){
 		String result;
 		String path="";
-		System.out.println("---------------------------------"+option);
-		if(option==1){
+		if(option.equals("notificate")){
 			path = "C:/MLW/XMLDESADV/"+LocalDate.now()+"/";
 		}else{
 			path = "C:/MLW/XMLORDERSP/"+LocalDate.now()+"/";
@@ -84,7 +83,6 @@ public class DataRestController {
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
-		
 		GetDetails userdet = new GetDetails();
 		EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
 		entityManager.getTransaction().begin();
@@ -94,7 +92,6 @@ public class DataRestController {
 	    em.getTransaction().begin();
 	    
 	    List<ResultLog> result = new QueryValidator().checkAllForXMLGen(request, entityManager, em);
-	    System.out.println("------------size------------"+result.size());
 	    em.getTransaction().commit();
 		em.clear();
 		em.close();

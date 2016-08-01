@@ -243,7 +243,7 @@ public class XmlGenerator{
 			    /**
 				 * begin to setUp or DESADV entity and ResultList according to XML notification parameters
 				 */
-			    note.setPreHEADParameters(order.getId(), LocalDate.now().toString(), invoice.getDOCDATE(),
+			    note.setPreHEADParameters(invoice.getREGNUMBER(), LocalDate.now().toString(), invoice.getDOCDATE(),
 			    						  ordernumber, orderdate.toString(), invoice.getREGNUMBER(),
 			    						  invoice.getDOCDATE(), QueryManagerUtil.getCampaignNumberByClientID(invoice.getCLIENTID(), entityManager));
 			    

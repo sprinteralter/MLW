@@ -17,12 +17,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-
 /**
  * <p>Java class for anonymous complex type.
- * 
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -86,8 +83,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -105,7 +100,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 public class DESADV {
 
     @XmlElement(name = "NUMBER")
-    protected long number;
+    protected String number;
     @XmlElement(name = "DATE", required = true)
     protected String date;
     @XmlElement(name = "DELIVERYDATE", required = true)
@@ -125,9 +120,8 @@ public class DESADV {
 
     /**
      * global setter the values of all DESADV preHEAD tags property.
-     * 
      */
-    public void setPreHEADParameters(long number,String date2,String deliverydate,
+    public void setPreHEADParameters(String number,String date2,String deliverydate,
     								String ordernumber,String orderdate,String deliverynotenumber,
     								String deliverynotedate, String campaignnumber){
     	this.number = number;
@@ -143,7 +137,7 @@ public class DESADV {
      * Gets the value of the number property.
      * 
      */
-    public long getNUMBER() {
+    public String getNUMBER() {
         return number;
     }
 
@@ -151,7 +145,7 @@ public class DESADV {
      * Sets the value of the number property.
      * 
      */
-    public void setNUMBER(long value) {
+    public void setNUMBER(String value) {
         this.number = value;
     }
 

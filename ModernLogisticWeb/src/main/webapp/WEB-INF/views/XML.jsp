@@ -7,13 +7,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="resources/css/xml.css" />
-	<link rel="stylesheet" type="text/css" href="resources/css/sweetalert.css" />
 	<!-- JS -->
 	<script type="text/javascript" src="resources/js/jquery-2.2.4.min.js"></script>
 	<script type="text/javascript" src="resources/js/jquery-ui.js"></script>
 	<script type="text/javascript" src="resources/js/xml.js"></script>
 	<script type="text/javascript" src="resources/jquery_plugins/jqueryForm.js"></script>
-	<script type="text/javascript" src="resources/js/sweetalert.js"></script>
 	<script>
         $(function() {
             $( "#tabs" ).tabs({
@@ -29,11 +27,6 @@
                  }
             });
         });
-    </script>
-    <script>
-    	function alert1(){
-        	swal('Alert Design 1 Clicked!','This is an Alert!','success' );
-    	}
     </script>
 </head>
 <body>
@@ -64,7 +57,6 @@
                 <h1>Modern Logistic S<img class="logoIcon" src="resources/images/citizen_globe.gif" width=25px  height=25px/>ftware</h1>
             </div>
             <div class="infoBarRight">
-            	<button class="rightalert" onclick="alert1()">rightalert</button>
             </div>
         </div>
     </div>

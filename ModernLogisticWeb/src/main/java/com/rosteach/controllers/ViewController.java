@@ -31,6 +31,13 @@ public class ViewController {
 		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
 		return "home";
 	}
+	@RequestMapping(value = "testhome", method = RequestMethod.GET)
+	public String testhome(Date date) {
+		date = new Date();
+		date.getTime();
+		logger.info("Home page downloaded with success!  Server date & time is: {}.",date);	
+		return "testhome";
+	}
 	
 	@RequestMapping(value = "/dataBinding", method = RequestMethod.GET)
 	public ModelAndView dataBinding() {

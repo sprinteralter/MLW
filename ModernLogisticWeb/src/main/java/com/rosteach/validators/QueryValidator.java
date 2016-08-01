@@ -37,7 +37,6 @@ public class QueryValidator{
 				int id = invoice.getID();
 				int temp = 0;
 				try{
-					id=invoice.getID();
 					List<SPROutcomeInvoiceDetails> details = QueryManagerUtil.getOutcomeDetailsByID(invoice.getID(), fireBird);
 					
 					/**
@@ -59,7 +58,6 @@ public class QueryValidator{
 					Order_info order_info = QueryManagerUtil.getOrder_infoByID(orderid, mySQL);
 					
 					mainclientid = order_info.getOrder_main_clientId();
-					
 					exPosition+=1;//6
 					temp=orderid;
 					List<ClientRequestDetails> ordersList = QueryManagerUtil.getOrdersDetailsByID(orderid, fireBird);
@@ -69,6 +67,7 @@ public class QueryValidator{
 					
 					for(SPROutcomeInvoiceDetails detail: details){
 						exPosition+=1;//8
+						System.out.println("-------------------"+exPosition);
 						goodsid = detail.getGOODSID();
 						double orderedQuantity = QueryManagerUtil.getOrderQuantityByParam(orderid, detail.getGOODSID(), fireBird);
 						
@@ -124,10 +123,10 @@ public class QueryValidator{
 	    else if(position==7){
 			res = "Отсутствует поле 'Договор', в таблице Клиенты; Код клиента: "+clientid+"!";
 		}
-	    else if(position==8){
+	    else if((position>=8)&(position%2==0)){
 			res = "Отсутствует поле 'Количество', в таблице Заявки от клиентов(Товары); Код клиента: "+clientid+"; Товар:"+goodsid+" !";
 		}
-	    else if(position==9){
+	    else if((position>=9)&(position%2!=0)){
 			res = "Отсутствует артикул покупателя! Клиент: "+mainclientid+"; Товар: "+goodsid;
 		}
 	    

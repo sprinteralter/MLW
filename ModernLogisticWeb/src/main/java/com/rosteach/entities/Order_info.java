@@ -23,7 +23,7 @@ public class Order_info {
 		private Date order_date;
 		private String order_number;
 		private String order_user;
-		private int order_main_clientId;
+		private Integer order_main_clientId;
 		
 		public Order_info(){
 			
