@@ -114,6 +114,7 @@ public class EdiService {
 		
 	}
 	
+	
 	//get measure id 
 	public int getMeasureid(int clientID, int productBuyer){
 		Query mID = em.createNativeQuery("select first(1) case g.CLASS3 when 'S' then 4 else 1 end edizm from prodlink p, goods g where g.id=p.goodsid and p.clientid = "+clientID+" and  p.prodcode = '"+productBuyer+"'");//"select measureid from goods where id ="+goodsID);

@@ -11,7 +11,7 @@
   </facet>
   <facet id="jpt.jaxb">
     <node name="classgen">
-      <attribute name="package" value=""/>
+      <attribute name="package" value="com.rosteach.xml.tavria"/>
     </node>
   </facet>
 </root>

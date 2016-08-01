@@ -228,6 +228,7 @@ public class XmlGenerator{
 		    
 			for(SPROutcomeInvoice invoice: inputInvoices){
 				//creating our notification entity and setters parameters
+				
 				DESADV note = new DESADV();
 				/**
 				 * get parameters for Order from QueryManager
@@ -245,9 +246,12 @@ public class XmlGenerator{
 			    note.setPreHEADParameters(order.getId(), LocalDate.now().toString(), invoice.getDOCDATE(),
 			    						  ordernumber, orderdate.toString(), invoice.getREGNUMBER(),
 			    						  invoice.getDOCDATE(), QueryManagerUtil.getCampaignNumberByClientID(invoice.getCLIENTID(), entityManager));
+			    
 					//head settings
 					DESADV.HEAD head = new HEAD();
 					String postcode = QueryManagerUtil.getRecipientByClientID(invoice.getCLIENTID(), entityManager);
+					 
+					
 					
 					head.setPrePositionPsrameters(order.getBuyer(), postcode,order.getBuyer());
 					//head.setEDIINTERCHANGEID(0);			
@@ -350,4 +354,5 @@ public class XmlGenerator{
 		} 
 		return resultList;
 	}
+	
 }

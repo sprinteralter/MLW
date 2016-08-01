@@ -22,6 +22,7 @@ import com.rosteach.DAO.food.FoodDAO;
 import com.rosteach.DAO.lktrans.LktransDAO;
 import com.rosteach.DAO.novus.NovusDAO;
 import com.rosteach.DAO.security.GetDetails;
+import com.rosteach.DAO.tavria.TavriaDAO;
 import com.rosteach.upload.FilesUploader;
 import com.rosteach.validators.FilesValidator;
 
@@ -39,6 +40,9 @@ public class XMLController {
 	
 	@Autowired
 	private FoodDAO food;
+	
+	@Autowired
+	private TavriaDAO tavr;
 	
 	/**
 	 * File upload mapping for Veres tab
@@ -262,6 +266,47 @@ public class XMLController {
 					String result = null;
 					try {
 						result = food.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+					} catch (InstantiationException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					
+					return result;
+				}
+				
+				//-----------------------------------------TAVRIA-------------------------------------------------------
+				
+				@RequestMapping(value = "/uploadTavria", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String uploadTavria(@RequestParam("file[]") MultipartFile [] file){
+					String result = "";
+					//checking and saving file block
+					GetDetails currentUser = new GetDetails();
+					FilesUploader files = new FilesUploader(currentUser.getName());
+					FilesValidator validator = new FilesValidator();
+					//validate all parameters
+					File directory = validator.checkDirectory(files.getDirectory());
+					validator.scanForFile(files.getRootPath());
+					
+					if(validator.checkType(file)==true){
+						result = files.saveFiles(file,directory);
+					}
+					else {
+						result = "Invalid type of file or files!!";
+					}
+					return result;
+			    }
+				
+				@RequestMapping(value = "/PushTavria", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String insertionTavria() throws JAXBException,SQLException{
+					
+					GetDetails currentUser = new GetDetails();
+					String db = currentUser.getDB();
+					String path="C:/MLW/"+currentUser.getName();
+				 	
+					String result = null;
+					try {
+						result = tavr.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 					} catch (InstantiationException | IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -77,6 +77,7 @@
             <li><a href="resources/tabs-XML/tab-4.jsp">EDI LKTrans</a></li>
 			<li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
 			<li><a href="resources/tabs-XML/tab-6.jsp">EDI Food</a></li>
+			<li><a href="resources/tabs-XML/tab-7.jsp">EDI Tavria</a></li>
         </ul>
     </div>
     <div id="footer">
