@@ -96,11 +96,11 @@ public class XmlGenerator{
 					
 					ord.setNUMBER(order.getOrder_kod()); // order.getOrder_kod());
 					ord.setHEAD(new ORDRSP.HEAD());
-					ord.getHEAD().setSupplier(Long.valueOf("9863762978175"));
+					ord.getHEAD().setSupplier(order.getOrder_suplier());
 					ord.getHEAD().setBuyer(Long.valueOf(order.getBuyer()));//order.getBuyer()); 	//BUYER FROM ORDER.XML
-					ord.getHEAD().setDeliveryplace(Long.valueOf(glnQ));
-					ord.getHEAD().setSender(Long.valueOf("9863762978175"));
-					ord.getHEAD().setRecipient(Long.valueOf(order.getBuyer()));
+					ord.getHEAD().setDeliveryplace(order.getOrder_deliveryplace());
+					ord.getHEAD().setSender(order.getOrder_recipient());
+					ord.getHEAD().setRecipient(order.getOrder_sender());
 					
 					//add ORDERSP forming date and number
 					order.setOrdersp_date(ord.getDATE().toGregorianCalendar().getTime());
@@ -126,13 +126,15 @@ public class XmlGenerator{
 					
 					for (int i=0; i < ORDERSOUTINVDET.size(); i++){
 						POSITION p = new POSITION();
+						
 						p.setPOSITIONNUMBER((short) i);
 						p.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
 						p.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
 						p.setORDEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
 						p.setACCEPTEDQUANTITY(0.0);
-						p.setPRODUCTIDBUYER(ORDERSOUTINVDET.get(i).getITEMPRICE());
-						
+						p.setPRICE(ORDERSOUTINVDET.get(i).getITEMPRICE());
+						Query getPRODUCTIDBUYER = entityManager.createNativeQuery("select prodcode from prodlink where clientid="+order.getOrder_main_clientId()+"and goodsid="+ORDERSOUTINVDET.get(i).getGOODSID());
+						p.setPRODUCTIDBUYER((String)getPRODUCTIDBUYER.getSingleResult());
 						
 						for(SPROutcomeInvoiceDetails o : outcome ){ //SPROutcomeInvoiceDetails o : positions  
 							int outGoodsID = o.getGOODSID();
@@ -287,9 +289,11 @@ public class XmlGenerator{
 										break;
 									}
 								}
+								
 								/**
 								 * check our markup to set position para depends on input Invoices 
 								 */
+								
 								if(checkpoint==false){
 									position.setDelPriceAndQuantity(0.0, 0);
 								}

@@ -576,7 +576,7 @@ public class ORDRSP {
             @XmlElement(name = "PRODUCT")
             protected String product;
             @XmlElement(name = "PRODUCTIDBUYER")
-            protected Double productidbuyer;
+            protected String productidbuyer;
             @XmlElement(name = "DESCRIPTION", required = true)
             protected String description;
             @XmlElement(name = "PRICE")
@@ -626,7 +626,7 @@ public class ORDRSP {
              * Gets the value of the productidbuyer property.
              * 
              */
-            public Double getPRODUCTIDBUYER() {
+            public String getPRODUCTIDBUYER() {
                 return productidbuyer;
             }
 
@@ -634,8 +634,8 @@ public class ORDRSP {
              * Sets the value of the productidbuyer property.
              * 
              */
-            public void setPRODUCTIDBUYER(Double double1) {
-                this.productidbuyer = double1;
+            public void setPRODUCTIDBUYER(String string) {
+                this.productidbuyer = string;
             }
 
             /**

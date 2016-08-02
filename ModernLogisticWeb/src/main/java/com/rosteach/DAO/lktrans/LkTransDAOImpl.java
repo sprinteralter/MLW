@@ -55,7 +55,7 @@ public class LkTransDAOImpl implements LktransDAO {
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), ord.getNUMBER());
 			
 			//add buer and orderID to mysql
-			ord_info.createOrder(orderID, ord.getNUMBER(), ord.getHEAD().getBUYER(), ord.getDATE().toGregorianCalendar().getTime(), name, 13480);
+			ord_info.createOrder(orderID, ord.getNUMBER(), ord.getHEAD().getBUYER(), ord.getDATE().toGregorianCalendar().getTime(), name, 13480, ord.getHEAD().getSUPPLIER(), ord.getHEAD().getDELIVERYPLACE(), ord.getHEAD().getSENDER(), ord.getHEAD().getRECIPIENT());
 
 		    
 			

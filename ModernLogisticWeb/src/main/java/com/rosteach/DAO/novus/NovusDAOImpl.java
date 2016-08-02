@@ -61,7 +61,7 @@ public class NovusDAOImpl implements NovusDAO {
 			int orderID = es.createOrder(ord.getDATE(), clientID, ord.getDELIVERYDATE(), String.valueOf(ord.getNUMBER()));
 			
 			//add buyer and orderID to mysql
-			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime(), name, 11426);
+			ord_info.createOrder(orderID, String.valueOf(ord.getNUMBER()), ord.getHEAD().getBUYER() , ord.getDATE().toGregorianCalendar().getTime(), name, 11426, ord.getHEAD().getSUPPLIER(), ord.getHEAD().getDELIVERYPLACE(), ord.getHEAD().getSENDER(), ord.getHEAD().getRECIPIENT());
 
 			
 			List<POSITION> positions = ord.getHEAD().getPOSITION();

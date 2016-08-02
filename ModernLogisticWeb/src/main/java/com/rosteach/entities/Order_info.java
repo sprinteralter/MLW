@@ -24,10 +24,55 @@ public class Order_info {
 		private String order_number;
 		private String order_user;
 		private Integer order_main_clientId;
+		private long order_suplier;
+		private long order_deliveryplace;
+		private long order_sender;
+		private long order_recipient;
 		
-		public Order_info(){
+		
+public Order_info(){
 			
 		}
+		
+		
+		public long getOrder_recipient() {
+	return order_recipient;
+}
+
+
+public void setOrder_recipient(long order_recipient) {
+	this.order_recipient = order_recipient;
+}
+
+
+		public long getOrder_suplier() {
+			return order_suplier;
+		}
+
+		public void setOrder_suplier(long order_suplier) {
+			this.order_suplier = order_suplier;
+		}
+
+		
+
+		public long getOrder_deliveryplace() {
+			return order_deliveryplace;
+		}
+
+		public void setOrder_deliveryplace(long order_deliveryplace) {
+			this.order_deliveryplace = order_deliveryplace;
+		}
+
+		public long getOrder_sender() {
+			return order_sender;
+		}
+
+		public void setOrder_sender(long order_sender) {
+			this.order_sender = order_sender;
+		}
+
+		
+		
 		
 		public long getId() {
 			return id;
