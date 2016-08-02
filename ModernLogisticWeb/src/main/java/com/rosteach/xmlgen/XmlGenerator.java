@@ -251,11 +251,13 @@ public class XmlGenerator{
 			    
 					//head settings
 					DESADV.HEAD head = new HEAD();
-					String postcode = QueryManagerUtil.getRecipientByClientID(invoice.getCLIENTID(), entityManager);
-					 
-					
-					
-					head.setPrePositionPsrameters(order.getBuyer(), postcode,order.getBuyer());
+					//String postcode = QueryManagerUtil.getRecipientByClientID(invoice.getCLIENTID(), entityManager);
+					head.setPrePositionPsrameters(order.getOrder_suplier(),
+							order.getBuyer(),
+							order.getOrder_deliveryplace(),
+							order.getOrder_recipient(),
+							order.getOrder_sender(),
+							"");
 					//head.setEDIINTERCHANGEID(0);			
 						//setting details into packingsequence
 						DESADV.HEAD.PACKINGSEQUENCE packingSequence = new DESADV.HEAD.PACKINGSEQUENCE();

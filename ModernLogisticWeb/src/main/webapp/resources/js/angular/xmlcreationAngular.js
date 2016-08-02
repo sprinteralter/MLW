@@ -18,6 +18,9 @@ app.controller('myCtrl', function($scope, $http){
 	$scope.confirmSending=false;
 	$scope.modalConfirmBody=false;
 	$scope.modalSendBody=false;
+	$scope.modalSuccessBody=false;
+	$scope.modalLoaderBody=false;
+	$scope.accessSending=false;
 	
 	$scope.myData=null;
 	$scope.responseData=null;
@@ -127,20 +130,21 @@ app.controller('myCtrl', function($scope, $http){
     });
     
     $scope.sendToEDI = function(){
-    	$scope.contentOverlay = true;
+    	//$scope.contentOverlay = true;
+    	$scope.modalLoaderBody=true;
+    	$scope.overlay = false;
+    	
     	var config = {
                 headers : {
                 	'Content-Transfer-Encoding': 'utf-8',
                 	'key': $scope.radioData
                 }
         }
-    	$scope.overlay = false;
     	
     	
     	$http.get('data/connectToFtpEDI',config)
     	 .then(function successCallback(response) {
-    		 	$scope.ResponseData = response;
-    		 	$window.alert($scope.contentOverlay);
+    		 	
     		  }, function errorCallback(response) {
     		    // called asynchronously if an error occurs
     		    // or server returns response with an error status.

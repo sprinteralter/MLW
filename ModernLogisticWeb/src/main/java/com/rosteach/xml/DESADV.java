@@ -384,33 +384,34 @@ public class DESADV {
     public static class HEAD {
 
         @XmlElement(name = "SUPPLIER")
-        protected String supplier;
+        protected long supplier;
         @XmlElement(name = "BUYER")
         protected long buyer;
         @XmlElement(name = "DELIVERYPLACE")
-        protected String deliveryplace;
+        protected long deliveryplace;
         @XmlElement(name = "SENDER")
-        protected String sender;
+        protected long sender;
         @XmlElement(name = "RECIPIENT")
         protected long recipient;
         @XmlElement(name = "EDIINTERCHANGEID")
-        protected int ediinterchangeid;
+        protected String ediinterchangeid;
         @XmlElement(name = "PACKINGSEQUENCE", required = true)
         protected DESADV.HEAD.PACKINGSEQUENCE packingsequence;
         
-        public void setPrePositionPsrameters(long buyer, String deliveryplace,long recipient){
-        	this.supplier = "9863762978175";
+        public void setPrePositionPsrameters( long supplier, long buyer, long deliveryplace,long sender,long recipient, String ediinterchangeid){
+        	this.supplier = supplier;
 			this.buyer = buyer;
 			this.deliveryplace = deliveryplace;
-			this.sender = "9863762978175";
+			this.sender = sender;
 			this.recipient = recipient;
+			this.ediinterchangeid=ediinterchangeid;
         }
 
 		/**
          * Gets the value of the supplier property.
          * 
          */
-        public String getSUPPLIER() {
+        public long getSUPPLIER() {
             return supplier;
         }
 
@@ -418,7 +419,7 @@ public class DESADV {
          * Sets the value of the supplier property.
          * 
          */
-        public void setSUPPLIER(String value) {
+        public void setSUPPLIER(long value) {
             this.supplier = value;
         }
 
@@ -442,7 +443,7 @@ public class DESADV {
          * Gets the value of the deliveryplace property.
          * 
          */
-        public String getDELIVERYPLACE() {
+        public long getDELIVERYPLACE() {
             return deliveryplace;
         }
 
@@ -450,7 +451,7 @@ public class DESADV {
          * Sets the value of the deliveryplace property.
          * 
          */
-        public void setDELIVERYPLACE(String value) {
+        public void setDELIVERYPLACE(long value) {
             this.deliveryplace = value;
         }
 
@@ -458,7 +459,7 @@ public class DESADV {
          * Gets the value of the sender property.
          * 
          */
-        public String getSENDER() {
+        public long getSENDER() {
             return sender;
         }
 
@@ -466,7 +467,7 @@ public class DESADV {
          * Sets the value of the sender property.
          * 
          */
-        public void setSENDER(String value) {
+        public void setSENDER(long value) {
             this.sender = value;
         }
 
@@ -490,7 +491,7 @@ public class DESADV {
          * Gets the value of the ediinterchangeid property.
          * 
          */
-        public int getEDIINTERCHANGEID() {
+        public String getEDIINTERCHANGEID() {
             return ediinterchangeid;
         }
 
@@ -498,7 +499,7 @@ public class DESADV {
          * Sets the value of the ediinterchangeid property.
          * 
          */
-        public void setEDIINTERCHANGEID(int value) {
+        public void setEDIINTERCHANGEID(String value) {
             this.ediinterchangeid = value;
         }
 

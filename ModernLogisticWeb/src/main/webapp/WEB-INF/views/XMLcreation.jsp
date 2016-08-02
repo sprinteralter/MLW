@@ -27,9 +27,9 @@
         </script>
     </head>
     <body ng-controller="myCtrl">
-    	<div id="overlay" ng-show="contentOverlay">
-           	<img id="loader" src="resources/images/cloud_loading_256.gif" alt="spinner"/>
-        </div>
+    	<!-- <div id="overlay" ng-show="contentOverlay">
+           	
+        </div> -->
         <!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" align="center">
 		  <div class="modal-dialog" role="document">
@@ -46,10 +46,17 @@
 		      <div class="modal-body" ng-show="modalSendBody">
 		        Выполнить отправку данных на сервер EDI? В процессе отправки, изменить и/или отменить передачу данных, невозможно!   
 		      </div>
+		      <div class="modal-body" ng-show="modalSuccessBody">
+		        Вы уверены, что хотите выполнить выбранную операцию!? 
+		      </div>
+		      <div class="modal-body" ng-show="modalLoaderBody">
+		        <img id="loader" src="resources/images/cloud_loading_256.gif" alt="spinner"/>
+		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-danger" data-dismiss="modal">Нет</button>
 		        <button type="button" class="btn btn-success" ng-show="confirmOperation" ng-click="sendData()" data-dismiss="modal">Да</button>
-		        <button type="button" class="btn btn-success" ng-show="confirmSending" ng-click="sendToEDI()" data-dismiss="modal">Выполнить</button>
+		        <button type="button" class="btn btn-success" ng-show="confirmSending" ng-click="sendToEDI()" data-dismiss="modal-body">Выполнить</button>
+		        <button type="button" class="btn btn-success" ng-show="accessSending">Ok</button>
 		      </div>
 		    </div>
 		  </div>
