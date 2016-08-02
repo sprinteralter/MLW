@@ -21,6 +21,7 @@ import com.rosteach.DAO.eko.EkoDAO;
 import com.rosteach.DAO.food.FoodDAO;
 import com.rosteach.DAO.lktrans.LktransDAO;
 import com.rosteach.DAO.novus.NovusDAO;
+import com.rosteach.DAO.orders.OrdersDAO;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.DAO.tavria.TavriaDAO;
 import com.rosteach.upload.FilesUploader;
@@ -28,8 +29,11 @@ import com.rosteach.validators.FilesValidator;
 
 @Controller
 public class XMLController {
-	
 	@Autowired
+	private OrdersDAO orders;
+	
+	
+	/*@Autowired
 	private NovusDAO novus;
 	
 	@Autowired
@@ -42,7 +46,7 @@ public class XMLController {
 	private FoodDAO food;
 	
 	@Autowired
-	private TavriaDAO tavr;
+	private TavriaDAO tavr;*/
 	
 	/**
 	 * File upload mapping for Veres tab
@@ -114,14 +118,14 @@ public class XMLController {
     }
 	
 	@RequestMapping(value = "/PushNovus", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-	public @ResponseBody String insertionNovus() throws JAXBException,SQLException{
+	public @ResponseBody String insertionNovus() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
 		
 		GetDetails currentUser = new GetDetails();
 		String db = currentUser.getDB();
 		String path="C:/MLW/"+currentUser.getName();
 	 	
-		String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
-		
+		//String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+		String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 11426);
 		
 		return result;
 	}
@@ -162,7 +166,8 @@ public class XMLController {
 		String db = currentUser.getDB();
 		String path="C:/MLW/"+currentUser.getName();
 		 	
-		String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+		//String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+		String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 25851);
 		return result;
 	}	
 	
@@ -195,7 +200,8 @@ public class XMLController {
 			String db = currentUser.getDB();
 			String path="C:/MLW/"+currentUser.getName();
 			 	
-			String result = lk.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+			//String result = lk.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+			String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 13480);
 			return result;
 		}	
 		
@@ -222,14 +228,14 @@ public class XMLController {
 	    }
 		
 		@RequestMapping(value = "/PushSocrat", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-		public @ResponseBody String insertionSocrat() throws JAXBException,SQLException{
+		public @ResponseBody String insertionSocrat() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
 			
 			GetDetails currentUser = new GetDetails();
 			String db = currentUser.getDB();
 			String path="C:/MLW/"+currentUser.getName();
 		 	
-			String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
-			
+			//String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
+			String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 57245);
 			
 			return result;
 		}
@@ -257,21 +263,21 @@ public class XMLController {
 			    }
 				
 				@RequestMapping(value = "/PushFood", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-				public @ResponseBody String insertionFood() throws JAXBException,SQLException{
+				public @ResponseBody String insertionFood() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
 					
 					GetDetails currentUser = new GetDetails();
 					String db = currentUser.getDB();
 					String path="C:/MLW/"+currentUser.getName();
 				 	
-					String result = null;
+					/*String result = null;
 					try {
 						result = food.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 					} catch (InstantiationException | IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					
+					*/
+					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 16009);
 					return result;
 				}
 				
@@ -298,21 +304,21 @@ public class XMLController {
 			    }
 				
 				@RequestMapping(value = "/PushTavria", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
-				public @ResponseBody String insertionTavria() throws JAXBException,SQLException{
+				public @ResponseBody String insertionTavria() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
 					
 					GetDetails currentUser = new GetDetails();
 					String db = currentUser.getDB();
 					String path="C:/MLW/"+currentUser.getName();
 				 	
-					String result = null;
+					/*String result = null;
 					try {
 						result = tavr.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 					} catch (InstantiationException | IllegalAccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					
+					*/
+					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 10410);
 					return result;
 				}
 		

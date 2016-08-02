@@ -84,8 +84,8 @@ public class XmlGenerator{
 						c.setTime(format.parse(String.valueOf(respQ.get(0)[1])));
 					ord.setORDERDATE(datatypeFactory.newInstance().newXMLGregorianCalendar(format.format(c.getTime())));
 
-					Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ out.getCLIENTID());
-					String glnQ = (String) getPOSTCODE.getSingleResult();
+					/*Query getPOSTCODE = entityManager.createNativeQuery("select postcode from client where id ="+ out.getCLIENTID());
+					String glnQ = (String) getPOSTCODE.getSingleResult();*/
 					Query getorderId = entityManager.createNativeQuery("select id from ORDERSOUTINV where OUTCOMEINVOICEIDSSET ='"+ out.getID()+"'");  
 					Integer orderid = (Integer)getorderId.getSingleResult();
 					//Order_info order = ord_info.getOrder_info_byKod(orderid); 	//get order by id
