@@ -17,13 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rosteach.DAO.InsertionDocInvoice;
-import com.rosteach.DAO.eko.EkoDAO;
-import com.rosteach.DAO.food.FoodDAO;
-import com.rosteach.DAO.lktrans.LktransDAO;
-import com.rosteach.DAO.novus.NovusDAO;
 import com.rosteach.DAO.orders.OrdersDAO;
 import com.rosteach.DAO.security.GetDetails;
-import com.rosteach.DAO.tavria.TavriaDAO;
 import com.rosteach.upload.FilesUploader;
 import com.rosteach.validators.FilesValidator;
 
@@ -31,22 +26,6 @@ import com.rosteach.validators.FilesValidator;
 public class XMLController {
 	@Autowired
 	private OrdersDAO orders;
-	
-	
-	/*@Autowired
-	private NovusDAO novus;
-	
-	@Autowired
-	private EkoDAO eko;
-	
-	@Autowired
-	private LktransDAO lk;
-	
-	@Autowired
-	private FoodDAO food;
-	
-	@Autowired
-	private TavriaDAO tavr;*/
 	
 	/**
 	 * File upload mapping for Veres tab
@@ -124,7 +103,6 @@ public class XMLController {
 		String db = currentUser.getDB();
 		String path="C:/MLW/"+currentUser.getName();
 	 	
-		//String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 		String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 11426);
 		
 		return result;
@@ -166,7 +144,6 @@ public class XMLController {
 		String db = currentUser.getDB();
 		String path="C:/MLW/"+currentUser.getName();
 		 	
-		//String result = eko.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 		String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 25851);
 		return result;
 	}	
@@ -200,12 +177,11 @@ public class XMLController {
 			String db = currentUser.getDB();
 			String path="C:/MLW/"+currentUser.getName();
 			 	
-			//String result = lk.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 			String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 13480);
 			return result;
 		}	
 		
-		//-----------------------------------------Socrat-------------------------------------------------------
+		//-----------------------------------------Socar-------------------------------------------------------
 		
 		@RequestMapping(value = "/uploadSocrat", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
 		public @ResponseBody String uploadSocrat(@RequestParam("file[]") MultipartFile [] file){
@@ -234,7 +210,6 @@ public class XMLController {
 			String db = currentUser.getDB();
 			String path="C:/MLW/"+currentUser.getName();
 		 	
-			//String result = novus.Insert(db, currentUser.getName(), currentUser.getPass(), path);
 			String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 57245);
 			
 			return result;
@@ -269,14 +244,6 @@ public class XMLController {
 					String db = currentUser.getDB();
 					String path="C:/MLW/"+currentUser.getName();
 				 	
-					/*String result = null;
-					try {
-						result = food.Insert(db, currentUser.getName(), currentUser.getPass(), path);
-					} catch (InstantiationException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					*/
 					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 16009);
 					return result;
 				}
@@ -309,15 +276,7 @@ public class XMLController {
 					GetDetails currentUser = new GetDetails();
 					String db = currentUser.getDB();
 					String path="C:/MLW/"+currentUser.getName();
-				 	
-					/*String result = null;
-					try {
-						result = tavr.Insert(db, currentUser.getName(), currentUser.getPass(), path);
-					} catch (InstantiationException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					*/
+				
 					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 10410);
 					return result;
 				}

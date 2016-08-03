@@ -127,7 +127,7 @@ public class XmlGenerator{
 					for (int i=0; i < ORDERSOUTINVDET.size(); i++){
 						POSITION p = new POSITION();
 						
-						p.setPOSITIONNUMBER((short) i);
+						p.setPOSITIONNUMBER((short) (i+1));
 						p.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
 						p.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
 						p.setORDEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
