@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 
+import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
@@ -18,13 +19,18 @@ public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
 	private EntityManager entityManager;
 	
 	@Override
-	public List<SPROutcomeInvoice> getInvoicesByLocalDate(String database, String username, String password) {
-		entityManager = new EntityManagerReferee().getConnection(database, username, password);
+	public List<SPROutcomeInvoice> getInvoicesByLocalDate(String date) {
+		entityManager = new EntityManagerReferee().getConnection();
 		entityManager.getTransaction().begin();
 
-		String date = DateUtils.getNextDate();
+		String querydate ="";
+		if(date.length()>0){
+			querydate = date;
+		}else{
+			querydate=DateUtils.getNextDate();
+		}
 
-		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'"+date+"','"+date+"',0,Null,Null,Null,0)", SPROutcomeInvoice.class);	
+		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICE (Null,Null,'"+querydate+"','"+querydate+"',0,Null,Null,Null,0)", SPROutcomeInvoice.class);	
 		@SuppressWarnings("unchecked")
 		List<SPROutcomeInvoice> invoices = query.getResultList();
 		
@@ -39,7 +45,7 @@ public class SPROutcomeInvoiceDAOImpl implements SPROutcomeInvoiceDAO{
 	@Override
 	public List<SPROutcomeInvoiceDetails> getInvoicesDetailsById(Integer id, String database, String username,
 			String password) {
-		entityManager = new EntityManagerReferee().getConnection(database, username, password);
+		entityManager = new EntityManagerReferee().getConnection();
 		Query query = entityManager.createNativeQuery("select * from SPROUTCOMEINVOICEDET (+"+id+",Null,0,Null,Null,0,0)", SPROutcomeInvoiceDetails.class);
 		
 		System.out.println("---------startgetting det");

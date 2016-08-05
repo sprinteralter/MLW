@@ -21,12 +21,19 @@ app.controller('myCtrl', function($scope, $http){
 	$scope.modalSuccessBody=false;
 	$scope.modalLoaderBody=false;
 	$scope.accessSending=false;
+	$scope.refreshGrid=false;
+	$scope.modalGridOptionsBody=false;
+	$scope.attentionHeader=true;
+	$scope.optionsHeader=false;
+	$scope.sendHeader=false;
 	
 	$scope.myData=null;
 	$scope.responseData=null;
 	$scope.selectedRows = [];
 	$scope.radioData = null;
 	$scope.option = "";
+	$scope.optionID = null;
+	$scope.optionDATE = null;
 	
 	$scope.showOverlayAndSelectBar = function(){
 		$scope.overlay = true;
@@ -47,6 +54,19 @@ app.controller('myCtrl', function($scope, $http){
 		$scope.modalConfirmBody=true;
 		$scope.radioData = "notificate";
 	}
+	$scope.cancelALL = function(){
+		$scope.optionsHeader=false;
+		$scope.attentionHeader=true;
+		$scope.modalGridOptionsBody=false;
+		$scope.refreshGrid=false;
+	}
+	$scope.cancelModal = function(){
+		$scope.optionsHeader=false;
+		$scope.attentionHeader=true;
+		$scope.modalGridOptionsBody=false;
+		$scope.refreshGrid=false;
+	}
+
 	$scope.cancel = function(){
 		$scope.overlay = false;
 		$scope.selectbar = false;
@@ -80,6 +100,14 @@ app.controller('myCtrl', function($scope, $http){
               {field: 'agentsname', displayName: 'Имя агента', width: "*"}
         ]
      };
+	
+	 $scope.showTopGridOptions= function(){
+		 $scope.refreshGrid=true;
+		 $scope.modalGridOptionsBody=true;
+		 $scope.attentionHeader=false;
+		 $scope.optionsHeader=true;
+	 }
+	
 	 $scope.sendData = function(){
 	    	var config = {
 	                headers : {
@@ -87,7 +115,9 @@ app.controller('myCtrl', function($scope, $http){
 	                	'key': $scope.radioData
 	                }
 	        }
-	    	if($scope.radioData== "confirm"){
+	    	$scope.attentionHeader=false;
+	    	$scope.sendHeader=true;
+	    	if($scope.radioData=="confirm"){
 	    		$scope.showNoteOtpion=false;
 	    		$scope.generateConfirmation=false;
 	    	}
@@ -143,13 +173,7 @@ app.controller('myCtrl', function($scope, $http){
     	
     	
     	$http.get('data/connectToFtpEDI',config)
-    	 .then(function successCallback(response) {
-    		 	
-    		  }, function errorCallback(response) {
-    		    // called asynchronously if an error occurs
-    		    // or server returns response with an error status.
-    		  });
-         /*.success(function (data){
+    	 .success(function (data){
         	 $scope.ResponseData = data;
         	 
          })
@@ -158,6 +182,28 @@ app.controller('myCtrl', function($scope, $http){
                  "<hr />status: " + status +
                  "<hr />headers: " + header +
                  "<hr />config: " + config;
-         });*/
+         });
+    };
+    $scope.refGrid = function(){
+    	$scope.refreshGrid=false;
+    	$scope.modalGridOptionsBody=false;
+    	$scope.optionsHeader = false;
+    	$scope.attentionHeader = true;
+    	
+    	
+    	var putdata = {
+    		'id':$scope.optionID,
+    		'date': $scope.optionDATE
+    	}	
+    	$http.put('data/refreshGrid',putdata,{headers: { 'Content-Transfer-Encoding': 'utf-8'}})
+    	 .success(function (data){
+    		 $scope.myData = data;
+         })
+         .error(function (data, status, header, config) {
+             $scope.ResponseDetails = "Data: " + data +
+                 "<hr />status: " + status +
+                 "<hr />headers: " + header +
+                 "<hr />config: " + config;
+         });
     };
 });

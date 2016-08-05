@@ -30,7 +30,7 @@ public class BindingDataDAOImpl implements BindingDataDAO{
 			String password			
 			){
 		referee = new EntityManagerReferee();
-		entityManager = referee.getConnection(database, username, password);
+		entityManager = referee.getConnection();
 		entityManager.getTransaction().begin();
 		
 		Query queryForDetails = entityManager.createNativeQuery("select * from SPRORDERSOUTINVDET ("+id+",1,0,Null,0, Null,Null,0,0);",ClientRequestDetails.class);

@@ -14,8 +14,8 @@ public class SPROutcomeInvoiceServiceImpl implements SPROutcomeInvoiceService{
 	@Autowired
 	private SPROutcomeInvoiceDAO invoiceDAO;
 	@Override
-	public List<SPROutcomeInvoice> getInvoicesByLocalDate(String database, String username, String password) {
-		return invoiceDAO.getInvoicesByLocalDate(database, username, password);
+	public List<SPROutcomeInvoice> getInvoicesByLocalDate(String date) {
+		return invoiceDAO.getInvoicesByLocalDate(date);
 	}
 	@Override
 	public List<SPROutcomeInvoiceDetails> getInvoicesDetailsById(Integer id, String database, String username,

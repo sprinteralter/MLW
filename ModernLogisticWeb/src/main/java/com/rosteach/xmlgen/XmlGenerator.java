@@ -61,7 +61,7 @@ public class XmlGenerator{
 			ObjectMapper mapper = new ObjectMapper(); 
 			List<SPROutcomeInvoice> inputInvoices = null;
 			inputInvoices = mapper.readValue(request, new TypeReference<List<SPROutcomeInvoice>>(){});
-			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
+			EntityManager entityManager = new EntityManagerReferee().getConnection();
 			for (SPROutcomeInvoice out : inputInvoices){
 				ResultLog result = new ResultLog();
 				ORDRSP ord = new ORDRSP();
@@ -221,7 +221,7 @@ public class XmlGenerator{
 			/**
 			 * create our JPA manager and connect to FireBird and begin transaction
 			 */
-			EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
+			EntityManager entityManager = new EntityManagerReferee().getConnection();
 			entityManager.getTransaction().begin();
 			
 			EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 

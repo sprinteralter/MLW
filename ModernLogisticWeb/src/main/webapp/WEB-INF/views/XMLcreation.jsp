@@ -6,10 +6,13 @@
     <head lang="en">
         <title>test</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- CSS -->
         <link rel="stylesheet" type="text/css" href="resources/css/prettify.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/ng-grid.css"/>
+        <link rel="stylesheet" type="text/css" href="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/jquery-ui.min.css"/>
+        
         <!-- JS -->
         <script type="text/javascript" src="resources/js/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="resources/js/bootstrap.min.js"></script>       
@@ -20,25 +23,51 @@
         <script type="text/javascript" src="resources/js/ng-grid-2.0.7.min.js"></script>
         <script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script>
         <script type="text/javascript" src="resources/js/angular/xmlcreationAngular.js"></script>
+        <script type="text/javascript" src="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/jquery-ui.min.js"></script>
+    	<script type="text/javascript" src="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/ui.datapicker-ru.js"></script>
+    	
     	<script>
             $(document).ready(function() {
-                $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});	
+                $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
+                $.datepicker.regional['ru']={
+					closeText: "Закрыть",
+					prevText: "&#x3C;Пред",
+					nextText: "След&#x3E;",
+					currentText: "Сегодня",
+					monthNames: [ "Январь","Февраль","Март","Апрель","Май","Июнь",
+					"Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь" ],
+					monthNamesShort: [ "Янв","Фев","Мар","Апр","Май","Июн",
+					"Июл","Авг","Сен","Окт","Ноя","Дек" ],
+					dayNames: [ "воскресенье","понедельник","вторник","среда","четверг","пятница","суббота" ],
+					dayNamesShort: [ "вск","пнд","втр","срд","чтв","птн","сбт" ],
+					dayNamesMin: [ "Вс","Пн","Вт","Ср","Чт","Пт","Сб" ],
+					weekHeader: "Нед",
+					dateFormat: "dd.mm.yy",
+					firstDay: 1,
+					isRTL: false,
+					showMonthAfterYear: false,
+					yearSuffix: "" };
+               
+                $( "#datepicker" ).datepicker();
+                $.datapicker.setDefaults($.datepicker.regional[ "ru" ]);
             });	
         </script>
     </head>
     <body ng-controller="myCtrl">
-    	<!-- <div id="overlay" ng-show="contentOverlay">
-           	
-        </div> -->
+    	<div id="overlay" ng-show="contentOverlay">
+           	<img id="loader" src="resources/images/cloud_loading_256.gif" alt="spinner"/>
+        </div>
         <!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" align="center">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        <button type="button" ng-click="cancelModal()" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
-		        <h4 class="modal-title" id="myModalLabel"><img src="resources/images/warning.svg" height="50px" width="50px"/></h4>
+		        <h4 class="modal-title" id="myModalLabel" ng-show="attentionHeader"><img src="resources/images/tick.svg" height="50px" width="50px"/></h4>
+		        <h4 class="modal-title" id="myModalLabel" ng-show="optionsHeader"><img src="resources/images/edit.svg" height="50px" width="50px"/></h4>
+		        <h4 class="modal-title" id="myModalLabel" ng-show="sendHeader"><img src="resources/images/computing-cloud.svg" height="50px" width="50px"/></h4>
 		      </div>
 		      <div class="modal-body" ng-show="modalConfirmBody">
 		        Вы уверены, что хотите выполнить выбранную операцию!? 
@@ -49,14 +78,19 @@
 		      <div class="modal-body" ng-show="modalSuccessBody">
 		        Вы уверены, что хотите выполнить выбранную операцию!? 
 		      </div>
-		      <div class="modal-body" ng-show="modalLoaderBody">
-		        <img id="loader" src="resources/images/cloud_loading_256.gif" alt="spinner"/>
+		      <div class="modal-body" ng-show="modalGridOptionsBody">
+			      <label for="date">Выбрать дату:</label>
+			      	 <input ng-model="optionDATE" id="datepicker" type="text"/> 
+			      <label for="optionalData" >Выбрать источник данных:</label>
+			      	<select id="optionalData" ng-model="optionID">
+			      		<option value="0">Расходная накладная</option>
+			      	</select>	
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-danger" data-dismiss="modal">Нет</button>
+		        <button type="button" class="btn btn-danger" ng-click="cancelALL()" data-dismiss="modal">Нет</button>
 		        <button type="button" class="btn btn-success" ng-show="confirmOperation" ng-click="sendData()" data-dismiss="modal">Да</button>
-		        <button type="button" class="btn btn-success" ng-show="confirmSending" ng-click="sendToEDI()" data-dismiss="modal-body">Выполнить</button>
-		        <button type="button" class="btn btn-success" ng-show="accessSending">Ok</button>
+		        <button type="button" class="btn btn-success" ng-show="confirmSending" ng-click="sendToEDI()" data-dismiss="modal">Выполнить</button>
+		        <button type="button" class="btn btn-success" ng-show="refreshGrid" ng-click="refGrid()" data-dismiss="modal">Обновить таблицу</button>
 		      </div>
 		    </div>
 		  </div>
@@ -81,7 +115,7 @@
             	</div>
         	</div>
     	</header>
-        <section id="wizard">    
+        <section id="wizard">
   		    <div id="rootwizard" class="tabbable tabs-left">
                 <ul class="tableLeft">
             	    <li><a href="#tab1" data-toggle="tab">Отправка подтв./увед.</a></li>
@@ -96,9 +130,11 @@
                      	</div>
                      	<div class="tab-pane-top">
                       		<div class="tab-pane-top-grid" ng-grid="gridOptions"></div>
-                      		<button id="takeData" ng-click="showOverlayAndSelectBar()"></button>
+                      		<button id="takeControl" ng-click="showTopGridOptions()" title="Опции таблицы" data-toggle="modal" data-target="#myModal"></button>
+                      		<button id="takeData" ng-click="showOverlayAndSelectBar()" title="Выбрать"></button>
                       	</div>
                       	<div class="btn-group" data-toggle="buttons">
+                      	
                       		<div class="btn-group-temp" ng-show="selectbar">
 	                     		<button type="button" class="btn btn-warning" ng-click="cancel()" ng-show="showWarning">
 	        						<i class="glyphicon glyphicon-star">Отменить</i>
@@ -137,5 +173,14 @@
           <footer>
                 <h4>XML CREATION</h4>
           </footer>
+          
+           <script type="text/javascript">
+					            $(function () {
+							        $('#datetimepicker').datetimepicker({
+							            language: 'ru',
+							            useCurrent: false
+							        });
+							    });
+					        </script>
     </body>
 </html>

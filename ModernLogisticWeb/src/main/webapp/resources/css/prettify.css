@@ -179,17 +179,35 @@ header{
 	margin: 0;
     padding: 0;
     width:3%;
-    height:100%;
-    border:none;
-    border-radius: 0 5px 5px 0;
+    height:50%;
+    border:0.5px solid white;
+    border-radius: 0 0 5px 0;
     color: white;
     display: inline-block;
     background: url('../images/tick.svg') center center no-repeat;
     box-sizing: border-box;
     cursor: pointer;
 }
-#wizard #rootwizard .tab-content #takeData:hover{
-	background-color: #6CC7E7;
+#wizard #rootwizard .tab-content #takeControl{
+	margin: 0;
+    padding: 0;
+    width:3%;
+    height:50%;
+    border:0.5px solid white;
+    border-radius: 0 5px 0 0;
+    color: white;
+    display: inline-block;
+    background: url('../images/edit.svg') center center no-repeat;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+/* #wizard #rootwizard .tab-content #takeControl:hover{
+	background-color: whitesmoke;
+} */
+#wizard #rootwizard .tab-content #takeData:hover,
+#wizard #rootwizard .tab-content #takeControl:hover{
+	background-color: #ECECEC;/*#6CC7E7;*/
+	border-color: #dddddd;
 }
 #wizard #rootwizard .tab-content .btn-group{
 	margin: 0;
@@ -228,7 +246,7 @@ header{
     padding: 0%;
     width:3%;
     height:100%;
-    border:none;
+    border:0.5px solid white;
     border-radius: 0 5px 5px 0;
     color: white;
     display: inline-block;
@@ -239,7 +257,8 @@ header{
 #wizard #rootwizard .tab-content #sendToFtp:after{
 }
 #wizard #rootwizard .tab-content #sendToFtp:hover{
-	background-color: #6CC7E7;
+	background-color: #ECECEC;/*#6CC7E7;*/
+	border-color: #dddddd;
 }
 footer{
 	margin: 0;
@@ -418,4 +437,3 @@ footer h4{
 .modal-body{
 	text-align: center;
 }
-

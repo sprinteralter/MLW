@@ -1,6 +1,8 @@
 package com.rosteach.controllers;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.connection.FTPConnectionEDI;
@@ -30,6 +33,7 @@ import com.rosteach.entities.SPROutcomeInvoice;
 //import com.rosteach.services.ClientsRequestsService;
 import com.rosteach.services.SPROutcomeInvoiceService;
 import com.rosteach.services.databinding.DataBindingService;
+import com.rosteach.util.JsonMapperUtil;
 import com.rosteach.util.QueryManagerUtil;
 import com.rosteach.validators.QueryValidator;
 import com.rosteach.xmlgen.XmlGenerator;
@@ -37,9 +41,7 @@ import com.rosteach.xmlgen.XmlGenerator;
 @RestController
 @RequestMapping(value= "/data")
 public class DataRestController {
-	
 
-	
 	@Autowired
 	private SPROutcomeInvoiceService invoicesService;
 	
@@ -50,13 +52,24 @@ public class DataRestController {
 	private DataBindingService dataService;
 	
 	/**
-	 * method for generating all needed data for xml confirmation
+	 * method for get start page invoices 
 	 * */
 	@RequestMapping(value="/getInvoices", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<SPROutcomeInvoice>> getAllClientsRequests(){
-		GetDetails currentUser = new GetDetails();
-		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(currentUser.getDB(), currentUser.getName(), currentUser.getPass()),HttpStatus.OK);
+		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(""),HttpStatus.OK);
 	}
+	
+	/**
+	 * method for get start page invoices according to specific options
+	 * @throws IOException 
+	 * @throws JsonProcessingException 
+	 * */
+	@RequestMapping(value="/refreshGrid", method=RequestMethod.PUT, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<List<SPROutcomeInvoice>> refreshGrid(@RequestBody String options) throws JsonProcessingException, IOException{
+		System.out.println("------------------"+JsonMapperUtil.getDateFromOptions(options));
+		return new ResponseEntity<List<SPROutcomeInvoice>>(invoicesService.getInvoicesByLocalDate(JsonMapperUtil.getDateFromOptions(options)),HttpStatus.OK);
+	}
+	
 	@RequestMapping(value="/connectToFtpEDI", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<String> checkConnectionFTP(@RequestHeader("key") String option){
 		String result;
@@ -84,7 +97,7 @@ public class DataRestController {
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
 	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
 		GetDetails userdet = new GetDetails();
-		EntityManager entityManager = new EntityManagerReferee().getConnection(userdet.getDB(), userdet.getName(), userdet.getPass());
+		EntityManager entityManager = new EntityManagerReferee().getConnection();
 		entityManager.getTransaction().begin();
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("SQL"); 
