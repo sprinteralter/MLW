@@ -119,9 +119,8 @@
   		    <div id="rootwizard" class="tabbable tabs-left">
                 <ul class="tableLeft">
             	    <li><a href="#tab1" data-toggle="tab">Отправка подтв./увед.</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Уведомление о приеме</a></li>
-                    <li><a href="#tab3" data-toggle="tab">Коммерческий документ</a></li>
-                    <li><a href="#tab4" data-toggle="tab">ЭНН</a></li>
+                    <li><a href="#tab2" data-toggle="tab">Коммерческий документ</a></li>
+                    <li><a href="#tab3" data-toggle="tab">ЭНН</a></li>
                 </ul>
                 <div class="tab-content">
                      <div class="tab-pane" id="tab1">
@@ -155,17 +154,15 @@
                      	</div>
                      	<div class="tab-pane-bottom" ng-show="showResultGrid">
                      		<div class="tab-pane-bottom-grid" ng-grid="gridResult"></div>
-                     		<button id="sendToFtp" data-toggle="modal" data-target="#myModal" ng-click="showModalSendPara()"></button>
+                     		<button id="sendToFtp" data-toggle="modal" data-target="#myModal" ng-show="sendToFtpBut" ng-click="showModalSendPara()" title="Отправить фалы EDI"></button>
+                     		<button id="refresh" ng-show="refresh" ng-click="refreshPage()" title="Повтор операции"></button>
                      	</div>
                      </div>
                      <div class="tab-pane" id="tab2">
-                      2
+                      	<button id="comdoc" ng-click="genCOMDOC()" title="Отправить фалы EDI">comdoc</button>
                      </div>
                      <div class="tab-pane" id="tab3">
                       3
-                     </div>
-                     <div class="tab-pane" id="tab4">
-                      4
                      </div>
                   </div>	
               </div>
@@ -173,14 +170,13 @@
           <footer>
                 <h4>XML CREATION</h4>
           </footer>
-          
-           <script type="text/javascript">
-					            $(function () {
-							        $('#datetimepicker').datetimepicker({
-							            language: 'ru',
-							            useCurrent: false
-							        });
-							    });
-					        </script>
+          <script type="text/javascript">
+				$(function () {
+					$('#datetimepicker').datetimepicker({
+					   language: 'ru',
+					   useCurrent: false
+					});
+				});
+		  </script>
     </body>
 </html>

@@ -29,12 +29,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rosteach.DAO.order_info.Order_infoDAO;
 import com.rosteach.DAO.security.GetDetails;
+import com.rosteach.entities.COMDOC;
 import com.rosteach.entities.ClientRequestDetails;
 import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.Order_info;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
+import com.rosteach.util.COMDOCUtil;
 import com.rosteach.util.DateUtils;
 import com.rosteach.util.JsonMapperUtil;
 import com.rosteach.util.QueryManagerUtil;
@@ -361,4 +363,38 @@ public class XmlGenerator{
 		return resultList;
 	}
 	
+	//*********************************************************************************************
+	
+		public List<ResultLog> generateCOMDOC(String request){
+			/**
+			 * Initialize our result collection to send data as response
+			 */
+			List<ResultLog> resultList = new LinkedList<ResultLog>();
+			try{
+				/**
+				 * creating JAXB context and Marshaller for XML generation
+				 */
+				JAXBContext context = JAXBContext.newInstance(COMDOC.class);
+				Marshaller marshaller = context.createMarshaller();
+				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				
+				COMDOC comdoc = new COMDOC(COMDOCUtil.getHeader(),
+											COMDOCUtil.getSides(),
+											COMDOCUtil.getParameters(),
+											COMDOCUtil.getTable(),
+											COMDOCUtil.getDocTotal());
+				
+				//creating our xml document
+				File directory = new File("C:/MLW/XMLCOMDOC/"+LocalDate.now()+"/");
+				if(!directory.exists()){
+					directory.mkdirs();
+				}
+				marshaller.marshal(comdoc, new File("C:/MLW/XMLCOMDOC/"+LocalDate.now()+"/","COMDOC_"+userdet.getName()+".xml"));
+			}
+			catch(JAXBException ex){
+				System.out.println("-----------------------"+ex.getMessage());
+			}
+			
+			return resultList;
+		}
 }

@@ -254,9 +254,21 @@ header{
     box-sizing: border-box;
     cursor: pointer;
 }
-#wizard #rootwizard .tab-content #sendToFtp:after{
+#wizard #rootwizard .tab-content #refresh{
+	margin: 0;
+    padding: 0%;
+    width:3%;
+    height:100%;
+    border:0.5px solid white;
+    border-radius: 0 5px 5px 0;
+    color: white;
+    display: inline-block;
+    background: url('../images/reload.svg') center center no-repeat;
+    box-sizing: border-box;
+    cursor: pointer;
 }
-#wizard #rootwizard .tab-content #sendToFtp:hover{
+#wizard #rootwizard .tab-content #sendToFtp:hover,
+#wizard #rootwizard .tab-content #refresh:hover{
 	background-color: #ECECEC;/*#6CC7E7;*/
 	border-color: #dddddd;
 }

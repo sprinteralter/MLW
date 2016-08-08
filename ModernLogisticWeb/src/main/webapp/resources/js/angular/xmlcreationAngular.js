@@ -26,6 +26,8 @@ app.controller('myCtrl', function($scope, $http){
 	$scope.attentionHeader=true;
 	$scope.optionsHeader=false;
 	$scope.sendHeader=false;
+	$scope.sendToFtpBut=true;
+	$scope.refresh = false;
 	
 	$scope.myData=null;
 	$scope.responseData=null;
@@ -161,6 +163,8 @@ app.controller('myCtrl', function($scope, $http){
     
     $scope.sendToEDI = function(){
     	//$scope.contentOverlay = true;
+    	$scope.sendToFtpBut=false;
+    	$scope.refresh = true;
     	$scope.modalLoaderBody=true;
     	$scope.overlay = false;
     	
@@ -173,6 +177,27 @@ app.controller('myCtrl', function($scope, $http){
     	
     	
     	$http.get('data/connectToFtpEDI',config)
+    	 .success(function (data){
+        	 $scope.ResponseData = data;
+        	 
+         })
+         .error(function (data, status, header, config) {
+             $scope.ResponseDetails = "Data: " + data +
+                 "<hr />status: " + status +
+                 "<hr />headers: " + header +
+                 "<hr />config: " + config;
+         });
+    };
+    $scope.genCOMDOC = function(){
+    	
+    	var config = {
+                headers : {
+                	'Content-Transfer-Encoding': 'utf-8',
+                }
+        }
+    	
+    	
+    	$http.get('data/comdoc',config)
     	 .success(function (data){
         	 $scope.ResponseData = data;
         	 

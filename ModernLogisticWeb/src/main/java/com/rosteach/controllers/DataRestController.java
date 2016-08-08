@@ -126,6 +126,16 @@ public class DataRestController {
 		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
 	}
 	/**
+	 * method for generating COMDOC 
+	 * */
+	@RequestMapping(value="/comdoc", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public void genComDoc(){
+		String request = "";
+		XmlGenerator generator = new XmlGenerator();
+		generator.generateCOMDOC(request);
+		//return new ResponseEntity<List<ResultLog>>(generator.generateCOMDOC(request),HttpStatus.OK);
+	}
+	/**
 	 * method for transfer data between databases
 	 * */
 	@RequestMapping(value = "/databind", method=RequestMethod.POST,consumes={"application/json"}, produces={"application/json; charset=UTF-8"})
