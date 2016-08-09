@@ -347,6 +347,39 @@ public class XMLController {
 					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 17172);
 					return result;
 				}
+				
+				//-----------------------------------------karavan-------------------------------------------------------
+				
+				@RequestMapping(value = "/uploadKaravan", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String uploadKaravan(@RequestParam("file[]") MultipartFile [] file){
+					String result = "";
+					//checking and saving file block
+					GetDetails currentUser = new GetDetails();
+					FilesUploader files = new FilesUploader(currentUser.getName());
+					FilesValidator validator = new FilesValidator();
+					//validate all parameters
+					File directory = validator.checkDirectory(files.getDirectory());
+					validator.scanForFile(files.getRootPath());
+					
+					if(validator.checkType(file)==true){
+						result = files.saveFiles(file,directory);
+					}
+					else {
+						result = "Invalid type of file or files!!";
+					}
+					return result;
+			    }
+				
+				@RequestMapping(value = "/PushKaravan", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String insertionKaravan() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
+					
+					GetDetails currentUser = new GetDetails();
+					String db = currentUser.getDB();
+					String path="C:/MLW/"+currentUser.getName();
+				
+					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 13036);
+					return result;
+				}
 		
 		
 		

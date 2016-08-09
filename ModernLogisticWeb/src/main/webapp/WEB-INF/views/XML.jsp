@@ -70,6 +70,9 @@
 			<li><a href="resources/tabs-XML/tab-5.jsp">EDI Socar</a></li>
 			<li><a href="resources/tabs-XML/tab-6.jsp">EDI Food</a></li>
 			<li><a href="resources/tabs-XML/tab-7.jsp">EDI Tavria</a></li>
+			<li><a href="resources/tabs-XML/tab-8.jsp">EDI Ashan</a></li>
+			<li><a href="resources/tabs-XML/tab-9.jsp">EDI Billa</a></li>
+			<li><a href="resources/tabs-XML/tab-10.jsp">EDI Karavan</a></li>
         </ul>
     </div>
     <div id="footer">
