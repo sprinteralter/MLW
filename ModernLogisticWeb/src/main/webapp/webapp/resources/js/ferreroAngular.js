@@ -1,5 +1,5 @@
 
-  	 
+  	 /*
 		var xhr = new XMLHttpRequest();
 		var RestGet = function() {
 				
@@ -11,12 +11,11 @@
 		      // обработать ошибку
 		      alert('Ошибка ' + xhr.status + ': ' + xhr.statusText);
 		   	 } else {
-		   		
-		   		
+
 		      alert(xhr.responseText);
 		      return xhr.responseText;
 		   	 }}
-		
+		*/
 
 
 var app = angular.module('myApp', ['ngGrid']);

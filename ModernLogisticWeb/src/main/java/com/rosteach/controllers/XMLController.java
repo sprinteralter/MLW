@@ -280,6 +280,75 @@ public class XMLController {
 					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 10410);
 					return result;
 				}
+				
+				
+//-----------------------------------------Ashan-------------------------------------------------------
+				
+				@RequestMapping(value = "/uploadAshan", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String uploadAshan(@RequestParam("file[]") MultipartFile [] file){
+					String result = "";
+					//checking and saving file block
+					GetDetails currentUser = new GetDetails();
+					FilesUploader files = new FilesUploader(currentUser.getName());
+					FilesValidator validator = new FilesValidator();
+					//validate all parameters
+					File directory = validator.checkDirectory(files.getDirectory());
+					validator.scanForFile(files.getRootPath());
+					
+					if(validator.checkType(file)==true){
+						result = files.saveFiles(file,directory);
+					}
+					else {
+						result = "Invalid type of file or files!!";
+					}
+					return result;
+			    }
+				
+				@RequestMapping(value = "/PushAshan", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String insertionAshan() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
+					
+					GetDetails currentUser = new GetDetails();
+					String db = currentUser.getDB();
+					String path="C:/MLW/"+currentUser.getName();
+				
+					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 12777);
+					return result;
+				}
+				
+//-----------------------------------------Billa-------------------------------------------------------
+				
+				@RequestMapping(value = "/uploadBilla", method=RequestMethod.POST, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String uploadBilla(@RequestParam("file[]") MultipartFile [] file){
+					String result = "";
+					//checking and saving file block
+					GetDetails currentUser = new GetDetails();
+					FilesUploader files = new FilesUploader(currentUser.getName());
+					FilesValidator validator = new FilesValidator();
+					//validate all parameters
+					File directory = validator.checkDirectory(files.getDirectory());
+					validator.scanForFile(files.getRootPath());
+					
+					if(validator.checkType(file)==true){
+						result = files.saveFiles(file,directory);
+					}
+					else {
+						result = "Invalid type of file or files!!";
+					}
+					return result;
+			    }
+				
+				@RequestMapping(value = "/PushBilla", method = RequestMethod.GET, produces={"text/plain;charset=UTF-8"})
+				public @ResponseBody String insertionBilla() throws JAXBException,SQLException, InstantiationException, IllegalAccessException{
+					
+					GetDetails currentUser = new GetDetails();
+					String db = currentUser.getDB();
+					String path="C:/MLW/"+currentUser.getName();
+				
+					String result = orders.Insert(db, currentUser.getName(), currentUser.getPass(), path, 17172);
+					return result;
+				}
+		
+		
 		
 		
 }

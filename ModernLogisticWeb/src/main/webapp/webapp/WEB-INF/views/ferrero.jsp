@@ -10,7 +10,7 @@
     	<link rel="stylesheet" type="text/css" href="resources/css/ng-grid-style.css" />
 
 		<script type="text/javascript" src="resources/js/jquery-2.2.4.min.js"></script>
-		<script type="text/javascript" src="resources/js/angular.min.js"></script>
+		<script type="text/javascript" src="resources/js/angular/angular.min.js"></script>
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.min.js"></script>
 		<script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script>
 		<script type="text/javascript" src="resources/js/ferreroAngular.js"></script>
@@ -22,8 +22,6 @@
 
 	<div id="header">
 		<h1>Modern Logistic<img class="logoIcon" src="resources/images/citizen_globe.gif"/>ftware</h1>	
-		
-</form>
 	</div>
 		{{PostDataResponse}}
 	
