@@ -62,11 +62,13 @@ public class FTPConnectionEDI {
 					send = ftpClient.storeFile(ftpFileName, inputStream);
 					System.out.println("-----------send----------"+send);
 					if(send==true){
-						outputsize=i+1; 
+						outputsize=i+1;
+						System.out.println("-----------outputsize----------"+outputsize);
 					}
 					inputStream.close();
+					System.out.println("-------------File is deleted: "+localFile.delete());
 				}
-				System.out.println("-----------outputsize----------"+outputsize);
+				
 				if(size!=outputsize){
 					return false;
 				}

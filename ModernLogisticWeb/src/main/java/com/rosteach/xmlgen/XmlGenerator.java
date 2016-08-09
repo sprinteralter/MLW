@@ -378,6 +378,7 @@ public class XmlGenerator{
 				Marshaller marshaller = context.createMarshaller();
 				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				
+				System.out.println("----------------"+COMDOCUtil.getSides().getContractor().get(0).getContractorname());
 				COMDOC comdoc = new COMDOC(COMDOCUtil.getHeader(),
 											COMDOCUtil.getSides(),
 											COMDOCUtil.getParameters(),

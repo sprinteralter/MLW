@@ -129,10 +129,11 @@ public class DataRestController {
 	 * method for generating COMDOC 
 	 * */
 	@RequestMapping(value="/comdoc", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public void genComDoc(){
+	public String genComDoc(){
 		String request = "";
 		XmlGenerator generator = new XmlGenerator();
 		generator.generateCOMDOC(request);
+		return request;
 		//return new ResponseEntity<List<ResultLog>>(generator.generateCOMDOC(request),HttpStatus.OK);
 	}
 	/**

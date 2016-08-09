@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -272,7 +273,7 @@ public class COMDOC {
     }
     
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "Заголовок", propOrder = {
+    @XmlType(name = "", propOrder = {
         "number",
         "type",
         "typecode",
@@ -710,12 +711,13 @@ public class COMDOC {
      * 
      * 
      */
+    @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "parameter"
     })
     public static class Parameters {
-
+    	@XmlElement(name="Параметр")
         protected List<COMDOC.Parameters.Parameter> parameter;
 
         /**
@@ -746,9 +748,13 @@ public class COMDOC {
             }
             return this.parameter;
         }
+        public Parameters(){}
+        
+        public Parameters(List<Parameter> parameter) {
+			this.parameter = parameter;
+		}
 
-
-        /**
+		/**
          * <p>Java class for anonymous complex type.
          * 
          * <p>The following schema fragment specifies the expected content contained within this class.
@@ -775,11 +781,20 @@ public class COMDOC {
             @XmlValue
             protected String value;
             @XmlAttribute(name = "id")
-            protected Byte id;
+            protected int id;
             @XmlAttribute(name = "name")
             protected String name;
+            
+            public Parameter(){}
+            
+            
+            public Parameter(String value, int id, String name) {
+				this.value = value;
+				this.id = id;
+				this.name = name;
+			}
 
-            /**
+			/**
              * Gets the value of the value property.
              * 
              * @return
@@ -811,7 +826,7 @@ public class COMDOC {
              *     {@link Byte }
              *     
              */
-            public Byte getId() {
+            public int getId() {
                 return id;
             }
 
@@ -823,7 +838,7 @@ public class COMDOC {
              *     {@link Byte }
              *     
              */
-            public void setId(Byte value) {
+            public void setId(int value) {
                 this.id = value;
             }
 
@@ -891,14 +906,14 @@ public class COMDOC {
      * 
      * 
      */
+    @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "contractor"
     })
     public static class Sides {
-    	
+    	@XmlElement(name="Контрагент",required=true)
         protected List<COMDOC.Sides.Contractor> contractor;
-        
         /**
          * Gets the value of the contractor property.
          * 
@@ -927,12 +942,12 @@ public class COMDOC {
             }
             return this.contractor;
         }
-
+        public Sides(){
+        	
+        }
         public Sides(List<Contractor> contractor) {
 			this.contractor = contractor;
 		}
-
-
 
 		/**
          * <p>Java class for anonymous complex type.
@@ -950,7 +965,6 @@ public class COMDOC {
             "gln"
         })
         public static class Contractor {
-
             @XmlElement(name="СтатусКонтрагента",required = true)
             protected String contractorstatus;
             @XmlElement(name="ВидОсоби",required = true)
@@ -962,8 +976,8 @@ public class COMDOC {
             @XmlElement(name="ІПН",required = true)
             protected long ipn;
             @XmlElement(name="СвідоцтвоПДВ",required = true)
-            protected Integer certificatePDV;
-            @XmlElement(name = "GLN")
+            protected int certificatePDV;
+            @XmlElement(name = "GLN",required = true)
             protected long gln;
             
             public Contractor(){
@@ -1188,12 +1202,13 @@ public class COMDOC {
      * 
      * 
      */
+    @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "row"
     })
     public static class Table {
-
+    	@XmlElement(name="Рядок")
         protected List<COMDOC.Table.Row> row;
 
         /**
@@ -1224,55 +1239,18 @@ public class COMDOC {
             }
             return this.row;
         }
+        public Table(){
+        	
+        }
+        public Table(List<Row> row) {
+			this.row = row;
+		}
 
 
-        /**
+		/**
          * <p>Java class for anonymous complex type.
          * 
          * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;sequence>
-         *         &lt;element name="posnum" type="{http://www.w3.org/2001/XMLSchema}byte"/>
-         *         &lt;element name="code">
-         *           &lt;complexType>
-         *             &lt;simpleContent>
-         *               &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>long">
-         *                 &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}byte" />
-         *               &lt;/extension>
-         *             &lt;/simpleContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *         &lt;element name="buyerarticle" type="{http://www.w3.org/2001/XMLSchema}byte"/>
-         *         &lt;element name="posname" type="{http://www.w3.org/2001/XMLSchema}string"/>
-         *         &lt;element name="itemcount" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *         &lt;element name="measurename" type="{http://www.w3.org/2001/XMLSchema}string"/>
-         *         &lt;element name="baseprice" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *         &lt;element name="PDV" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *         &lt;element name="price" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *         &lt;element name="totaltable">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;sequence>
-         *                   &lt;element name="summwithPDV" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *                   &lt;element name="summPDV" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *                   &lt;element name="summ" type="{http://www.w3.org/2001/XMLSchema}float"/>
-         *                 &lt;/sequence>
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *       &lt;/sequence>
-         *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}byte" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
          * 
          */
         @XmlAccessorType(XmlAccessType.FIELD)
@@ -1289,30 +1267,51 @@ public class COMDOC {
             "totaltable"
         })
         public static class Row {
-
-            protected byte posnum;
-            @XmlElement(required = true)
+        	@XmlElement(name="НомПоз",required = true)
+            protected int posnum;
+        	@XmlElement(name="Штрихкод",required = true)
             protected COMDOC.Table.Row.Code code;
-            protected byte buyerarticle;
-            @XmlElement(required = true)
+        	@XmlElement(name="АртикулПокупця",required = true)
+            protected int buyerarticle;
+            @XmlElement(name="Найменування",required = true)
             protected String posname;
-            protected float itemcount;
-            @XmlElement(required = true)
+            @XmlElement(name="ПрийнятаКількість",required = true)
+            protected double itemcount;
+            @XmlElement(name="ОдиницяВиміру",required = true)
             protected String measurename;
-            protected float baseprice;
-            @XmlElement(name = "PDV")
-            protected float pdv;
-            protected float price;
-            @XmlElement(required = true)
+            @XmlElement(name="БазоваЦіна",required = true)
+            protected double baseprice;
+            @XmlElement(name="ПДВ",required = true)
+            protected double pdv;
+            @XmlElement(name="Ціна",required = true)
+            protected double price;
+            @XmlElement(name="ВсьогоПоРядку",required = true)
             protected COMDOC.Table.Row.Totaltable totaltable;
             @XmlAttribute(name = "id")
-            protected Byte id;
-
-            /**
+            protected int id;
+            
+            public Row(){
+            	
+            }
+            public Row(int posnum, Code code, int buyerarticle, String posname, double itemcount, String measurename,
+            		double baseprice, double pdv, double price, Totaltable totaltable, int id) {
+				this.posnum = posnum;
+				this.code = code;
+				this.buyerarticle = buyerarticle;
+				this.posname = posname;
+				this.itemcount = itemcount;
+				this.measurename = measurename;
+				this.baseprice = baseprice;
+				this.pdv = pdv;
+				this.price = price;
+				this.totaltable = totaltable;
+				this.id = id;
+			}
+			/**
              * Gets the value of the posnum property.
              * 
              */
-            public byte getPosnum() {
+            public int getPosnum() {
                 return posnum;
             }
 
@@ -1320,7 +1319,7 @@ public class COMDOC {
              * Sets the value of the posnum property.
              * 
              */
-            public void setPosnum(byte value) {
+            public void setPosnum(int value) {
                 this.posnum = value;
             }
 
@@ -1352,7 +1351,7 @@ public class COMDOC {
              * Gets the value of the buyerarticle property.
              * 
              */
-            public byte getBuyerarticle() {
+            public int getBuyerarticle() {
                 return buyerarticle;
             }
 
@@ -1360,7 +1359,7 @@ public class COMDOC {
              * Sets the value of the buyerarticle property.
              * 
              */
-            public void setBuyerarticle(byte value) {
+            public void setBuyerarticle(int value) {
                 this.buyerarticle = value;
             }
 
@@ -1392,7 +1391,7 @@ public class COMDOC {
              * Gets the value of the itemcount property.
              * 
              */
-            public float getItemcount() {
+            public double getItemcount() {
                 return itemcount;
             }
 
@@ -1400,7 +1399,7 @@ public class COMDOC {
              * Sets the value of the itemcount property.
              * 
              */
-            public void setItemcount(float value) {
+            public void setItemcount(double value) {
                 this.itemcount = value;
             }
 
@@ -1432,7 +1431,7 @@ public class COMDOC {
              * Gets the value of the baseprice property.
              * 
              */
-            public float getBaseprice() {
+            public double getBaseprice() {
                 return baseprice;
             }
 
@@ -1440,7 +1439,7 @@ public class COMDOC {
              * Sets the value of the baseprice property.
              * 
              */
-            public void setBaseprice(float value) {
+            public void setBaseprice(double value) {
                 this.baseprice = value;
             }
 
@@ -1448,7 +1447,7 @@ public class COMDOC {
              * Gets the value of the pdv property.
              * 
              */
-            public float getPDV() {
+            public double getPDV() {
                 return pdv;
             }
 
@@ -1456,7 +1455,7 @@ public class COMDOC {
              * Sets the value of the pdv property.
              * 
              */
-            public void setPDV(float value) {
+            public void setPDV(double value) {
                 this.pdv = value;
             }
 
@@ -1464,7 +1463,7 @@ public class COMDOC {
              * Gets the value of the price property.
              * 
              */
-            public float getPrice() {
+            public double getPrice() {
                 return price;
             }
 
@@ -1472,7 +1471,7 @@ public class COMDOC {
              * Sets the value of the price property.
              * 
              */
-            public void setPrice(float value) {
+            public void setPrice(double value) {
                 this.price = value;
             }
 
@@ -1508,7 +1507,7 @@ public class COMDOC {
              *     {@link Byte }
              *     
              */
-            public Byte getId() {
+            public int getId() {
                 return id;
             }
 
@@ -1520,7 +1519,7 @@ public class COMDOC {
              *     {@link Byte }
              *     
              */
-            public void setId(Byte value) {
+            public void setId(int value) {
                 this.id = value;
             }
 
@@ -1549,15 +1548,24 @@ public class COMDOC {
             public static class Code {
 
                 @XmlValue
-                protected long value;
+                protected String value;
                 @XmlAttribute(name = "id")
-                protected Byte id;
+                protected int id;
+                
+                public Code(){
+                	
+                }
+                
+                public Code(String value, int id) {
+					this.value = value;
+					this.id = id;
+				}
 
-                /**
+				/**
                  * Gets the value of the value property.
                  * 
                  */
-                public long getValue() {
+                public String getValue() {
                     return value;
                 }
 
@@ -1565,7 +1573,7 @@ public class COMDOC {
                  * Sets the value of the value property.
                  * 
                  */
-                public void setValue(long value) {
+                public void setValue(String value) {
                     this.value = value;
                 }
 
@@ -1577,7 +1585,7 @@ public class COMDOC {
                  *     {@link Byte }
                  *     
                  */
-                public Byte getId() {
+                public int getId() {
                     return id;
                 }
 
@@ -1589,7 +1597,7 @@ public class COMDOC {
                  *     {@link Byte }
                  *     
                  */
-                public void setId(Byte value) {
+                public void setId(int value) {
                     this.id = value;
                 }
 
@@ -1624,16 +1632,26 @@ public class COMDOC {
                 "summ"
             })
             public static class Totaltable {
+            	@XmlElement(name="СумаБезПДВ",required = true)
+                protected double summwithPDV;
+            	@XmlElement(name="СумаПДВ",required = true)
+                protected double summPDV;
+            	@XmlElement(name="Сума",required = true)
+                protected double summ;
+                
+                public Totaltable(){}
 
-                protected float summwithPDV;
-                protected float summPDV;
-                protected float summ;
+                public Totaltable(double summwithPDV, double summPDV, double summ) {
+					this.summwithPDV = summwithPDV;
+					this.summPDV = summPDV;
+					this.summ = summ;
+				}
 
-                /**
+				/**
                  * Gets the value of the summwithPDV property.
                  * 
                  */
-                public float getSummwithPDV() {
+                public double getSummwithPDV() {
                     return summwithPDV;
                 }
 
@@ -1641,7 +1659,7 @@ public class COMDOC {
                  * Sets the value of the summwithPDV property.
                  * 
                  */
-                public void setSummwithPDV(float value) {
+                public void setSummwithPDV(double value) {
                     this.summwithPDV = value;
                 }
 
@@ -1649,7 +1667,7 @@ public class COMDOC {
                  * Gets the value of the summPDV property.
                  * 
                  */
-                public float getSummPDV() {
+                public double getSummPDV() {
                     return summPDV;
                 }
 
@@ -1657,7 +1675,7 @@ public class COMDOC {
                  * Sets the value of the summPDV property.
                  * 
                  */
-                public void setSummPDV(float value) {
+                public void setSummPDV(double value) {
                     this.summPDV = value;
                 }
 
@@ -1665,7 +1683,7 @@ public class COMDOC {
                  * Gets the value of the summ property.
                  * 
                  */
-                public float getSumm() {
+                public double getSumm() {
                     return summ;
                 }
 
@@ -1673,7 +1691,7 @@ public class COMDOC {
                  * Sets the value of the summ property.
                  * 
                  */
-                public void setSumm(float value) {
+                public void setSumm(double value) {
                     this.summ = value;
                 }
 
