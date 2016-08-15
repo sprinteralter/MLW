@@ -54,9 +54,31 @@ public class QueryManagerUtil{
 	 * method to get orderQuantity as ITEMCOUNT from OrdersOutInvDet by id and goodsid (FIREBIRD)
 	 * return type: double
 	 * */
-	public static double getOrderQuantityByParam(int Id,int goodsid,EntityManager em){
-		Query getOrderQuantity = em.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+Id+" and GOODSID ="+goodsid);  
-		return (double)getOrderQuantity.getSingleResult();  
+	public static double getOrderQuantityByParam(int Id,int goodsid,EntityManager em,int goodsgroupid){	
+		Query getOrderQuantity = em.createNativeQuery("select ItemCount from OrdersOutInvDet where OrdersOutInvId ="+Id+" and GOODSID ="+goodsid);	
+		Query getMeasureCoef = em.createNativeQuery("select coef from goodsmeasurelink where goodsid ="+goodsid+" and measureid = "+4);
+		double result = (double)getOrderQuantity.getSingleResult();
+		if(goodsgroupid==740){
+			return result*(double)getMeasureCoef.getSingleResult(); 
+		}
+		else
+		return result;  
+	}
+	/**
+	 * input types: int,int,EntityManager 
+	 * method to get orderQuantity as ITEMCOUNT from OrdersOutInvDet by id and goodsid (FIREBIRD)
+	 * return type: double
+	 * */
+	public static double getDeliveredQuantityByParam(int goodsid,double itemcount, int goodsgroupid,EntityManager em){	
+			
+		Query getMeasureCoef = em.createNativeQuery("select coef from goodsmeasurelink where goodsid ="+goodsid+" and measureid ="+4);
+		double coef = (double)getMeasureCoef.getSingleResult();
+		System.out.println("---------------coef"+coef);
+		if(goodsgroupid==740){
+			return itemcount*coef;
+		}
+		else
+		return itemcount;
 	}
 	/**
 	 * input types: int,int,EntityManager 
@@ -107,5 +129,5 @@ public class QueryManagerUtil{
 	public static String getProductIdBuyerByParam(int goodsid,int clientid,EntityManager em){
 		Query getPRODUCTIDBUYER = em.createNativeQuery("select prodcode from prodlink where clientid="+clientid+"and goodsid="+goodsid);	
 		return (String)getPRODUCTIDBUYER.getSingleResult();
-	}
+	}	
 }

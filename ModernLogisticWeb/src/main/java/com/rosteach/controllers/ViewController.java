@@ -75,8 +75,8 @@ public class ViewController {
 		Date date = new Date();
 		logger.info("XMLcreation downloaded with success!  Server date & time is: {}.",date);	
 		
-		mav.addObject("username", "Имя: "+username);
-		mav.addObject("database", "База: "+database.substring(start,end));
+		mav.addObject("username", username);
+		mav.addObject("database", database.substring(start,end));
 		return mav;
 	}
 

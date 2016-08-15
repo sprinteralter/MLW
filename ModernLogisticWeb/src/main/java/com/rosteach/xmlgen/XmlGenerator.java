@@ -10,12 +10,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -32,18 +32,22 @@ import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.entities.COMDOC;
 import com.rosteach.entities.ClientRequestDetails;
 import com.rosteach.entities.EntityManagerReferee;
+import com.rosteach.entities.Links;
 import com.rosteach.entities.Order_info;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 import com.rosteach.entities.SPROutcomeInvoiceDetails;
 import com.rosteach.util.COMDOCUtil;
 import com.rosteach.util.DateUtils;
+import com.rosteach.util.FilesUtil;
 import com.rosteach.util.JsonMapperUtil;
 import com.rosteach.util.QueryManagerUtil;
 import com.rosteach.xml.DESADV;
+import com.rosteach.xml.DocListInvoice;
 import com.rosteach.xml.DESADV.HEAD;
 import com.rosteach.xml.ordersp.ORDRSP;
 import com.rosteach.xml.ordersp.ORDRSP.HEAD.POSITION;
+import com.sun.research.ws.wadl.Link;
 
 
 public class XmlGenerator{
@@ -278,7 +282,7 @@ public class XmlGenerator{
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
 								position.setParameters(i+1, ORDERSOUTINVDET.get(i).getGOODSCODE(),
 														ORDERSOUTINVDET.get(i).getMEASURESNAME(), 
-														QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager),
+														QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager,ORDERSOUTINVDET.get(i).getGOODSGROUPID()),
 														ORDERSOUTINVDET.get(i).getMEASURESNAME(), ORDERSOUTINVDET.get(i).getGOODSNAME(),
 														QueryManagerUtil.getProductIdBuyerByParam(ORDERSOUTINVDET.get(i).getGOODSID(),order.getOrder_main_clientId(),entityManager));
 								
@@ -302,7 +306,7 @@ public class XmlGenerator{
 									position.setDelPriceAndQuantity(0.0, 0);
 								}
 								else{
-									position.setDelPriceAndQuantity(outcomeDetails.get(checknumber).getITEMCOUNT(), outcomeDetails.get(checknumber).getENDPRICE());
+									position.setDelPriceAndQuantity(QueryManagerUtil.getDeliveredQuantityByParam(outcomeDetails.get(checknumber).getGOODSID(), outcomeDetails.get(checknumber).getITEMCOUNT(),  outcomeDetails.get(checknumber).getGOODSGROUPID(), entityManager), outcomeDetails.get(checknumber).getENDPRICE());
 								}
 								
 								orderedquantity+=position.getORDEREDQUANTITY();
@@ -367,9 +371,10 @@ public class XmlGenerator{
 	
 		public List<ResultLog> generateCOMDOC(String request){
 			/**
-			 * Initialize our result collection to send data as response
+			 * Initialize our input data as collection
 			 */
 			List<ResultLog> resultList = new LinkedList<ResultLog>();
+			
 			try{
 				/**
 				 * creating JAXB context and Marshaller for XML generation
@@ -378,7 +383,6 @@ public class XmlGenerator{
 				Marshaller marshaller = context.createMarshaller();
 				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				
-				System.out.println("----------------"+COMDOCUtil.getSides().getContractor().get(0).getContractorname());
 				COMDOC comdoc = new COMDOC(COMDOCUtil.getHeader(),
 											COMDOCUtil.getSides(),
 											COMDOCUtil.getParameters(),
@@ -397,5 +401,19 @@ public class XmlGenerator{
 			}
 			
 			return resultList;
+		}
+		public List<COMDOC> getLinks() throws JAXBException{
+			List<COMDOC> links = new LinkedList<COMDOC>();
+			Set<File> files = new FilesUtil().getCOMDOCS();
+			for(File file: files){
+				COMDOC comdoc = (COMDOC)((JAXBContext.newInstance(COMDOC.class)).createUnmarshaller()).unmarshal(new File(file.getAbsolutePath()));
+				/*Links link = new Links("Коммерческий документ",DateUtils.getFormatDateXML(comdoc.getHeader().getDate()),comdoc.getHeader().getType());
+				links.add(link);*/
+				comdoc.getHeader().setDate(DateUtils.getFormatDateXML(comdoc.getHeader().getDate()));
+				links.add(comdoc);
+			}
+			//System.out.println(links.get(0).getDocName());
+			System.out.println("links size-------------"+links.size());
+			return links;
 		}
 }

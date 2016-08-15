@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.xml.bind.JAXBException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.connection.FTPConnectionEDI;
+import com.rosteach.entities.COMDOC;
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
 //import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
 import com.rosteach.entities.EntityManagerReferee;
+import com.rosteach.entities.Links;
 import com.rosteach.entities.ResultLog;
 import com.rosteach.entities.SPROutcomeInvoice;
 //import com.rosteach.services.ClientsRequestsService;
@@ -71,32 +75,49 @@ public class DataRestController {
 	}
 	
 	@RequestMapping(value="/connectToFtpEDI", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<String> checkConnectionFTP(@RequestHeader("key") String option){
-		String result;
+	public ResponseEntity<List<ResultLog>> checkConnectionFTP(@RequestHeader("key") int option){
+		System.out.println("sendoption----------------"+option);
+		List<ResultLog> result = new LinkedList<ResultLog>();
+		ResultLog res= new ResultLog();
 		String path="";
-		if(option.equals("notificate")){
+		if(option==2){
 			path = "C:/MLW/XMLDESADV/"+LocalDate.now()+"/";
-		}else{
+		}else if(option==1){
 			path = "C:/MLW/XMLORDERSP/"+LocalDate.now()+"/";
 		}
+		/*else if(option==3){
+			path = "C:/MLW/XMLCOMDOC/"+LocalDate.now()+"/";
+		}*/
 		FTPConnectionEDI connection = new FTPConnectionEDI();
-			boolean check = connection.setConnection();
+		
+			boolean check = connection.getConnection("uasprintftp","c4eea2d5");
+			
 			if(check==true){
 				boolean send = connection.sendFiles(path);
-				result = "{'result':'send_"+send+"'}";
+				
+				if(send){
+					res.setTotalInfo("Отправлено!");
+					res.setTotalname("Отправка документов на сервера EDI успешна!");
+					result.add(res);
+				}else{
+					res.setTotalInfo("Ошибка!");
+					res.setTotalname("Ошибка при передачи файлов, обратитесь к системному администратору!");
+					result.add(res);
+				}
 			}
 			else{
-				result = "{'result':'connection_"+check+"'}";
+				res.setTotalInfo("Ошибка!");
+				res.setTotalname("Взможно связь с сервером отсутствует, либо отсутствуют файлы для отправки!");
+				result.add(res);
 			}
-		System.out.println(result);
-		return new ResponseEntity<String>(result,HttpStatus.OK);
+		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
 	}
 	/**
 	 * method for generating all needed data for xml confirmation
 	 * */
 	@RequestMapping(value="/confirm", method=RequestMethod.POST, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") String option){
-		GetDetails userdet = new GetDetails();
+	public ResponseEntity<List<ResultLog>> confirmRequests(@RequestBody String request,@RequestHeader("key") int option){
+		System.out.println("---------------option:   "+option);
 		EntityManager entityManager = new EntityManagerReferee().getConnection();
 		entityManager.getTransaction().begin();
 		
@@ -117,24 +138,16 @@ public class DataRestController {
 		
 		XmlGenerator generator = new XmlGenerator();
 		if(result.size()==0){
-			if(option.equals("notificate")){
+			if(option==2){
 				result = generator.generateNotification(request);
-			}else if(option.equals("confirm")){
+			}else if(option==1){
 				result = generator.generateConfirmation(request);
+			}
+			else if(option==3){
+				result = generator.generateCOMDOC(request);;
 			}
 		}
 		return new ResponseEntity<List<ResultLog>>(result,HttpStatus.OK);
-	}
-	/**
-	 * method for generating COMDOC 
-	 * */
-	@RequestMapping(value="/comdoc", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public String genComDoc(){
-		String request = "";
-		XmlGenerator generator = new XmlGenerator();
-		generator.generateCOMDOC(request);
-		return request;
-		//return new ResponseEntity<List<ResultLog>>(generator.generateCOMDOC(request),HttpStatus.OK);
 	}
 	/**
 	 * method for transfer data between databases
@@ -156,4 +169,26 @@ public class DataRestController {
 		return dataService.setClientsRequestsWithDetails(service,"sprinter","SYSDBA","strongpass");
 		//new ResponseEntity<List<ClientRequest>>(dataService.getRequests("alter", name, password, ""),HttpStatus.OK);ResponseEntity<List<ClientRequest>>
     }
+	/**
+	 * method for ftp connection and getting comdocs as json collection
+	 * */
+	@RequestMapping(value="/comdocs", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<List<COMDOC>> getAllCOMDOCS(){
+		FTPConnectionEDI ftp = new FTPConnectionEDI();
+		boolean connection = ftp.getConnection("uasprinterk", "b279bedf");
+		List<COMDOC> result=null;
+		if(connection){
+			if(ftp.getCOMDOCS("/inbox/")){
+				try {
+					result = new XmlGenerator().getLinks();
+				} catch (JAXBException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("reaultList-----------"+result.size());
+		return new ResponseEntity<List<COMDOC>>(result,HttpStatus.OK);
+	}
+	
 }

@@ -76,7 +76,7 @@
 		        Выполнить отправку данных на сервер EDI? В процессе отправки, изменить и/или отменить передачу данных, невозможно!   
 		      </div>
 		      <div class="modal-body" ng-show="modalSuccessBody">
-		        Вы уверены, что хотите выполнить выбранную операцию!? 
+		        Операция выполнена успешно! 
 		      </div>
 		      <div class="modal-body" ng-show="modalGridOptionsBody">
 			      <label for="date">Выбрать дату:</label>
@@ -109,7 +109,7 @@
 		        </div>
             	<div class="infoBarRight">
                 	<div class="infoBarIconRight" align="right">
-                    	<a><img class="user" title="Ваш профиль" src="resources/images/add-user.svg"/></a>
+                    	<a>${database}:${username}<img class="user" title="Ваш профиль" src="resources/images/add-user.svg"/></a>
                     	<a href="logout"><img title="Выйти" src="resources/images/padlock.svg"/></a>
                 	</div>
             	</div>
@@ -118,9 +118,8 @@
         <section id="wizard">
   		    <div id="rootwizard" class="tabbable tabs-left">
                 <ul class="tableLeft">
-            	    <li><a href="#tab1" data-toggle="tab">Отправка подтв./увед.</a></li>
-                    <li><a href="#tab2" data-toggle="tab">Коммерческий документ</a></li>
-                    <li><a href="#tab3" data-toggle="tab">ЭНН</a></li>
+            	    <li><a href="#tab1" data-toggle="tab">EDI - XML подтв./увед.</a></li>
+                    <li ng-click="tab2()"><a href="#tab2" data-toggle="tab">EDI - Коммерческий документ</a></li>
                 </ul>
                 <div class="tab-content">
                      <div class="tab-pane" id="tab1">
@@ -130,26 +129,28 @@
                      	<div class="tab-pane-top">
                       		<div class="tab-pane-top-grid" ng-grid="gridOptions"></div>
                       		<button id="takeControl" ng-click="showTopGridOptions()" title="Опции таблицы" data-toggle="modal" data-target="#myModal"></button>
-                      		<button id="takeData" ng-click="showOverlayAndSelectBar()" title="Выбрать"></button>
+                      		<button id="takeData" ng-click="accessTopGrid()" title="Выбрать"></button>
                       	</div>
                       	<div class="btn-group" data-toggle="buttons">
-                      	
-                      		<div class="btn-group-temp" ng-show="selectbar">
-	                     		<button type="button" class="btn btn-warning" ng-click="cancel()" ng-show="showWarning">
+                      		<div class="btn-group-temp" ng-show="selectbar">	                     		
+	                     		<button type="button" class="btn btn-warning" ng-click="cancel()" ng-show="showCancelBut">
 	        						<i class="glyphicon glyphicon-star">Отменить</i>
 	        					</button>
-	                     		<label class="btn btn-info" ng-click="showGenConfBut()" ng-show="showConfOption">
-	          						<input type="radio" name="options" id="option1">Подтверждение заказа
-	        					</label>
-	        					<label class="btn btn-info" ng-click="showGenNoteBut()" ng-show="showNoteOtpion">
-	          						<input type="radio" name="options" id="option2"> Уведомление об отгрузке
-	        					</label>
-	        					<button type="button" class="btn btn-success" ng-show="generateConfirmation" data-toggle="modal" data-target="#myModal">
-	        						<i class="glyphicon glyphicon-star">Cгенерировать подтверждение</i>
+	        					<h5 class="selectedOption" ng-show="showSelectedOption">{{selected}}<img class="optionloader" src="resources/images/optionloader.gif" alt="optionloader"/></h5>
+	        					<select ng-model="selectedOption" ng-show="selectMenu">
+								    <option value="" selected disabled>Выбрать операцию</option>
+								    <option value="1">Подтверждение заказа</option>
+								    <option value="2">Уведомление об отгрузке</option>
+								</select>
+	        					<button type="button" class="btn btn-success" ng-show="selectedOption=='1'" data-toggle="modal" data-target="#myModal">
+	        						<i class="glyphicon glyphicon-star">Cгенерировать подтверждение заказа</i>
 	        					</button>
-	        					<button type="button" class="btn btn-success" ng-show="generateNotification" data-toggle="modal" data-target="#myModal">
-	        						<i class="glyphicon glyphicon-star">Cгенерировать уведомление</i>
+	        					<button type="button" class="btn btn-success" ng-show="selectedOption=='2'" data-toggle="modal" data-target="#myModal">
+	        						<i class="glyphicon glyphicon-star">Cгенерировать уведомление об отгрузке</i>
 	        					</button>
+	        					<!-- <button type="button" class="btn btn-success" ng-show="selectedOption=='3'" data-toggle="modal" data-target="#myModal">
+	        						<i class="glyphicon glyphicon-star">Cгенерировать коммерческий документ</i>
+	        					</button> -->
 	        				</div>
                      	</div>
                      	<div class="tab-pane-bottom" ng-show="showResultGrid">
@@ -159,10 +160,46 @@
                      	</div>
                      </div>
                      <div class="tab-pane" id="tab2">
-                      	<button id="comdoc" ng-click="genCOMDOC()" title="Отправить фалы EDI">comdoc</button>
-                     </div>
-                     <div class="tab-pane" id="tab3">
-                      3
+                     	<div class="navbar">
+						    <div class="navbar-inner">
+						        <div class="container">
+							        <!-- <a class="brand" href="#">Project</a> -->
+							        <div class="nav-collapse collapse">
+							            <form class="navbar-search">
+							            	<select class="span2">
+											    <option value="0">Все клиенты</option>
+												<option value="">ТОВ "Новус Украина"</option>
+												<option value="">ТОВ "ЕКО-МАРКЕТ"</option>
+									  		</select>
+							            </form>
+							            <!-- <button type="button" class="btn btn-default pull-right">&#10162</button> -->
+							            <form class="navbar-search pull-right">
+							                <div class="form-group">
+											    <input type="text" class="form-control" placeholder="поиск..." ng-model="linksSearching ">
+											</div>
+							            </form>
+						            </div><!--/.nav-collapse -->
+						        </div>
+						    </div>
+						</div>
+	                     <div class="tab-pane-panels" ng-repeat="link in links | filter: linksSearching">
+							<div class="tab-pane-panels-left">
+								<h6>Коммерческий документ</h6>
+								<p>№: {{link.header.number}}</p>
+								<p>Дата: {{link.header.date}}</p>
+							</div>
+							<div class="tab-pane-panels-central">
+	                     		<div class="tab-pane-panels-central-header">
+	                     			
+	                     		</div>
+	                     		<p>{{link.header.type}}</p>
+							</div>
+							<div class="tab-pane-panels-right">
+								<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+		        					<i>Подписать</i>
+		        				</button>
+							</div>
+	                  	</div>
                      </div>
                   </div>	
               </div>
@@ -170,13 +207,5 @@
           <footer>
                 <h4>XML CREATION</h4>
           </footer>
-          <script type="text/javascript">
-				$(function () {
-					$('#datetimepicker').datetimepicker({
-					   language: 'ru',
-					   useCurrent: false
-					});
-				});
-		  </script>
     </body>
 </html>

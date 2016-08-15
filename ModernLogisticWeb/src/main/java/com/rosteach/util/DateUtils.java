@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 public class DateUtils {
 	
 	public static Date asDate(LocalDate localDate) {
@@ -28,6 +30,9 @@ public class DateUtils {
 			nextDate=date.plusDays(1).toString();//.plusDays(1).toString();
 		} 
 		return nextDate;
+	}
+	public static String getFormatDateXML(String date){
+		return date.substring(8,10)+"."+date.substring(5,7)+"."+date.substring(0,4);
 	}
 	
 }

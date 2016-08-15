@@ -69,7 +69,7 @@ public class QueryValidator{
 						exPosition+=1;//8
 						System.out.println("-------------------"+exPosition);
 						goodsid = detail.getGOODSID();
-						double orderedQuantity = QueryManagerUtil.getOrderQuantityByParam(orderid, detail.getGOODSID(), fireBird);
+						double orderedQuantity = QueryManagerUtil.getOrderQuantityByParam(orderid, detail.getGOODSID(), fireBird,detail.getGOODSGROUPID());
 						
 						exPosition+=1;//9
 						String productidBuyer = QueryManagerUtil.getProductIdBuyerByParam(detail.getGOODSID(),mainclientid,fireBird);

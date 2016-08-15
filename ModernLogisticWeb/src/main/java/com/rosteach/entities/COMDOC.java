@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -290,8 +289,7 @@ public class COMDOC {
     	@XmlElement(name="КодТипуДокументу",required = true)
         protected String typecode;
     	@XmlElement(name="ДатаДокументу",required = true)
-        @XmlSchemaType(name = "date")
-        protected XMLGregorianCalendar date;
+        protected String date;
     	@XmlElement(name="НомерЗамовлення",required = true)
     	protected String invoicenumber;
         @XmlElement(name="Коментар",required = true)
@@ -302,7 +300,7 @@ public class COMDOC {
         public Header(){
         	
         }
-        public Header(String number, String type, String typecode, XMLGregorianCalendar date, String invoicenumber,
+        public Header(String number, String type, String typecode, String date, String invoicenumber,
 				Comment comment, Docreason docreason) {
 			this.number = number;
 			this.type = type;
@@ -377,7 +375,7 @@ public class COMDOC {
          *     {@link XMLGregorianCalendar }
          *     
          */
-        public XMLGregorianCalendar getDate() {
+        public String getDate() {
             return date;
         }
 
@@ -389,7 +387,7 @@ public class COMDOC {
          *     {@link XMLGregorianCalendar }
          *     
          */
-        public void setDate(XMLGregorianCalendar value) {
+        public void setDate(String value) {
             this.date = value;
         }
 
