@@ -136,7 +136,7 @@ public class XmlGenerator{
 						p.setPOSITIONNUMBER((short) (i+1));
 						p.setPRODUCT(ORDERSOUTINVDET.get(i).getGOODSCODE());
 						p.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
-						p.setORDEREDQUANTITY(ORDERSOUTINVDET.get(i).getITEMCOUNT());
+						p.setORDEREDQUANTITY(QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager, Integer.valueOf(ORDERSOUTINVDET.get(i).getGOODSGROUPID())));
 						p.setACCEPTEDQUANTITY(0.0);
 						p.setPRICE(ORDERSOUTINVDET.get(i).getITEMPRICE());
 						Query getPRODUCTIDBUYER = entityManager.createNativeQuery("select prodcode from prodlink where clientid="+order.getOrder_main_clientId()+"and goodsid="+ORDERSOUTINVDET.get(i).getGOODSID());
@@ -147,7 +147,7 @@ public class XmlGenerator{
 							int ordGoodsID = ORDERSOUTINVDET.get(i).getGOODSID();
 							if(ordGoodsID == outGoodsID ){
 								deliveryprice+=o.getSUMITEMPRICEWITHOVERH();
-								p.setACCEPTEDQUANTITY(o.getITEMCOUNT());
+								p.setACCEPTEDQUANTITY(QueryManagerUtil.getDeliveredQuantityByParam(o.getGOODSID(), o.getITEMCOUNT(), o.getGOODSGROUPID(), entityManager));
 								p.setPRICE(o.getENDPRICE());
 								break;
 							}
