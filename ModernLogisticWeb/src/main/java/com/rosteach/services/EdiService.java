@@ -24,7 +24,7 @@ public class EdiService {
 	//create connection
 	public void setConnection(String database, String name, String password){
 		Map<String,String> properties = new HashMap<String,String>();
-		properties.put("javax.persistence.jdbc.url", database);
+		properties.put("javax.persistence.jdbc.url", database+"?lc_ctype=WIN1251;sql_dialect=3");
 		properties.put("javax.persistence.jdbc.user", name);
 		properties.put("javax.persistence.jdbc.password", password);
 		
