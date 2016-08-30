@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -30,7 +29,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "documenttotal"
 })
 @XmlRootElement(name = "ЕлектроннийДокумент")
-public class COMDOC {
+public class COMDOC{
 
     @XmlElement(name="Заголовок",required = true)
     protected COMDOC.Header header;
@@ -581,15 +580,14 @@ public class COMDOC {
             @XmlElement(name = "КодТипуДокументу",required = true)
             protected String reasontypecode;
             @XmlElement(name = "ДатаДокументу",required = true)
-            @XmlSchemaType(name = "date")
-            protected XMLGregorianCalendar reasondate;
+            protected String reasondate;
             
             public Docreason(){
             	
             }
             
             public Docreason(String reasonnumber, String reasontype, String reasontypecode,
-					XMLGregorianCalendar reasondate) {
+					String reasondate) {
 				this.reasonnumber = reasonnumber;
 				this.reasontype = reasontype;
 				this.reasontypecode = reasontypecode;
@@ -660,7 +658,7 @@ public class COMDOC {
              *     {@link XMLGregorianCalendar }
              *     
              */
-            public XMLGregorianCalendar getReasondate() {
+            public String getReasondate() {
                 return reasondate;
             }
 
@@ -672,7 +670,7 @@ public class COMDOC {
              *     {@link XMLGregorianCalendar }
              *     
              */
-            public void setReasondate(XMLGregorianCalendar value) {
+            public void setReasondate(String value) {
                 this.reasondate = value;
             }
 

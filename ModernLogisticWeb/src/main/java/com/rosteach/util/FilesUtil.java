@@ -10,7 +10,6 @@ public class FilesUtil {
 	}
 	public Set<File> getCOMDOCS(){
 		Set<File> files = new HashSet<File>();
-		
 			File directory =  new File("C:/MLW/XMLCOMDOC.xml/"); 
 			if(directory.isDirectory()){
 				String [] s = directory.list();

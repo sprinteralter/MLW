@@ -11,22 +11,30 @@
         <link rel="stylesheet" type="text/css" href="resources/css/prettify.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="resources/css/ng-grid.css"/>
-        <link rel="stylesheet" type="text/css" href="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/jquery-ui.min.css"/>
-        
+        <link rel="stylesheet" type="text/css" href="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/jquery-ui.min.css"/>        
         <!-- JS -->
         <script type="text/javascript" src="resources/js/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="resources/js/bootstrap.min.js"></script>       
-        <script type="text/javascript" src="resources/js/jquery-bootstrap-wizard.js"></script>
-        <script type="text/javascript" src="resources/js/ui-bootstrap-tpls-2.0.0.min.js"></script>
+     	<script type="text/javascript" src="resources/js/jquery-bootstrap-wizard.js"></script>
+        <!-- <script type="text/javascript" src="resources/js/ui-bootstrap-tpls-2.0.0.min.js"></script> -->
         <script type="text/javascript" src="resources/js/angular/angular.min.js"></script>
         <script type="text/javascript" src="resources/js/angular/angular-animate.min.js"></script>
         <script type="text/javascript" src="resources/js/ng-grid-2.0.7.min.js"></script>
-        <script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script>
+        <!-- <script type="text/javascript" src="resources/js/ng-grid-2.0.7.debug.js"></script> -->
         <script type="text/javascript" src="resources/js/angular/xmlcreationAngular.js"></script>
         <script type="text/javascript" src="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/jquery-ui.min.js"></script>
     	<script type="text/javascript" src="resources/js/jquery-ui-1.12.0.custom/jquery-ui-1.12.0.custom/ui.datapicker-ru.js"></script>
     	
     	<script>
+	    	$(document).on('show','.accordion', function (e) {
+	            //$('.accordion-heading i').toggleClass(' ');
+	            $(e.target).prev('.accordion-heading').addClass('accordion-opened');
+	       });
+	       
+	       $(document).on('hide','.accordion', function (e) {
+	           $(this).find('.accordion-heading').not($(e.target)).removeClass('accordion-opened');
+	           //$('.accordion-heading i').toggleClass('fa-chevron-right fa-chevron-down');
+	       });
             $(document).ready(function() {
                 $('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-tabs'});
                 $.datepicker.regional['ru']={
@@ -82,9 +90,9 @@
 			      <label for="date">Выбрать дату:</label>
 			      	 <input ng-model="optionDATE" id="datepicker" type="text"/> 
 			      <label for="optionalData" >Выбрать источник данных:</label>
-			      	<select id="optionalData" ng-model="optionID">
-			      		<option value="0">Расходная накладная</option>
-			      	</select>	
+			      <select id="optionalData" ng-model="optionID">
+			         <option value="0">Расходная накладная</option>
+			      </select>	
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-danger" ng-click="cancelALL()" data-dismiss="modal">Нет</button>
@@ -159,50 +167,104 @@
                      		<button id="refresh" ng-show="refresh" ng-click="refreshPage()" title="Повтор операции"></button>
                      	</div>
                      </div>
+                     
+                     
                      <div class="tab-pane" id="tab2">
-                     	<div class="navbar">
+                     	
+                     	<div class="navbar navbar-info">
 						    <div class="navbar-inner">
 						        <div class="container">
 							        <!-- <a class="brand" href="#">Project</a> -->
 							        <div class="nav-collapse collapse">
+										<ul class="nav nav-pills pull-left" role="tablist">
+											<li role="presentation"><a>Всего <span class="badge">{{links.length}}</span></a></li>
+											<li role="presentation"><a>Фильтр <span class="badge badge-success">{{filteredData.filteredLinks.length}}</span></a></li>
+											<li ng-show="tab2showSelectedList" role="presentation"><a>Выбрано <span class="badge badge-info">{{selectedList.length}}</span></a></li>
+										</ul>
 							            <form class="navbar-search">
-							            	<select class="span2">
-											    <option value="0">Все клиенты</option>
-												<option value="">ТОВ "Новус Украина"</option>
-												<option value="">ТОВ "ЕКО-МАРКЕТ"</option>
+							            	<select class="span" ng-model="tab2SelectClient" ng-change="tab2filterchange()">
+											    <option value="0">Клиенты</option>
+												<option value="9863577638028">ТОВ "Новус Украина"</option>
+												<option value=" 4820129370008">ТОВ "ЕКО-МАРКЕТ"</option>
+												<option value="4823058711089">ТОВ "Фудмережа"</option>
 									  		</select>
 							            </form>
-							            <!-- <button type="button" class="btn btn-default pull-right">&#10162</button> -->
-							            <form class="navbar-search pull-right">
-							                <div class="form-group">
-											    <input type="text" class="form-control" placeholder="поиск..." ng-model="linksSearching ">
-											</div>
+							            
+							            <form class="navbar-search">
+							            	<select class="span" ng-model="tab2SelectDoc" ng-change="tab2filterchange()">
+											    <option value="0">Документы: {{links.length}}</option>
+												<option value="Приходная накладная">Приходная накладная: {{doc1}}</option>
+												<option value="Расходная накладная">Расходная накладная: {{doc2}}</option>
+												<option value="Акт о приеме товара">Акт о приеме товара: {{doc3}}</option>
+												<option value="Акт про виявлені недоліки">Акт о выявлении недостатков: {{doc4}}</option>
+												<option value="Возвратная накладная">Возвратная накладная: {{doc5}}</option>
+									  		</select>
 							            </form>
+							            <ul class="nav navbar-nav pull-right">
+									        <li class="dropdown">
+									          <a style='cursor:pointer' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&#9881<span class="caret"></span></a>
+									          <ul class="dropdown-menu">
+									            <li style='cursor:pointer' ng-click='tab2SendChosenDocs()'><a><i class="icon-edit"></i> Подписать выбранные документы ({{selectedList.length}})</a></li>
+									            <li style='cursor:pointer' ng-click='tab2refreshLinks()'><a><i class="icon-refresh"></i> Обновить данные</a></li>
+									            <!-- <li><a href="#">Something else here</a></li>
+									            <li role="separator" class="divider"></li>
+									            <li><a href="#">Separated link</a></li>-->									      </ul>
+									        </li>
+									    </ul>
+									    <button type="button" class="btn btn-default pull-right" ng-click="tab2showSearching()"><i class="icon-search"></i></button>
+							            <!-- <button type="button" class="btn btn-default pull-right">&#10162</button> -->
+							            
+										<form class="navbar-search pull-right" ng-show="tab2showSearch">
+										    <input type="text" class="search-query" placeholder="поиск..." ng-model="linksSearching ">
+										</form>
 						            </div><!--/.nav-collapse -->
 						        </div>
 						    </div>
 						</div>
-	                     <div class="tab-pane-panels" ng-repeat="link in links | filter: linksSearching">
-							<div class="tab-pane-panels-left">
-								<h6>Коммерческий документ</h6>
-								<p>№: {{link.header.number}}</p>
-								<p>Дата: {{link.header.date}}</p>
-							</div>
-							<div class="tab-pane-panels-central">
-	                     		<div class="tab-pane-panels-central-header">
-	                     			
-	                     		</div>
-	                     		<p>{{link.header.type}}</p>
-							</div>
-							<div class="tab-pane-panels-right">
-								<button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
-		        					<i>Подписать</i>
-		        				</button>
-							</div>
-	                  	</div>
-                     </div>
-                  </div>	
+						
+						<div class="navbar" ng-repeat="link in (filteredData.filteredLinks =(links | filter: linksSearching | filter: tab2SelectDoc| filter: tab2SelectClient | orderBy: 'header.date'))">
+						    <div class="navbar-inner">
+						        <div class="container">
+							        <!-- <a class="brand" href="#">Project</a> -->									
+							        <div class="nav-collapse collapse">
+							        	<a class="brand brand-info">{{link.sides.contractor[0].contractorname}}</a>
+						            </div><!--/.nav-collapse -->
+						            <ul class="nav">
+									  <li class="active"><a>{{link.header.type}}</a></li>
+									  <li><a>{{link.header.date}}</a></li>
+									</ul>
+									<ul class="nav pull-right" ng-show="tab2panelSuccess">
+									  <li class="active"><a><i class="icon-check"></i></a></li>
+									</ul>
+									<button ng-click="tab2addLink($index,hiddenButDet=!hiddenButDet,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButCancel=!hiddenButCancel)" ng-show="hiddenAddBut" id="panelsBut" type="button" class="btn btn-info pull-right" title="Добавить в список"><i class="icon-ok"></i></button>
+									<button ng-click="tab2detailsLink(hiddenDiv=!hiddenDiv,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut)" ng-show="hiddenButDet" id="panelsBut" type="button" class="btn btn-warning pull-right" title="Детали"><i class="icon-list"></i></button>
+									<button ng-click="tab2signLink($index,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButDet=!hiddenButDet,tab2panelSuccess=!tab2panelSuccess)" id="panelsBut" type="button" ng-show="hiddenButSign" class="btn btn-success pull-right" title="Подписать"><i class="icon-edit"></i></button>
+									<button ng-click="tab2CancelLink($index,hiddenButDet=!hiddenButDet,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButCancel=!hiddenButCancel)" id="panelsBut" type="button" ng-show="hiddenButCancel" class="btn btn-danger pull-right" title="Удалить из списка"><i class="icon-remove"></i></button>
+									<!-- <ul class="nav navbar-nav pull-right">
+								       <li class="dropdown">
+								          <a class="dropdown-toggle" data-toggle="dropdown" href="#">&#9776<span class="caret"></span></a>
+								          <ul class="dropdown-menu">
+								            <li><a href="#"><i class="icon-search"></i></a></li>
+								            <li><a href="#">Page 1-2</a></li>
+								            <li><a href="#">Page 1-3</a></li>
+								          </ul>
+								        </li>
+								    </ul> -->
+								    
+						        </div>
+						        <div class="tab2PanelDetail" ng-show="hiddenDiv">
+						        	<b>Коммерческий документ</b>
+									<p>№: {{link.header.number}}</p>
+									<p>Дата: {{link.header.date}}</p>
+						        </div>
+						        <!-- <div class="progress progress-success progress-striped active" ng-show="hiddenProgress">
+								  <div class="bar" style="width: 40%;"></div>
+								</div> -->
+						    </div>
+						</div>
+                  </div>
               </div>
+            </div>  
           </section>
           <footer>
                 <h4>XML CREATION</h4>

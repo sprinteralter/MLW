@@ -65,12 +65,11 @@ public class QueryManagerUtil{
 		return result;  
 	}
 	/**
-	 * input types: int,int,EntityManager 
-	 * method to get orderQuantity as ITEMCOUNT from OrdersOutInvDet by id and goodsid (FIREBIRD)
+	 * input types: int,double,int,EntityManager 
+	 * method to get deliveredQuantity as ITEMCOUNT from OrdersOutInvDet by id and goodsid according to groopid (FIREBIRD)
 	 * return type: double
 	 * */
-	public static double getDeliveredQuantityByParam(int goodsid,double itemcount, int goodsgroupid,EntityManager em){	
-			
+	public static double getDeliveredQuantityByParam(int goodsid,double itemcount, int goodsgroupid,EntityManager em){		
 		Query getMeasureCoef = em.createNativeQuery("select coef from goodsmeasurelink where goodsid ="+goodsid+" and measureid ="+4);
 		double coef = (double)getMeasureCoef.getSingleResult();
 		System.out.println("---------------coef"+coef);
@@ -79,6 +78,46 @@ public class QueryManagerUtil{
 		}
 		else
 		return itemcount;
+	}
+	/**
+	 * input types: int,double,int,EntityManager 
+	 * method to get delivereEndprice per COUNT from OrdersOutInvDet by endprice according to goodsgroopid (FIREBIRD)
+	 * return type: double
+	 * */
+	public static double getDeliveredEndPriceByParam(int clientid, int goodsgroupid,int goodsid,EntityManager em){		
+		double coef=0;
+		double endprice=0;
+		
+		Query getClientPriceID = em.createNativeQuery("select pricetypeid from client where id="+clientid);
+		int priceid = (short)getClientPriceID.getSingleResult();
+		
+		Query getClientBankMFO = em.createNativeQuery("select bankmfo from client where id="+clientid);
+		int bankMFO = Integer.parseInt((String)getClientBankMFO.getSingleResult());
+		
+		if(bankMFO==322313){
+			Query getValWithOverth = em.createNativeQuery("select VAL from SPRFIXEDPRICE ("+priceid+",Null,0,Null,Null,0,0,Null) where goodsid ="+goodsid);
+			endprice = (double)getValWithOverth.getSingleResult();
+		}
+		else{
+			Query getValWithOverth = em.createNativeQuery("select VALWITHOVERH from SPRFIXEDPRICE ("+priceid+",Null,0,Null,Null,0,0,Null) where goodsid ="+goodsid);
+			endprice = (double)getValWithOverth.getSingleResult();
+		}
+		
+		Query getMeasureCoef = em.createNativeQuery("select coef from goodsmeasurelink where goodsid ="+goodsid+" and measureid ="+4);
+		coef = (double)getMeasureCoef.getSingleResult();
+		
+		double div = endprice/coef;
+		
+		if(goodsgroupid==740){
+			String res = div+"";
+			if(res.length()>7){
+				return Double.parseDouble(res.substring(0,7));
+			}
+			else 
+			return div;
+		}
+		else
+		return endprice;
 	}
 	/**
 	 * input types: int,int,EntityManager 

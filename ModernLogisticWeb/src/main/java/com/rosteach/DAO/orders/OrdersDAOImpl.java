@@ -70,6 +70,9 @@ public class OrdersDAOImpl implements OrdersDAO {
 						return "Нет привязки артикула (покупатель) " + p.getPRODUCTIDBUYER() + " к товару "+ p.getCHARACTERISTIC().getDESCRIPTION();
 					}
 					
+					if (main_id == 13036)
+						mesID=2;
+					
 					//add position to order
 					es.addPosition(orderID, goodsID, mesID, p.getORDEREDQUANTITY());
 			 }

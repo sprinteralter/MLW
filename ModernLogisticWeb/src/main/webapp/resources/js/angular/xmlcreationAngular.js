@@ -31,8 +31,6 @@ app.controller('myCtrl', function($scope, $http){
 	$scope.sendOption=null;
 	$scope.showSelectedOption=false;
 	
-	
-	
 	$scope.myData=null;
 	$scope.responseData=null;
 	$scope.selectedRows = [];
@@ -156,6 +154,7 @@ app.controller('myCtrl', function($scope, $http){
 	              {field: 'totaldate', displayName: 'Дата', width: "*"},
 	              {field: 'totalorderedquantity', displayName: 'Заказано(общ.)', width: "*"},
 	              {field: 'totaldeliveryquantity', displayName: 'Поставка(общ.)', width: "*"}
+	              /*{field: 'totaldeliveryprice', displayName: 'Сумма поставки(общ.)', width: "*"}*/
 	        ]
 	    };
     
@@ -218,15 +217,89 @@ app.controller('myCtrl', function($scope, $http){
     }
     
     /*************************tab 2 code***********************/
+    
+    $scope.linksSearching=null;
+	$scope.tab2SelectClient='0';
+	$scope.tab2SelectDoc='0';
+	$scope.panelsClass="tab-pane-panels";
+	$scope.panelCheckedClass="tab-pane-panels-checked";
+	$scope.links=null;
+	$scope.panelNumber=0;
+	$scope.doc4 = 0;
+	$scope.filter = 0;
+	$scope.tab2showSelectedList=false;
+	$scope.filteredData = {};
+	$scope.selectedList = [];
+	$scope.hiddenDiv = false;
+	$scope.hiddenProgress = false;
+	$scope.tab2showSearch=false;	
+	$scope.hiddenAddBut = true;
+	$scope.hiddenButDet = true;
+	$scope.hiddenButSign = true;
+	$scope.hiddenButCancel = false;
+	$scope.tab2panelSuccess = false;
+	
+	
     $http.get('data/comdocs',{headers: { 'Content-Transfer-Encoding': 'utf-8' }})
     .success(function(data){
     	$scope.links = data;
+    	
+    	angular.forEach($scope.links, function(item){
+            var type = item.header.type;
+            if(type==="Акт про виявлені недоліки"){
+            	$scope.doc4 +=1; 
+            }
+    		console.log(item.header.type);  
+        })
+    	console.log($scope.doc4);
+    	//$scope.tab2TotalDocsItems = $scope.links.length;
     });
     
-    /*$scope.tab2 = function(){
-	    var links = $http.get('data/comdocs',{headers: { 'Content-Transfer-Encoding': 'utf-8' }})
-	    .success(function(data){
-	    	$scope.links = data;
-	    });
-    }*/
+    $scope.tab2filterchange = function(){
+    	var client = $scope.tab2SelectClient;
+    	var doc = $scope.tab2SelectDoc;
+    	if(client=='0'){
+    		
+    	}
+    }
+    
+    $scope.tab2SendChosenDocs = function(){
+    	
+    }
+    
+    $scope.tab2addLink=function(index){
+    	console.log(index)
+    	$scope.selectedList.push(index);
+    	console.log($scope.selectedList[index]);
+    	console.log($scope.selectedList);
+    	if(!$scope.tab2showSelectedList & $scope.selectedList.length!=0){
+    		$scope.tab2showSelectedList=true;
+    	}
+    	
+    }
+    $scope.tab2detailsLink=function(){
+    	
+    }
+    $scope.tab2signLink = function(index){
+        $http.get('data/comdoc',{headers: { 'Content-Transfer-Encoding': 'utf-8', 'key': index}})
+        .success(function(data){
+        	console.log(data);
+        });
+    }
+    $scope.tab2CancelLink=function(index){
+    	var id = $scope.selectedList.indexOf(index);
+    	$scope.selectedList.splice(id,1);
+    	console.log($scope.selectedList);
+    	console.log($scope.selectedList.length);
+    	if($scope.tab2showSelectedList & $scope.selectedList.length==0){
+    		$scope.tab2showSelectedList=false;
+    	}
+    }
+    $scope.tab2showSearching=function(){
+    	$scope.tab2showSearch=!$scope.tab2showSearch;
+    };
+    
+    $scope.tab2refreshLinks=function(){
+    	
+    };
 });

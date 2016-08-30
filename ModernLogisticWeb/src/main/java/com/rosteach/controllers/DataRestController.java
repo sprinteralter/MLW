@@ -2,10 +2,7 @@ package com.rosteach.controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -178,16 +175,24 @@ public class DataRestController {
 		boolean connection = ftp.getConnection("uasprinterk", "b279bedf");
 		List<COMDOC> result=null;
 		if(connection){
-			if(ftp.getCOMDOCS("/inbox/")){
-				try {
-					result = new XmlGenerator().getLinks();
-				} catch (JAXBException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			try {
+				ftp.getCOMDOCS("inbox/");
+				result = new XmlGenerator().getLinks();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		System.out.println("reaultList-----------"+result.size());
+		return new ResponseEntity<List<COMDOC>>(result,HttpStatus.OK);
+	}
+	/**
+	 * method for ftp connection and getting comdocs as json collection
+	 * */
+	@RequestMapping(value="/comdoc", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
+	public ResponseEntity<List<COMDOC>> signComdoc(@RequestHeader("key") int id){
+		List<COMDOC> result=null;
+		System.out.println("requestid-------------------------- "+id);
 		return new ResponseEntity<List<COMDOC>>(result,HttpStatus.OK);
 	}
 	

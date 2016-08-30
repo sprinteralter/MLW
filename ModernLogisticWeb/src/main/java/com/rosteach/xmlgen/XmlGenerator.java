@@ -138,7 +138,8 @@ public class XmlGenerator{
 						p.setDESCRIPTION(ORDERSOUTINVDET.get(i).getGOODSNAME());
 						p.setORDEREDQUANTITY(QueryManagerUtil.getOrderQuantityByParam(orderid, ORDERSOUTINVDET.get(i).getGOODSID(), entityManager, Integer.valueOf(ORDERSOUTINVDET.get(i).getGOODSGROUPID())));
 						p.setACCEPTEDQUANTITY(0.0);
-						p.setPRICE(ORDERSOUTINVDET.get(i).getITEMPRICE());
+						System.out.println("--------------"+ORDERSOUTINVDET.get(i).getITEMPRICE()+";"+ ORDERSOUTINVDET.get(i).getGOODSGROUPID()+ ORDERSOUTINVDET.get(i).getGOODSID());
+						p.setPRICE(QueryManagerUtil.getDeliveredEndPriceByParam(out.getCLIENTID(), ORDERSOUTINVDET.get(i).getGOODSGROUPID(), ORDERSOUTINVDET.get(i).getGOODSID(), entityManager));//ORDERSOUTINVDET.get(i).getITEMPRICE());
 						Query getPRODUCTIDBUYER = entityManager.createNativeQuery("select prodcode from prodlink where clientid="+order.getOrder_main_clientId()+"and goodsid="+ORDERSOUTINVDET.get(i).getGOODSID());
 						p.setPRODUCTIDBUYER((String)getPRODUCTIDBUYER.getSingleResult());
 						
@@ -148,12 +149,11 @@ public class XmlGenerator{
 							if(ordGoodsID == outGoodsID ){
 								deliveryprice+=o.getSUMITEMPRICEWITHOVERH();
 								p.setACCEPTEDQUANTITY(QueryManagerUtil.getDeliveredQuantityByParam(o.getGOODSID(), o.getITEMCOUNT(), o.getGOODSGROUPID(), entityManager));
-								p.setPRICE(o.getENDPRICE());
+								p.setPRICE(QueryManagerUtil.getDeliveredEndPriceByParam(out.getCLIENTID(), o.getGOODSGROUPID(), o.getGOODSID(), entityManager));//o.getENDPRICE());
 								break;
 							}
 							
 						}
-						
 						
 						if(p.getORDEREDQUANTITY().intValue() == p.getACCEPTEDQUANTITY().intValue()){
 							p.setPRODUCTTYPE(1);
@@ -277,7 +277,7 @@ public class XmlGenerator{
 						
 						int orderedquantity = 0;
 						int deliveryquantity = 0;
-						
+						double deliveredsumm = 0;
 							for(int i =0; i<ORDERSOUTINVDET.size();i++){
 								DESADV.HEAD.PACKINGSEQUENCE.POSITION position = new DESADV.HEAD.PACKINGSEQUENCE.POSITION();
 								position.setParameters(i+1, ORDERSOUTINVDET.get(i).getGOODSCODE(),
@@ -306,11 +306,14 @@ public class XmlGenerator{
 									position.setDelPriceAndQuantity(0.0, 0);
 								}
 								else{
-									position.setDelPriceAndQuantity(QueryManagerUtil.getDeliveredQuantityByParam(outcomeDetails.get(checknumber).getGOODSID(), outcomeDetails.get(checknumber).getITEMCOUNT(),  outcomeDetails.get(checknumber).getGOODSGROUPID(), entityManager), outcomeDetails.get(checknumber).getENDPRICE());
+									
+									position.setDelPriceAndQuantity(QueryManagerUtil.getDeliveredQuantityByParam(outcomeDetails.get(checknumber).getGOODSID(), outcomeDetails.get(checknumber).getITEMCOUNT(),  outcomeDetails.get(checknumber).getGOODSGROUPID(), entityManager), 
+																	QueryManagerUtil.getDeliveredEndPriceByParam(invoice.getCLIENTID(), outcomeDetails.get(checknumber).getGOODSGROUPID(), outcomeDetails.get(checknumber).getGOODSID(), entityManager));
 								}
 								
 								orderedquantity+=position.getORDEREDQUANTITY();
 								deliveryquantity+=position.getDELIVEREDQUANTITY();
+								//deliveredsumm+=outcomeDetails.get(checknumber).getSUMITEMPRICEWITHOVERH();
 								list.add(position);
 								entityManager.clear();
 							}
@@ -325,7 +328,7 @@ public class XmlGenerator{
 						ResultLog result = new ResultLog("Ок","Ув. об отгрузке("+invoice.getREGNUMBER()+")",
 														LocalDate.now().toString(),
 														deliveryquantity,
-														0,
+														deliveredsumm,
 														orderedquantity);
 					
 						packingSequence.setPOSITION(list);
@@ -405,11 +408,14 @@ public class XmlGenerator{
 		public List<COMDOC> getLinks() throws JAXBException{
 			List<COMDOC> links = new LinkedList<COMDOC>();
 			Set<File> files = new FilesUtil().getCOMDOCS();
+			int index =0;
 			for(File file: files){
+				System.out.println("lastModified------------"+index+++"--------------"+file.lastModified());
 				COMDOC comdoc = (COMDOC)((JAXBContext.newInstance(COMDOC.class)).createUnmarshaller()).unmarshal(new File(file.getAbsolutePath()));
 				/*Links link = new Links("Коммерческий документ",DateUtils.getFormatDateXML(comdoc.getHeader().getDate()),comdoc.getHeader().getType());
 				links.add(link);*/
 				comdoc.getHeader().setDate(DateUtils.getFormatDateXML(comdoc.getHeader().getDate()));
+				comdoc.getHeader().getDocreason().setReasondate(DateUtils.getFormatDateXML(comdoc.getHeader().getDocreason().getReasondate()));;
 				links.add(comdoc);
 			}
 			//System.out.println(links.get(0).getDocName());
