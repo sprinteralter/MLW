@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.rosteach.tasks.CsvGenerator;
+
 @Controller
 public class AdminPageController {
 
@@ -78,6 +80,32 @@ public class AdminPageController {
 		return mv;
 	 }
 
+	 @RequestMapping(value = "/generateHomka", method = RequestMethod.POST)             //register add user
+	    public ModelAndView homka(@RequestParam(value = "s") String s,
+	                               @RequestParam(value = "po") String po,
+	                               @RequestParam(value = "ftp", defaultValue = "false") boolean ftp,
+	                               HttpServletResponse response
+	                              
+	                               ) {
+
+		 ModelAndView mv = new ModelAndView("admin");
+				
+				
+	           try {
+	        	   if (ftp == false){
+	        		   new CsvGenerator(s, po);
+	        	   }
+				
+	        	   if (ftp == true){
+	        		   new CsvGenerator(s, po).CurlUpload("upload.bat");
+	        	   }
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return mv;
+	 }
+	 
 }
 	
 
