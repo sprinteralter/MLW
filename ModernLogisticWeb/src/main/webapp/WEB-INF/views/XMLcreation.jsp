@@ -222,40 +222,30 @@
 						    </div>
 						</div>
 						
-						<div class="navbar" ng-repeat="link in (filteredData.filteredLinks =(links | filter: linksSearching | filter: tab2SelectDoc| filter: tab2SelectClient | orderBy: 'header.date'))">
+						<div class="navbar" ng-repeat="link in (filteredData.filteredLinks =(links | filter: linksSearching | filter: tab2SelectDoc| filter: tab2SelectClient | orderBy: 'obj.header.date'))">
 						    <div class="navbar-inner">
 						        <div class="container">
 							        <!-- <a class="brand" href="#">Project</a> -->									
 							        <div class="nav-collapse collapse">
-							        	<a class="brand brand-info">{{link.sides.contractor[0].contractorname}}</a>
+							        	<a class="brand brand-info">{{link.obj.sides.contractor[0].contractorname}}</a>
 						            </div><!--/.nav-collapse -->
 						            <ul class="nav">
-									  <li class="active"><a>{{link.header.type}}</a></li>
-									  <li><a>{{link.header.date}}</a></li>
+									  <li class="active"><a>{{link.obj.header.type}}</a></li>
+									  <li><a>{{link.obj.header.date}}</a></li>
 									</ul>
 									<ul class="nav pull-right" ng-show="tab2panelSuccess">
 									  <li class="active"><a><i class="icon-check"></i></a></li>
+									  <li class="active"><a>{{tab2signResponse}}</a></li>
 									</ul>
 									<button ng-click="tab2addLink($index,hiddenButDet=!hiddenButDet,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButCancel=!hiddenButCancel)" ng-show="hiddenAddBut" id="panelsBut" type="button" class="btn btn-info pull-right" title="Добавить в список"><i class="icon-ok"></i></button>
 									<button ng-click="tab2detailsLink(hiddenDiv=!hiddenDiv,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut)" ng-show="hiddenButDet" id="panelsBut" type="button" class="btn btn-warning pull-right" title="Детали"><i class="icon-list"></i></button>
 									<button ng-click="tab2signLink($index,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButDet=!hiddenButDet,tab2panelSuccess=!tab2panelSuccess)" id="panelsBut" type="button" ng-show="hiddenButSign" class="btn btn-success pull-right" title="Подписать"><i class="icon-edit"></i></button>
-									<button ng-click="tab2CancelLink($index,hiddenButDet=!hiddenButDet,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButCancel=!hiddenButCancel)" id="panelsBut" type="button" ng-show="hiddenButCancel" class="btn btn-danger pull-right" title="Удалить из списка"><i class="icon-remove"></i></button>
-									<!-- <ul class="nav navbar-nav pull-right">
-								       <li class="dropdown">
-								          <a class="dropdown-toggle" data-toggle="dropdown" href="#">&#9776<span class="caret"></span></a>
-								          <ul class="dropdown-menu">
-								            <li><a href="#"><i class="icon-search"></i></a></li>
-								            <li><a href="#">Page 1-2</a></li>
-								            <li><a href="#">Page 1-3</a></li>
-								          </ul>
-								        </li>
-								    </ul> -->
-								    
+									<button ng-click="tab2CancelLink($index,hiddenButDet=!hiddenButDet,hiddenButSign=!hiddenButSign,hiddenAddBut=!hiddenAddBut,hiddenButCancel=!hiddenButCancel)" id="panelsBut" type="button" ng-show="hiddenButCancel" class="btn btn-danger pull-right" title="Удалить из списка"><i class="icon-remove"></i></button>								    
 						        </div>
 						        <div class="tab2PanelDetail" ng-show="hiddenDiv">
 						        	<b>Коммерческий документ</b>
-									<p>№: {{link.header.number}}</p>
-									<p>Дата: {{link.header.date}}</p>
+									<p>№: {{link.obj.header.number}}</p>
+									<p>Дата: {{link.obj.header.date}}</p>
 						        </div>
 						        <!-- <div class="progress progress-success progress-striped active" ng-show="hiddenProgress">
 								  <div class="bar" style="width: 40%;"></div>

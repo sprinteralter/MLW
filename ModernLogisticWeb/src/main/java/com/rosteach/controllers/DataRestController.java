@@ -25,6 +25,7 @@ import com.rosteach.connection.FTPConnectionEDI;
 import com.rosteach.entities.COMDOC;
 import com.rosteach.entities.ClientRequest;
 import com.rosteach.entities.ClientRequestDetails;
+import com.rosteach.entities.DOCwithName;
 //import com.rosteach.entities.ClientsRequests;
 import com.rosteach.entities.DataBind;
 import com.rosteach.entities.EntityManagerReferee;
@@ -34,6 +35,7 @@ import com.rosteach.entities.SPROutcomeInvoice;
 //import com.rosteach.services.ClientsRequestsService;
 import com.rosteach.services.SPROutcomeInvoiceService;
 import com.rosteach.services.databinding.DataBindingService;
+import com.rosteach.util.FilesUtil;
 import com.rosteach.util.JsonMapperUtil;
 import com.rosteach.util.QueryManagerUtil;
 import com.rosteach.validators.QueryValidator;
@@ -170,30 +172,34 @@ public class DataRestController {
 	 * method for ftp connection and getting comdocs as json collection
 	 * */
 	@RequestMapping(value="/comdocs", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<COMDOC>> getAllCOMDOCS(){
-		FTPConnectionEDI ftp = new FTPConnectionEDI();
-		boolean connection = ftp.getConnection("uasprinterk", "b279bedf");
-		List<COMDOC> result=null;
-		if(connection){
+	public ResponseEntity<List<DOCwithName>> getAllCOMDOCS(){
+		//FTPConnectionEDI ftp = new FTPConnectionEDI();
+		//boolean connection = ftp.getConnection("uasprinterk", "b279bedf");
+		List<DOCwithName> result=null;
+		//if(connection){
 			try {
-				ftp.getCOMDOCS("inbox/");
+				//ftp.getCOMDOCS("inbox/");
 				result = new XmlGenerator().getLinks();
 			} catch (JAXBException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		//}
 		System.out.println("reaultList-----------"+result.size());
-		return new ResponseEntity<List<COMDOC>>(result,HttpStatus.OK);
+		return new ResponseEntity<List<DOCwithName>>(result,HttpStatus.OK);
 	}
 	/**
 	 * method for ftp connection and getting comdocs as json collection
 	 * */
 	@RequestMapping(value="/comdoc", method=RequestMethod.GET, produces={"application/json; charset=UTF-8"})
-	public ResponseEntity<List<COMDOC>> signComdoc(@RequestHeader("key") int id){
-		List<COMDOC> result=null;
-		System.out.println("requestid-------------------------- "+id);
-		return new ResponseEntity<List<COMDOC>>(result,HttpStatus.OK);
+	public ResponseEntity<Boolean> signComdoc(@RequestHeader("key") String filename){
+		System.out.println("requestfilename-------------------------- "+filename);
+		boolean check = false;
+		if(FilesUtil.delete(filename)){
+			check = true;
+		};
+		System.out.println("file deleted-------------------------- "+check);
+		return new ResponseEntity<Boolean>(check,HttpStatus.OK);
 	}
 	
 }

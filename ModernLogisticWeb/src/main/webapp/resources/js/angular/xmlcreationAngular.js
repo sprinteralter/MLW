@@ -238,18 +238,19 @@ app.controller('myCtrl', function($scope, $http){
 	$scope.hiddenButSign = true;
 	$scope.hiddenButCancel = false;
 	$scope.tab2panelSuccess = false;
+	$scope.tab2signResponse=null;
 	
 	
     $http.get('data/comdocs',{headers: { 'Content-Transfer-Encoding': 'utf-8' }})
     .success(function(data){
     	$scope.links = data;
-    	
+    	console.log($scope.links);
     	angular.forEach($scope.links, function(item){
-            var type = item.header.type;
+            var type = item.obj.header.type;
             if(type==="Акт про виявлені недоліки"){
             	$scope.doc4 +=1; 
             }
-    		console.log(item.header.type);  
+    		console.log(item.obj.header.type);  
         })
     	console.log($scope.doc4);
     	//$scope.tab2TotalDocsItems = $scope.links.length;
@@ -281,9 +282,15 @@ app.controller('myCtrl', function($scope, $http){
     	
     }
     $scope.tab2signLink = function(index){
-        $http.get('data/comdoc',{headers: { 'Content-Transfer-Encoding': 'utf-8', 'key': index}})
+        $http.get('data/comdoc',{headers: { 'Content-Transfer-Encoding': 'utf-8', 'key': $scope.filteredData.filteredLinks[index].name}})
         .success(function(data){
-        	console.log(data);
+        	console.log($scope.filteredData.filteredLinks[index].name)
+        	if(data){
+        		$scope.tab2signResponse="Подписан";
+        	}
+        	else{
+        		$scope.tab2signResponse="Ошибка";
+        	}
         });
     }
     $scope.tab2CancelLink=function(index){

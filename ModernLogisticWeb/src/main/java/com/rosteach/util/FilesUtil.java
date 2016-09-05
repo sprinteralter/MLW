@@ -22,4 +22,13 @@ public class FilesUtil {
 			}
 		return files;
 	}
+	
+	public static boolean  delete(String filename){
+		File file = new File("C:/MLW/XMLCOMDOC.xml/"+filename);
+		if(file.exists()&file.delete()){
+			return true;
+		}
+		else 
+			return false;
+	}
 }

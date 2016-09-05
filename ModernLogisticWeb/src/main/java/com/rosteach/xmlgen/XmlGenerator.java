@@ -8,8 +8,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -31,6 +33,7 @@ import com.rosteach.DAO.order_info.Order_infoDAO;
 import com.rosteach.DAO.security.GetDetails;
 import com.rosteach.entities.COMDOC;
 import com.rosteach.entities.ClientRequestDetails;
+import com.rosteach.entities.DOCwithName;
 import com.rosteach.entities.EntityManagerReferee;
 import com.rosteach.entities.Links;
 import com.rosteach.entities.Order_info;
@@ -405,18 +408,19 @@ public class XmlGenerator{
 			
 			return resultList;
 		}
-		public List<COMDOC> getLinks() throws JAXBException{
-			List<COMDOC> links = new LinkedList<COMDOC>();
+		public List<DOCwithName> getLinks() throws JAXBException{
+			List<DOCwithName> links = new LinkedList<DOCwithName>();
 			Set<File> files = new FilesUtil().getCOMDOCS();
-			int index =0;
+			//int index =0;
 			for(File file: files){
-				System.out.println("lastModified------------"+index+++"--------------"+file.lastModified());
-				COMDOC comdoc = (COMDOC)((JAXBContext.newInstance(COMDOC.class)).createUnmarshaller()).unmarshal(new File(file.getAbsolutePath()));
-				/*Links link = new Links("Коммерческий документ",DateUtils.getFormatDateXML(comdoc.getHeader().getDate()),comdoc.getHeader().getType());
-				links.add(link);*/
-				comdoc.getHeader().setDate(DateUtils.getFormatDateXML(comdoc.getHeader().getDate()));
-				comdoc.getHeader().getDocreason().setReasondate(DateUtils.getFormatDateXML(comdoc.getHeader().getDocreason().getReasondate()));;
-				links.add(comdoc);
+				if(file.getName().endsWith("xml")){
+					COMDOC comdoc = (COMDOC)((JAXBContext.newInstance(COMDOC.class)).createUnmarshaller()).unmarshal(new File(file.getAbsolutePath()));
+					/*Links link = new Links("Коммерческий документ",DateUtils.getFormatDateXML(comdoc.getHeader().getDate()),comdoc.getHeader().getType());
+					links.add(link);*/
+					comdoc.getHeader().setDate(DateUtils.getFormatDateXML(comdoc.getHeader().getDate()));
+					comdoc.getHeader().getDocreason().setReasondate(DateUtils.getFormatDateXML(comdoc.getHeader().getDocreason().getReasondate()));;
+					links.add(new DOCwithName(file.getName(),comdoc));
+				}
 			}
 			//System.out.println(links.get(0).getDocName());
 			System.out.println("links size-------------"+links.size());

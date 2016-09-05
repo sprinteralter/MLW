@@ -21,7 +21,9 @@ public interface EUTaxServiceFile extends Library{
 
 	public static interface EUKeyType{
 		public static final int euKeyTypeAccountant = 1;
-		public static final int euKeyTypeDirector = 3;
+		public static final int euKeyTypeDirector = 2;
 		public static final int euKeyTypeDigitalStamp = 3;
 	}
+	
+	
 }
