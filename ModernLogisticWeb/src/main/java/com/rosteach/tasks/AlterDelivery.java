@@ -328,7 +328,9 @@ public List<Client> client(){
 	List<Client> cl = new ArrayList();
 	for (Object o : getC.getResultList()){
 		Object[] cols = (Object[]) o;
-		Client c = new Client(String.valueOf(cols[0]), String.valueOf(cols[1]), String.valueOf(cols[2]), "4");
+		
+		Client c = new Client(String.valueOf(cols[0]), (String)cols[1], (String)cols[2], "4");
+		
 		cl.add(c);
 	}
 	return cl;

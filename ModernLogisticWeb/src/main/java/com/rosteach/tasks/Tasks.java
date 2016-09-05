@@ -38,7 +38,7 @@ public class Tasks {
    List<String> oborot = new ArrayList<String>();
     int res = 0;
     
-    @Scheduled(cron="01 00 03 * * ?") //fixedDelay=2500000) //
+    @Scheduled(cron="01 30 03 * * ?") //fixedDelay=2500000) //
     public void reportCurrentTime() throws IOException {
     	/*sku();
 		delivery();

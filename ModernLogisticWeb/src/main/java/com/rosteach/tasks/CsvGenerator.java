@@ -80,6 +80,12 @@ public CsvGenerator(LocalDate s, LocalDate po) throws IOException{
 
 public void CurlUpload(String fileName) throws ParseException, IOException{
 	String path = "C:/SPOT2D/";
+	try {
+		Thread.sleep(5000);
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	Runtime.getRuntime().exec(path+fileName); //cmd /c 
 	
 	/*File[] files = new File(path).listFiles();
@@ -183,6 +189,7 @@ public void clients() throws IOException{
 	for (Client o : clients){
 		csvFilePrinter.printRecord(o.location+";"+o.clientCode+";"+o.clientName+";"+o.clientAdr);
 		
+
 	}
 	writer.flush();
 	writer.close();
