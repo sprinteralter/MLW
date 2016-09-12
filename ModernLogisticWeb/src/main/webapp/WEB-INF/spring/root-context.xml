@@ -27,7 +27,7 @@
     	<property name="maxUploadSize" value="100000000"/>
 	</bean>
 	
-<!-- 	<bean id="DatabaseFilter" class="com.rosteach.DAO.security.DatabaseFilter">
+	<!-- <bean id="DatabaseFilter" class="com.rosteach.DAO.security.DatabaseFilter">
 	 <property name="authenticationManager" ref="authenticationManager" />
 	</bean> -->
 	

@@ -32,6 +32,7 @@ public class GetSverkaPoVigruzkeBox {
 	    "from "+
 	    	"SPRORDERSOUTINV (1,'"+startDate+"','"+endDate+"',0,0,0) sv,"+
 	    	"SPRORDERSOUTINVDET (sv.id,Null,0,2,1, Null,Null,0,0) svt "+
+	    "where STOREID=0"+
 	    "group by "+
 	    	"sv.clientsname";
 		
