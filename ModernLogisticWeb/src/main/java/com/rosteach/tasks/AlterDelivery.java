@@ -52,18 +52,21 @@ public List<Delivery> delivery() throws IOException{
 			+ "c.id Client_Code,  "
 			+ "dc.docdate Doc_Date, "
 			+ "g.code1 SKU_Code, "
-			+ "id.itemcount itemcount,  "
-			+ "dc.mainsumm price_sum, " //+ "o.SUMITEMPRICEWITHOVERH, " //
+			+ "outcards.itemcount itemcount,  "
+			+ "id.itemcount * id.endprice * g.coef Del_Amount, " //+ "o.SUMITEMPRICEWITHOVERH, " //
 			+ "dc.agentid TA, "
-			+"g.id, "
-			+ "p.val price_one, "
-			+ "id.outcomeinvoiceid" 
+			+"g.id goodsid, "
+			+ "ca.buyprice * g.coef, "
+			+ "ou.regnumber regnum, "
+			+ "ou.id outid" 
 			+ " from "
 			+ "doccommon dc, "
 			+ "outcomeinvoicedet id, "
 			+ "goods g, "
 			+ "client c, "
-			+ "fixedprice p"
+			+ "cardindex ca, "
+			+ "OUTCOMEINVOICECARDS outcards, "
+			+ "outcomeinvoice ou"
 			+ " where "
 			+ "c.id=dc.clientid"
 			+ " and dc.id = id.outcomeinvoiceid"
@@ -73,28 +76,33 @@ public List<Delivery> delivery() throws IOException{
 			+ " and dc.signed = 3"
 			+ " and dc.isreturn = 0"
 			+ " and g.prodtreeid in (5062)"
-			+ " and dc.clientid not in (907,300003,300701,301271,8169,14970,1823)" //4151,
+			+ " and dc.clientid not in (907,300003,300701,301271,8169,14970,1823)" //4151, //
 			+ " and dc.docdate >= '"+minus45+"' "
 			+ "and dc.docdate <= '"+today+"' "
-			+ "and p.goodsid = g.id "
-			+ "and p.pricetypeid = 1"); 
+			+ "and ca.id = outcards.cardindexid "
+			+ "and id.outcomeinvoiceid = outcards.outcomeinvoiceid"
+			+ " and ca.goodsid = g.id "
+			+ " and ou.id = id.outcomeinvoiceid"); 
 	
 	Query form2 = em.createNativeQuery("select "
 			+ "c.id Client_Code,  "
 			+ "dc.docdate Doc_Date, "
 			+ "g.code1 SKU_Code, "
-			+ "id.itemcount itemcount,  "
-			+ "dc.mainsumm price_sum, "
+			+ "mgrca.itemcount itemcount,  "
+			+ "id.itemcount * id.endprice * g.coef Del_Amount, "
 			+ "dc.agentid TA, "
-			+"g.id, "
-			+ "p.val price_one, "
-			+ "id.innermigrationid "
+			+"g.id goodsid, "
+			+ "ca.buyprice * g.coef, "
+			+ "im.regnumber regnum, "
+			+ "im.id inrmigrID "
 			+ "from "
 			+ "doccommon dc, "
 			+ "innermigrationdet id, "
 			+ "goods g, "
 			+ "client c, "
-			+ "fixedprice p "
+			+ "cardindex ca,"
+			+ "INNERMIGRATIONCARDS mgrca,"
+			+ " innermigration im "
 			+ "where "
 			+ "c.id=dc.clientid"
 			+ " and dc.id = id.innermigrationid"
@@ -105,42 +113,48 @@ public List<Delivery> delivery() throws IOException{
 			+ " and dc.signed = 3"
 			+ " and dc.isreturn = 0"
 			+ " and g.prodtreeid = 5062"
-			+ " and dc.clientid not in (907,300003,300701,301271,8169,14970,1823)" //4151,
+			+ " and dc.clientid not in (907,300003,300701,301271,8169,14970,1823)" //4151, 
 			+ " and dc.docdate >=  '"+minus45+"' "
 			+ "and dc.docdate <= '"+today+"' "
-			+ "and p.goodsid = g.id "
-			+ "and p.pricetypeid = 1"); 
+			+ "and ca.id = mgrca.cardindexiddst "
+			+ "and id.innermigrationid = mgrca.innermigrationid "
+			+ "and ca.goodsid = g.id "
+			+ "and im.id = id.innermigrationid"); 
 	
 	Query returns = em.createNativeQuery("select "
 			+ "c.id Client_Code, "
 			+ "dc.docdate Del_Date, "
 			+ "g.code1 SKU_Code,  "
 			+ "id.itemcount * -1 Del_Volume, "
-			+ "dc.mainsumm * -1 Del_Amount, "
-			+ "dc.agentid TA, g.id, "
-			+ "p.val, "
-			+ "id.incomeinvoiceid,"
-			+ " id.cardindexid "
+			+ "(id.itemcount * id.retprice * g.coef * -1) Del_Amount, "
+			+ "dc.agentid TA, "
+			+ "g.id goodsid, "
+			+ "ca.buyprice * g.coef, "
+			+ "ii.regnumber, "
+			+ "ca.id caid, "
+			+ "ii.id incomeid "
 			+ "from "
-			+ "doccommon dc, "
+			+ " doccommon dc, "
 			+ "incomeinvoicedet id, "
 			+ "goods g, "
 			+ "client c, "
-			+ "fixedprice p "
+			+ "cardindex ca, "
+			+ "incomeinvoice ii "
 			+ "where "
 			+ "c.id=dc.clientid "
 			+ "and dc.id = id.incomeinvoiceid "
 			+ "and g.id = id.goodsid "
 			+ "and dc.STOREIDDST = "+store
-			+ "and id.receipted = 1 "
+			+ " and id.receipted = 1 "
 			+ "and dc.signed = 3 "
 			+ "and dc.isreturn = 1 "
 			+ "and g.prodtreeid = 5062 "
-			+ "and dc.clientid not in (907,300003,300701,301271,8169,14970,1823) " //4151
+			+ "and dc.clientid not in (907,300003,300701,301271,8169,14970,1823) " //4151 
 			+ " and dc.docdate >=  '"+minus45+"' "
 			+ "and dc.docdate <= '"+today+"' "
-			+ "and p.goodsid = g.id "
-			+ "and p.pricetypeid = 1"); 
+			+ "and ca.id = id.cardindexid "
+			+ "and ca.goodsid = g.id "
+			+ " and ii.id = id.incomeinvoiceid "); 
 	
 	
 	for (Object d : form1.getResultList()){
@@ -150,15 +164,14 @@ public List<Delivery> delivery() throws IOException{
 		s.setDocDate(String.valueOf(cols[1]));
 		s.setSkuCode(String.valueOf(cols[2]));
 		s.setItemCount(String.valueOf(cols[3]));
-		s.setAmount(em.createNativeQuery("select SUMITEMPRICEWITHOVERH from SPROUTCOMEINVOICEDET ("+cols[8]+",Null,0,Null,Null,0,0) where goodsid = "+cols[6]+" ").getSingleResult().toString()); //String.valueOf(cols[4]));
+		s.setAmount(String.valueOf(cols[4])); //em.createNativeQuery("select SUMITEMPRICEWITHOVERH from SPROUTCOMEINVOICEDET ("+cols[9]+",Null,0,Null,Null,0,0) where goodsid = "+cols[6]+" ").getSingleResult().toString()); //String.valueOf(cols[4]));
 		s.setTa(String.valueOf(cols[5]));
 		s.setProdCode(String.valueOf(cols[6]));
 		s.setPrice(String.valueOf(cols[7]));
 		s.setOutcomeInvoice(String.valueOf(cols[8]));
 		s.setDistr_id("4");
 		del.add(s);
-		
-		
+
 	}
 	for (Object d : form2.getResultList()){
 		Object[] cols = (Object[]) d;
@@ -167,7 +180,7 @@ public List<Delivery> delivery() throws IOException{
 		s.setDocDate(String.valueOf(cols[1]));
 		s.setSkuCode(String.valueOf(cols[2]));
 		s.setItemCount(String.valueOf(cols[3]));
-		s.setAmount(em.createNativeQuery("select SUMITEMPRICEWITHOVERH from SPRINNERMIGRATIONDET ("+cols[8]+",Null,0,Null,Null,0,0) where goodsid = "+cols[6]+" and itemcount = "+cols[3]).getSingleResult().toString());//String.valueOf(cols[4]));
+		s.setAmount(String.valueOf(cols[4]));//em.createNativeQuery("select distinct SUMITEMPRICEWITHOVERH from SPRINNERMIGRATIONDET ("+cols[9]+",Null,0,Null,Null,0,0) where goodsid = "+cols[6]).getSingleResult().toString());//String.valueOf(cols[4])); // +" and itemcount = "+cols[3]
 		s.setTa(String.valueOf(cols[5]));
 		s.setProdCode(String.valueOf(cols[6]));
 		s.setPrice(String.valueOf(cols[7]));
@@ -184,20 +197,24 @@ public List<Delivery> delivery() throws IOException{
 		s.setSkuCode(String.valueOf(cols[2]));
 		s.setItemCount(String.valueOf(cols[3]));
 		//int sum = (int) em.createNativeQuery("select SUMITEMPRICEWITHOVERH from sprincomeinvoicedet ("+cols[8]+",Null,0,1,Null,Null, Null,0,0) where goodsid = "+cols[6]+" and itemcount = ("+cols[3]+" * -1)  ").getSingleResult());
-		s.setAmount("-"+em.createNativeQuery("select SUMITEMPRICEWITHOVERH from sprincomeinvoicedet ("+cols[8]+",Null,0,1,Null,Null, Null,0,0) where goodsid = "+cols[6]+" and itemcount = ("+cols[3]+" * -1) and cardindexid = "+cols[9]).getSingleResult().toString());//String.valueOf(cols[4]));
+		if(cols[4] != null)
+		s.setAmount("-"+String.valueOf(cols[4]));//em.createNativeQuery("select SUMITEMPRICEWITHOVERH from sprincomeinvoicedet ("+cols[10]+",Null,0,1,Null,Null, Null,0,0) where goodsid = "+cols[6]+"  and cardindexid = "+cols[9]).getSingleResult().toString());//String.valueOf(cols[4]));
 		s.setTa(String.valueOf(cols[5]));
 		s.setProdCode(String.valueOf(cols[6]));
 		s.setPrice(String.valueOf(cols[7]));
 		s.setOutcomeInvoice(String.valueOf(cols[8]));
 		s.setDistr_id("4");
 		
-		if (s.getAmount().contains("--")){
+		if (cols[4] != null && s.getAmount().contains("--")){
 			s.setAmount(s.getAmount().substring(1));
 			
 		}
 		
-		if (Double.valueOf(s.getAmount()) < 0 && Double.valueOf(s.getItemCount()) > 0){
+		if (cols[4] != null && Double.valueOf(s.getAmount()) < 0 && Double.valueOf(s.getItemCount()) > 0){
 			s.setItemCount("-"+s.getItemCount());
+		} 
+		if (cols[4] == null){
+			s.setAmount("0.0");
 		}
 		
 		del.add(s);
@@ -223,7 +240,7 @@ public List<RemObj> stocks(){
 		LocalDate day = today.minusDays(i);
 	Query rem = em.createNativeQuery("select"
 			+ " r.goodsid, "
-			+"r.REMAINDERITEMS1 ," //"sum(r.SUMREMAINDER) Stock_Volume, "
+			+"r.REMAINDERITEMS2 ," //"sum(r.SUMREMAINDER) Stock_Volume, " //r.REMAINDERITEMS1 !!!!
 			+ "p.val, "
 			+ "r.incomeitems "
 			+ "from "

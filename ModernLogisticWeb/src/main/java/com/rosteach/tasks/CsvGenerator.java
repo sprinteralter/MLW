@@ -80,12 +80,7 @@ public CsvGenerator(LocalDate s, LocalDate po) throws IOException{
 
 public void CurlUpload(String fileName) throws ParseException, IOException{
 	String path = "C:/SPOT2D/";
-	try {
-		Thread.sleep(5000);
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	
 	Runtime.getRuntime().exec(path+fileName); //cmd /c 
 	
 	/*File[] files = new File(path).listFiles();
@@ -139,6 +134,12 @@ private void sku() throws IOException{
 
 private void delivery() throws IOException{
 	
+	Double col=0.0;
+	Double sum = 0.0;
+	
+	Double colMin=0.0;
+	Double sumMin = 0.0;
+
 	List<Delivery> del = ad.delivery();
 	//del.addAll(new BcDelivery().delivery());
 	writer = new FileWriter(path+"delivery.csv");
@@ -146,14 +147,20 @@ private void delivery() throws IOException{
 	csvFilePrinter = new CSVPrinter(writer, csvFileFormat);
 	for (Delivery d : del){
 		csvFilePrinter.printRecord(d.getDistr_id()+";"+d.getClientId()+";"+d.getDocDate()+";"+d.getProdCode()+";"+d.getItemCount()+";"+d.getAmount()+";"+d.getTa()+";"+d.getPrice()+";"+d.getOutcomeInvoice());//s.getId()+";"+s.getCode()+";"+s.name+";"+s.getMeasureid()
-	
+		if (Double.valueOf(d.getItemCount()) > 0 && Double.valueOf(d.getAmount()) > 0) {
+			col += Double.valueOf(d.getItemCount());
+			sum += Double.valueOf(d.getAmount());
+		} else {
+			colMin += Double.valueOf(d.getItemCount());
+			sumMin += Double.valueOf(d.getAmount());
+		}
 		
 	}
 	
 	writer.flush();
 	writer.close();
 	csvFilePrinter.close();
-
+	System.out.println(col + " COL | sum =  "+sum + " ColMin = "+colMin + "sumMin= "+sumMin);
 }
 
 public void remainder() throws IOException{

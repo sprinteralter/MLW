@@ -45,7 +45,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
+	
+	
 	<dependencies>
+	
+	
+
+
+	
+		
 		
 		<dependency>
     	 <groupId>org.apache.commons</groupId>
@@ -64,6 +72,7 @@
     <artifactId>httpmime</artifactId>
     <version>4.5.2</version>
 </dependency>
+	
 	
 		<!-- https://mvnrepository.com/artifact/com.sun.jna/jna -->
 		<dependency>
@@ -291,7 +300,28 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.12</version>
-		</dependency>     
+		</dependency>   
+		
+		
+		<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcmail-jdk15</artifactId>
+    <version>1.46</version>
+</dependency>
+
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcmail-jdk15</artifactId>
+    <version>1.46</version>
+</dependency>
+
+
+		   <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15</artifactId>
+            <version>1.46</version>
+        </dependency>
+          
 		  
 	</dependencies>
 	
